@@ -1,0 +1,8 @@
+*.so
+*.o
+*.user
+*swp
+testapp*
+html
+latex
+
