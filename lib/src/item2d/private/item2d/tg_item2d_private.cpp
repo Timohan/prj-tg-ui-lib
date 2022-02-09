@@ -11,45 +11,41 @@
 
 #include "tg_item2d_private.h"
 #include <cmath>
-#include "../../global/tg_global_log.h"
-#include "../tg_rectangle.h"
-#include "../../window/tg_mainwindow_private.h"
+#include "../../../global/tg_global_log.h"
+#include "../../tg_rectangle.h"
+#include "../../../window/tg_mainwindow_private.h"
 
 TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
+    TgItem2dVisible(parent, this),
     TgItem2dPosition(parent, this),
     m_internalCallback(nullptr),
-    m_visibleState(TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible),
     m_parent(parent),
     m_currentItem(current),
     m_selected(false),
     m_canSelect(false),
-    m_enabled(true),
-    f_visibleChanged(nullptr)
+    m_enabled(true)
 {
     TG_FUNCTION_BEGIN();
     if (parent) {
         parent->addChild(current);
     }
-    setDefaultValues();
     TG_FUNCTION_END();
 }
 
 TgItem2dPrivate::TgItem2dPrivate(float x, float y, float width, float height, TgItem2d *parent, TgItem2d *current) :
+    TgItem2dVisible(parent, this),
     TgItem2dPosition(x, y, width, height, parent, this),
     m_internalCallback(nullptr),
-    m_visibleState(TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible),
     m_parent(parent),
     m_currentItem(current),
     m_selected(false),
     m_canSelect(false),
-    m_enabled(true),
-    f_visibleChanged(nullptr)
+    m_enabled(true)
 {
     TG_FUNCTION_BEGIN();
     if (parent) {
         parent->addChild(current);
     }
-    setDefaultValues();
     TG_FUNCTION_END();
 }
 
@@ -64,132 +60,10 @@ TgItem2dPrivate::~TgItem2dPrivate()
     TG_FUNCTION_END();
 }
 
-void TgItem2dPrivate::setDefaultValues()
-{
-    if (m_parent) {
-        if (m_parent->getVisible()) {
-            m_visibleState = TgItem2dVisibilityState::TgItem2dVisible;
-        }
-    } else {
-        m_visibleState = TgItem2dVisibilityState::TgItem2dInvisible;
-    }
-}
-
 void TgItem2dPrivate::setInternalCallbacks(TgItem2dInternalCallback *callback)
 {
     TG_FUNCTION_BEGIN();
     m_internalCallback = callback;
-    TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgItem2dPrivate::getVisible
- *
- * get visible
- *
- * \return visible
- */
-bool TgItem2dPrivate::getVisible()
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return m_visibleState == TgItem2dVisibilityState::TgItem2dVisible;
-}
-
-/*!
- * \brief TgItem2dPrivate::setVisible
- *
- * sets this item visible/hidden
- *
- * \param visible
- */
-void TgItem2dPrivate::setVisible(bool visible)
-{
-    TG_FUNCTION_BEGIN();
-    TgItem2dPrivateMessage msg;
-    if (visible) {
-        switch (m_visibleState) {
-            case TgItem2dVisibilityState::TgItem2dVisible:
-            case TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible:
-            default:
-                TG_FUNCTION_END();
-                return;
-            case TgItem2dVisibilityState::TgItem2dInvisible:
-                m_visibleState = TgItem2dVisibilityState::TgItem2dVisible;
-                break;
-        }
-        msg.m_type = TgItem2dPrivateMessageType::ParentItemToVisible;
-        sendMessageToChildren(&msg, false);
-
-        if (f_visibleChanged) {
-            f_visibleChanged(true);
-        }
-    } else {
-        switch (m_visibleState) {
-            case TgItem2dVisibilityState::TgItem2dInvisible:
-            default:
-                TG_FUNCTION_END();
-                return;
-            case TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible:
-                m_visibleState = TgItem2dVisibilityState::TgItem2dInvisible;
-                TG_FUNCTION_END();
-                return;
-            case TgItem2dVisibilityState::TgItem2dVisible:
-                m_visibleState = TgItem2dVisibilityState::TgItem2dInvisible;
-                break;
-        }
-        msg.m_type = TgItem2dPrivateMessageType::ParentItemToInvisible;
-        sendMessageToChildren(&msg, false);
-
-        if (f_visibleChanged) {
-            f_visibleChanged(false);
-        }
-        setSelected(false);
-    }
-    TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgItem2dPrivate::setVisible
- *
- * sets this item visible/hidden by parent visible changed
- * This function is called from sendMessageToChildren
- *
- * \param visible
- */
-void TgItem2dPrivate::parentVisibleChanged(bool visible)
-{
-    TG_FUNCTION_BEGIN();
-    if (visible) {
-        switch (m_visibleState) {
-            case TgItem2dVisibilityState::TgItem2dInvisible:
-            case TgItem2dVisibilityState::TgItem2dVisible:
-            default:
-                TG_FUNCTION_END();
-                return;
-            case TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible:
-                m_visibleState = TgItem2dVisibilityState::TgItem2dVisible;
-                break;
-        }
-        if (f_visibleChanged) {
-            f_visibleChanged(true);
-        }
-    } else {
-        switch (m_visibleState) {
-            case TgItem2dVisibilityState::TgItem2dInvisible:
-            case TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible:
-            default:
-                TG_FUNCTION_END();
-                return;
-            case TgItem2dVisibilityState::TgItem2dVisible:
-                m_visibleState = TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible;
-                break;
-        }
-        if (f_visibleChanged) {
-            f_visibleChanged(false);
-        }
-    }
-
     TG_FUNCTION_END();
 }
 
@@ -215,7 +89,7 @@ void TgItem2dPrivate::addChild(TgItem2d *child)
 void TgItem2dPrivate::renderChildren(const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
-    if (m_visibleState != TgItem2dVisibilityState::TgItem2dVisible) {
+    if (!getVisible()) {
         TG_FUNCTION_END();
         return;
     }
@@ -343,33 +217,6 @@ void TgItem2dPrivate::sendMessageToChildren(const TgItem2dPrivateMessage *messag
         }
         m_listChildren[i]->sendMessageToChildren(message);
     }
-    TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgItem2dPrivate::connectOnVisibleChanged
- *
- * set connect visible changed callback
- * \param visibleChanged callback of visible changed
- */
-void TgItem2dPrivate::connectOnVisibleChanged(std::function<void(bool)> visibleChanged)
-{
-    TG_FUNCTION_BEGIN();
-    if (visibleChanged) {
-        f_visibleChanged = visibleChanged;
-    }
-    TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgItem2dPrivate::disconnectOnVisibleChanged
- *
- * disconnect visible changed callback
- */
-void TgItem2dPrivate::disconnectOnVisibleChanged()
-{
-    TG_FUNCTION_BEGIN();
-    f_visibleChanged = nullptr;
     TG_FUNCTION_END();
 }
 

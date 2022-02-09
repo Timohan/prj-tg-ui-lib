@@ -74,7 +74,7 @@ public:
     void connectOnResizeChanged(std::function<void(float x, float y, float width, float height)> resizeChanged);
     void disconnectOnResizeChanged();
 
-    void connectOnVisibleChanged(std::function<void(bool)> visibleChanged);
+    void connectOnVisibleChanged(std::function<void(bool visible)> visibleChanged);
     void disconnectOnVisibleChanged();
 
     bool getSelected();

@@ -13,7 +13,7 @@
 #include "../global/tg_global_application.h"
 #include "tg_mainwindow_private.h"
 #include "../event/tg_events.h"
-#include "../item2d/private/tg_item2d_private.h"
+#include "../item2d/private/item2d/tg_item2d_private.h"
 
 /*!
  * \brief TgMainWindow::TgMainWindow

@@ -14,7 +14,7 @@
 
 class TgItem2dPrivate;
 #include <functional>
-#include "../tg_item2d.h"
+#include "../../tg_item2d.h"
 
 struct TgAnchorMargingValues // using when AnchorFollowParentSize
 {

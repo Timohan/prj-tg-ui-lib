@@ -17,7 +17,7 @@
 #include "../tg_textfield.h"
 #include "../tg_image.h"
 #include "../tg_button.h"
-#include "tg_item2d_private.h"
+#include "item2d/tg_item2d_private.h"
 #include <string>
 #include <mutex>
 

@@ -10,7 +10,7 @@
  */
 
 #include "tg_item2d.h"
-#include "private/tg_item2d_private.h"
+#include "private/item2d/tg_item2d_private.h"
 #include "../global/tg_global_log.h"
 
 /*!

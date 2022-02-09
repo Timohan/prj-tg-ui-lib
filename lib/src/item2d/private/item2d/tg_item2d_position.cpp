@@ -12,10 +12,9 @@
 #include "tg_item2d_position.h"
 #include <cmath>
 #include <limits>
-#include "../../global/tg_global_log.h"
-#include "../tg_item2d.h"
+#include "../../../global/tg_global_log.h"
 #include "tg_item2d_private.h"
-#include "../../window/tg_mainwindow_private.h"
+#include "../../../window/tg_mainwindow_private.h"
 
 TgItem2dPosition::TgItem2dPosition(TgItem2d *parent, TgItem2dPrivate *currentItemPrivate) :
     m_x(0),

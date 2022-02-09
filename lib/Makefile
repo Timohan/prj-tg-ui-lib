@@ -56,6 +56,10 @@ item2d_private_mouse_capture_SRCDIR:=$(CURRENT_DIR)src/item2d/private/mouse_capt
 item2d_private_mouse_capture_SRCS:=$(wildcard $(item2d_private_mouse_capture_SRCDIR)/*.cpp)
 item2d_private_mouse_capture_OBJS:=$(item2d_private_mouse_capture_SRCS:.cpp=.o)
 
+item2d_private_item2d_SRCDIR:=$(CURRENT_DIR)src/item2d/private/item2d
+item2d_private_item2d_SRCS:=$(wildcard $(item2d_private_item2d_SRCDIR)/*.cpp)
+item2d_private_item2d_OBJS:=$(item2d_private_item2d_SRCS:.cpp=.o)
+
 math_SRCDIR:=$(CURRENT_DIR)src/math
 math_SRCS:=$(wildcard $(math_SRCDIR)/*.cpp)
 math_OBJS:=$(math_SRCS:.cpp=.o)
@@ -86,8 +90,8 @@ render_OBJS:=$(render_SRCS:.cpp=.o)
 
 all: default
 
-default: $(render_OBJS) $(application_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(input_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
-	$(CCX) $(render_OBJS) $(application_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(input_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
+default: $(render_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(input_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
+	$(CCX) $(render_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(input_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
 
 $(application_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
@@ -111,6 +115,9 @@ $(item2d_private_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
 $(item2d_private_mouse_capture_OBJS):%.o: %.cpp
+	$(CCX) $(CXXFLAGS) -c $< -o $@
+
+$(item2d_private_item2d_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
 $(math_OBJS):%.o: %.cpp
@@ -140,6 +147,7 @@ clean:
 	rm -f src/item2d/*.o
 	rm -f src/item2d/private/*.o
 	rm -f src/item2d/private/mouse_capture/*.o
+	rm -f src/item2d/private/item2d/*.o
 	rm -f src/math/*.o
 	rm -f src/image/*.o
 	rm -f src/font/*.o
