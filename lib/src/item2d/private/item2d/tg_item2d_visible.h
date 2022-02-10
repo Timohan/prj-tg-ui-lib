@@ -13,6 +13,7 @@
 #define TG_ITEM_2D_PRIVATE_VISIBLE_H
 
 #include <functional>
+#include <mutex>
 
 enum TgItem2dVisibilityState
 {
@@ -35,10 +36,16 @@ public:
 
     void connectOnVisibleChanged(std::function<void(bool)> visibleChanged);
     void disconnectOnVisibleChanged();
+    void setRequireRecheckVisibleChangeToChildren(bool require);
+protected:
+    void reCheckChildrenVisibility();
+
 private:
     TgItem2d *m_parent;
     TgItem2dPrivate *m_currentItem2dPrivate;
     TgItem2dVisibilityState m_visibleState;
+    bool m_requireRecheckVisibleChangeToChildren;
+    std::mutex m_mutex;
 
     std::function<void(bool visible)> f_visibleChanged;
 };

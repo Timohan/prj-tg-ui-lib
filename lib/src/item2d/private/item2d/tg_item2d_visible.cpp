@@ -19,6 +19,7 @@ TgItem2dVisible::TgItem2dVisible(TgItem2d *parent, TgItem2dPrivate *currentItem2
     m_parent(parent),
     m_currentItem2dPrivate(currentItem2dPrivate),
     m_visibleState(TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible),
+    m_requireRecheckVisibleChangeToChildren(false),
     f_visibleChanged(nullptr)
 {
     if (m_parent) {
@@ -136,6 +137,7 @@ void TgItem2dVisible::parentVisibleChanged(bool visible)
         if (f_visibleChanged) {
             f_visibleChanged(false);
         }
+        m_currentItem2dPrivate->setSelected(false);
     }
 
     TG_FUNCTION_END();
@@ -165,5 +167,35 @@ void TgItem2dVisible::disconnectOnVisibleChanged()
 {
     TG_FUNCTION_BEGIN();
     f_visibleChanged = nullptr;
+    TG_FUNCTION_END();
+}
+
+void TgItem2dVisible::setRequireRecheckVisibleChangeToChildren(bool require)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    m_requireRecheckVisibleChangeToChildren = require;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+}
+
+void TgItem2dVisible::reCheckChildrenVisibility()
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    if (!m_requireRecheckVisibleChangeToChildren) {
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return;
+    }
+    m_requireRecheckVisibleChangeToChildren = false;
+    m_mutex.unlock();
+    TgItem2dPrivateMessage msg;
+    if (getVisible()) {
+        msg.m_type = TgItem2dPrivateMessageType::ParentItemToVisible;
+    } else {
+        msg.m_type = TgItem2dPrivateMessageType::ParentItemToInvisible;
+    }
+    m_currentItem2dPrivate->sendMessageToChildren(&msg, false);
     TG_FUNCTION_END();
 }

@@ -160,6 +160,14 @@ void TgItem2d::sendMessageToChildren(const TgItem2dPrivateMessage *message)
 TgEventResult TgItem2d::handleEvent(TgEventData *eventData, const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
+    if (((eventData->m_type == TgEventType::EventTypeCharacterCallback
+        && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey)
+        || eventData->m_type == TgEventType::EventTypeSelectFirstItem)
+            && !getVisible()) {
+        TG_FUNCTION_END();
+        return TgEventResult::EventResultNotCompleted;
+    }
+
     if (eventData->m_type == TgEventType::EventTypeCharacterCallback
         && !eventData->m_event.m_keyEvent.m_previousItem2d
         && getSelected()
