@@ -19,6 +19,7 @@ struct TgWindowInfo;
 #include "../../tg_item2d.h"
 #include "tg_item2d_position.h"
 #include "tg_item2d_visible.h"
+#include "tg_item2d_selected.h"
 
 enum TgItem2dPrivateMessageType
 {
@@ -43,7 +44,7 @@ public:
     virtual void onSelectedCallback() = 0;
 };
 
-class TgItem2dPrivate : public TgItem2dVisible, public TgItem2dPosition
+class TgItem2dPrivate : public TgItem2dVisible, public TgItem2dPosition, public TgItem2dSelected
 {
 public:
     explicit TgItem2dPrivate(TgItem2d *parent, TgItem2d *current);
@@ -57,11 +58,7 @@ public:
 
     void checkOnResizeChangedOnChildren();
 
-    bool getSelected();
-    bool getCanSelect();
     bool getEnabled();
-    void setSelected(bool selected);
-    void setCanSelect(bool canSelect);
     void setEnabled(bool enabled);
 
     void setInternalCallbacks(TgItem2dInternalCallback *callback);
@@ -73,8 +70,6 @@ private:
     TgItem2dInternalCallback *m_internalCallback;
     TgItem2d *m_parent;
     TgItem2d *m_currentItem;
-    bool m_selected;
-    bool m_canSelect;
     bool m_enabled;
 
     void addChild(TgItem2d *child);
@@ -84,6 +79,7 @@ private:
     friend class TgItem2d;
     friend class TgItem2dPosition;
     friend class TgItem2dVisible;
+    friend class TgItem2dSelected;
 };
 
 #endif // TG_ITEM_2D_PRIVATE_H

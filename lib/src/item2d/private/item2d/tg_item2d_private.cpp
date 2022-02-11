@@ -18,11 +18,10 @@
 TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
     TgItem2dVisible(parent, this),
     TgItem2dPosition(parent, this),
+    TgItem2dSelected(parent, this),
     m_internalCallback(nullptr),
     m_parent(parent),
     m_currentItem(current),
-    m_selected(false),
-    m_canSelect(false),
     m_enabled(true)
 {
     TG_FUNCTION_BEGIN();
@@ -35,11 +34,10 @@ TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
 TgItem2dPrivate::TgItem2dPrivate(float x, float y, float width, float height, TgItem2d *parent, TgItem2d *current) :
     TgItem2dVisible(parent, this),
     TgItem2dPosition(x, y, width, height, parent, this),
+    TgItem2dSelected(parent, this),
     m_internalCallback(nullptr),
     m_parent(parent),
     m_currentItem(current),
-    m_selected(false),
-    m_canSelect(false),
     m_enabled(true)
 {
     TG_FUNCTION_BEGIN();
@@ -236,30 +234,6 @@ void TgItem2dPrivate::checkOnResizeChangedOnChildren()
 }
 
 /*!
- * \brief TgItem2dPrivate::getSelected
- *
- * \return is selected
- */
-bool TgItem2dPrivate::getSelected()
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return m_selected;
-}
-
-/*!
- * \brief TgItem2dPrivate::getCanSelect
- *
- * \return can item be selected
- */
-bool TgItem2dPrivate::getCanSelect()
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return m_canSelect && getEnabled();
-}
-
-/*!
  * \brief TgItem2dPrivate::getEnabled
  *
  * \return is enabled
@@ -269,43 +243,6 @@ bool TgItem2dPrivate::getEnabled()
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
     return m_enabled;
-}
-
-/*!
- * \brief TgItem2dPrivate::setSelected
- *
- * \param selected sets selected true/false
- */
-void TgItem2dPrivate::setSelected(bool selected)
-{
-    TG_FUNCTION_BEGIN();
-    if (m_selected == selected) {
-        TG_FUNCTION_END();
-        return;
-    }
-    m_selected = selected;
-    if (m_internalCallback) {
-        m_internalCallback->onSelectedCallback();
-    }
-    if (selected) {
-        TgItem2dPrivateMessage msg;
-        msg.m_fromItem = m_currentItem;
-        msg.m_type = TgItem2dPrivateMessageType::SetUnselected;
-        sendMessageToChildrenFromBegin(&msg);
-    }
-    TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgItem2dPrivate::setCanSelect
- *
- * \param canSelect sets "can be selected" true/false
- */
-void TgItem2dPrivate::setCanSelect(bool canSelect)
-{
-    TG_FUNCTION_BEGIN();
-    m_canSelect = canSelect;
-    TG_FUNCTION_END();
 }
 
 /*!
