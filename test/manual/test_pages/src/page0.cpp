@@ -16,6 +16,10 @@ Page0::Page0(TgPages *parent, MainWindow *mainWindow) :
     m_buttonClose.connectOnMouseClicked( std::bind(&Page0::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     this->connectOnVisibleChanged( std::bind(&Page0::onPageVisibleChanged, this, std::placeholders::_1) );
     m_buttonClose.connectOnVisibleChanged( std::bind(&Page0::onButtonCloseVisibleChanged, this, std::placeholders::_1) );
+
+    m_buttonChangeToPage1.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedChangeToPage1Changed, this, std::placeholders::_1) );
+    m_buttonChangeToPage2.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedChangeToPage2Changed, this, std::placeholders::_1) );
+    m_buttonClose.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedCloseChanged, this, std::placeholders::_1) );
 }
 
 Page0::~Page0()
@@ -59,4 +63,19 @@ void Page0::onPageVisibleChanged(bool visible)
 void Page0::onButtonCloseVisibleChanged(bool visible)
 {
     std::cout << "Page0 Button close visible changed: " << visible << "\n";
+}
+
+void Page0::onButtonSelectedChangeToPage1Changed(bool selected)
+{
+    std::cout << "Page0::ChangeToPage1 Button selected changed: " << selected << "\n";
+}
+
+void Page0::onButtonSelectedChangeToPage2Changed(bool selected)
+{
+    std::cout << "Page0::ChangeToPage2 Button selected changed: " << selected << "\n";
+}
+
+void Page0::onButtonSelectedCloseChanged(bool selected)
+{
+    std::cout << "Page0::Close Button selected changed: " << selected << "\n";
 }

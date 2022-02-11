@@ -24,6 +24,10 @@ private:
     void onButtonPageChangeTimeToSecond(TgMouseType type, float x, float y);
     void onPageVisibleChanged(bool visible);
 
+    void onButtonChangeSelectedChanged(bool selected);
+    void onButtonChangeSwitchTimeSelectedChanged(bool selected);
+    void onButtonChangeSwitchTimeToSecondSelectedChanged(bool selected);
+
 };
 
 #endif

@@ -19,7 +19,8 @@ TgItem2dSelected::TgItem2dSelected(TgItem2d *parent, TgItem2dPrivate *currentIte
     m_parent(parent),
     m_currentItem2dPrivate(currentItem2dPrivate),
     m_selected(false),
-    m_canSelect(false)
+    m_canSelect(false),
+    f_selectedChanged(nullptr)
 {
 }
 
@@ -69,6 +70,9 @@ void TgItem2dSelected::setSelected(bool selected)
         msg.m_type = TgItem2dPrivateMessageType::SetUnselected;
         m_currentItem2dPrivate->sendMessageToChildrenFromBegin(&msg);
     }
+    if (f_selectedChanged) {
+        f_selectedChanged(selected);
+    }
     TG_FUNCTION_END();
 }
 
@@ -81,5 +85,32 @@ void TgItem2dSelected::setCanSelect(bool canSelect)
 {
     TG_FUNCTION_BEGIN();
     m_canSelect = canSelect;
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2dSelected::connectOnSelectedChanged
+ *
+ * set connect selected changed callback
+ * \param selectedChanged callback of selected changed
+ */
+void TgItem2dSelected::connectOnSelectedChanged(std::function<void(bool)> selectedChanged)
+{
+    TG_FUNCTION_BEGIN();
+    if (selectedChanged) {
+        f_selectedChanged = selectedChanged;
+    }
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2dSelected::disconnectOnSelectedChanged
+ *
+ * disconnect selected changed callback
+ */
+void TgItem2dSelected::disconnectOnSelectedChanged()
+{
+    TG_FUNCTION_BEGIN();
+    f_selectedChanged = nullptr;
     TG_FUNCTION_END();
 }

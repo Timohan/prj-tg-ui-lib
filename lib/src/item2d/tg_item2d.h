@@ -77,6 +77,9 @@ public:
     void connectOnVisibleChanged(std::function<void(bool visible)> visibleChanged);
     void disconnectOnVisibleChanged();
 
+    void connectOnSelectedChanged(std::function<void(bool selected)> selectedChanged);
+    void disconnectOnSelectedChanged();
+
     bool getSelected();
     bool getCanSelect();
     bool getEnabled();

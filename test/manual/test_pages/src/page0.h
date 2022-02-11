@@ -25,6 +25,10 @@ private:
     void onButtonCloseClick(TgMouseType type, float x, float y);
     void onPageVisibleChanged(bool visible);
     void onButtonCloseVisibleChanged(bool visible);
+
+    void onButtonSelectedChangeToPage1Changed(bool selected);
+    void onButtonSelectedChangeToPage2Changed(bool selected);
+    void onButtonSelectedCloseChanged(bool selected);
 };
 
 #endif

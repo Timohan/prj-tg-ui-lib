@@ -13,6 +13,10 @@ Page1::Page1(TgPages *parent) :
     m_buttonChangeSwitchTime.connectOnMouseClicked( std::bind(&Page1::onButtonPageChangeTimeToDefault, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeSwitchTimeToSecond.connectOnMouseClicked( std::bind(&Page1::onButtonPageChangeTimeToSecond, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     this->connectOnVisibleChanged( std::bind(&Page1::onPageVisibleChanged, this, std::placeholders::_1) );
+
+    m_buttonChange.connectOnSelectedChanged( std::bind(&Page1::onButtonChangeSelectedChanged, this, std::placeholders::_1) );
+    m_buttonChangeSwitchTime.connectOnSelectedChanged( std::bind(&Page1::onButtonChangeSwitchTimeSelectedChanged, this, std::placeholders::_1) );
+    m_buttonChangeSwitchTimeToSecond.connectOnSelectedChanged( std::bind(&Page1::onButtonChangeSwitchTimeToSecondSelectedChanged, this, std::placeholders::_1) );
 }
 
 Page1::~Page1()
@@ -50,3 +54,19 @@ void Page1::onPageVisibleChanged(bool visible)
 {
     std::cout << "Page1 visible changed: " << visible << "\n";
 }
+
+void Page1::onButtonChangeSelectedChanged(bool selected)
+{
+    std::cout << "Page1::Change page Button selected changed: " << selected << "\n";
+}
+
+void Page1::onButtonChangeSwitchTimeSelectedChanged(bool selected)
+{
+    std::cout << "Page1::ChangeSwitchTime Button selected changed: " << selected << "\n";
+}
+
+void Page1::onButtonChangeSwitchTimeToSecondSelectedChanged(bool selected)
+{
+    std::cout << "Page1::ChangeSwitchTimeToSecond button selected changed: " << selected << "\n";
+}
+

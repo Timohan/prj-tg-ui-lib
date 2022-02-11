@@ -614,6 +614,31 @@ void TgItem2d::disconnectOnVisibleChanged()
 }
 
 /*!
+ * \brief TgItem2d::connectOnSelectedChanged
+ *
+ * set connect selected changed callback
+ * \param selectedChanged callback of selected changed
+ */
+void TgItem2d::connectOnSelectedChanged(std::function<void(bool selected)> selectedChanged)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->connectOnSelectedChanged(selectedChanged);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2d::disconnectOnSelectedChanged
+ *
+ * disconnect selected changed callback
+ */
+void TgItem2d::disconnectOnSelectedChanged()
+{
+    TG_FUNCTION_BEGIN();
+    m_private->disconnectOnSelectedChanged();
+    TG_FUNCTION_END();
+}
+
+/*!
  * \brief TgItem2d::checkOnResizeChanged
  *
  * checks if position or size is changed, and sends

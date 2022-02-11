@@ -29,6 +29,13 @@ private:
     void onButtonClickFromLeft(TgMouseType type, float x, float y);
     void onButtonClickFromRight(TgMouseType type, float x, float y);
     void onPageVisibleChanged(bool visible);
+
+    void onButtonChangeSelectedChanged(bool selected);
+    void onButtonChangeSwitchTypeDirectSelectedChanged(bool selected);
+    void onButtonChangeSwitchTypeFromTopChanged(bool selected);
+    void onButtonChangeSwitchTypeFromBottomChanged(bool selected);
+    void onButtonChangeSwitchTypeFromLeftChanged(bool selected);
+    void onButtonChangeSwitchTypeFromRightChanged(bool selected);
 };
 
 #endif

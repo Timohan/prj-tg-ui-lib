@@ -27,12 +27,17 @@ public:
 
     void setSelected(bool selected);
     void setCanSelect(bool canSelect);
+
+    void connectOnSelectedChanged(std::function<void(bool)> selectedChanged);
+    void disconnectOnSelectedChanged();
 private:
     TgItem2d *m_parent;
     TgItem2dPrivate *m_currentItem2dPrivate;
 
     bool m_selected;
     bool m_canSelect;
+
+    std::function<void(bool selected)> f_selectedChanged;
 };
 
 #endif // TG_ITEM_2D_PRIVATE_SELECTED_H

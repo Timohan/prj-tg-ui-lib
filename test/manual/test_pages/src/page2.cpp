@@ -19,6 +19,13 @@ Page2::Page2(TgPages *parent) :
     m_buttonChangeSwitchTypeFromLeft.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromLeft, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeSwitchTypeFromRight.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromRight, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     this->connectOnVisibleChanged( std::bind(&Page2::onPageVisibleChanged, this, std::placeholders::_1) );
+
+    m_buttonChange.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSelectedChanged, this, std::placeholders::_1) );
+    m_buttonChangeSwitchTypeDirect.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSwitchTypeDirectSelectedChanged, this, std::placeholders::_1) );
+    m_buttonChangeSwitchTypeFromTop.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSwitchTypeFromTopChanged, this, std::placeholders::_1) );
+    m_buttonChangeSwitchTypeFromBottom.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSwitchTypeFromBottomChanged, this, std::placeholders::_1) );
+    m_buttonChangeSwitchTypeFromLeft.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSwitchTypeFromLeftChanged, this, std::placeholders::_1) );
+    m_buttonChangeSwitchTypeFromRight.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSwitchTypeFromRightChanged, this, std::placeholders::_1) );
 }
 
 Page2::~Page2()
@@ -83,3 +90,34 @@ void Page2::onPageVisibleChanged(bool visible)
 {
     std::cout << "Page2 visible changed: " << visible << "\n";
 }
+
+void Page2::onButtonChangeSelectedChanged(bool selected)
+{
+    std::cout << "Page2::Change page from page 2 Button selected changed: " << selected << "\n";
+}
+
+void Page2::onButtonChangeSwitchTypeDirectSelectedChanged(bool selected)
+{
+    std::cout << "Page2::ChangeSwitchTypeDirect Button selected changed: " << selected << "\n";
+}
+
+void Page2::onButtonChangeSwitchTypeFromTopChanged(bool selected)
+{
+    std::cout << "Page2::ChangeSwitchTypeFromTop button selected changed: " << selected << "\n";
+}
+
+void Page2::onButtonChangeSwitchTypeFromBottomChanged(bool selected)
+{
+    std::cout << "Page2::ChangeSwitchTypeFromBottom button selected changed: " << selected << "\n";
+}
+
+void Page2::onButtonChangeSwitchTypeFromLeftChanged(bool selected)
+{
+    std::cout << "Page2::ChangeSwitchTypeFromLeft button selected changed: " << selected << "\n";
+}
+
+void Page2::onButtonChangeSwitchTypeFromRightChanged(bool selected)
+{
+    std::cout << "Page2::ChangeSwitchTypeFromRight button selected changed: " << selected << "\n";
+}
+
