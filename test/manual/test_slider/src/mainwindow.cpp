@@ -2,7 +2,7 @@
 #include <iostream>
 
 MainWindow::MainWindow(int width, int height) :
-    TgMainWindow(width, height, "TestApp1"),
+    TgMainWindow(width, height, "TestSlider"),
     m_buttonClose(this, 20, 20, 200, 50, "Close button"),
     m_sliderHorizontal(this, 20, 100, 400, 20, TgSliderType::SliderType_Horizontal),
     m_sliderVertical(this, 20, 140, 20, 200, TgSliderType::SliderType_Vertical),

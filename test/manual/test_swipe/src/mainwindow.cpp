@@ -2,7 +2,7 @@
 #include <iostream>
 
 MainWindow::MainWindow(int width, int height) :
-    TgMainWindow(width, height, "TestApp1"),
+    TgMainWindow(width, height, "TestSwipe"),
     m_mouseCaptureForSwipe(this),
     m_buttonClose(this, 20, 20, 200, 50, "Close button"),
     m_buttonUp(this, 20, 80, 200, 50, "Up"),

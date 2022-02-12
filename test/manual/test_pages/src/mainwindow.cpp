@@ -2,7 +2,7 @@
 #include <iostream>
 
 MainWindow::MainWindow(int width, int height) :
-    TgMainWindow(width, height, "TestApp1"),
+    TgMainWindow(width, height, "TestPages"),
     m_pages(this),
     m_page0(&m_pages, this),
     m_page1(&m_pages),
