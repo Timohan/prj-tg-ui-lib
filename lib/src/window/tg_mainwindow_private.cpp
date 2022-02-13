@@ -144,7 +144,6 @@ void TgMainWindowPrivate::handleEvents()
     TG_FUNCTION_BEGIN();
     TgEventData *eventData;
     TgEventResult ret;
-    TgEventData tmpEventData;
     m_events.lock();
     while (1) {
         eventData = m_events.getFirstEventData();
@@ -166,13 +165,37 @@ void TgMainWindowPrivate::handleEvents()
                 eventData->m_event.m_mouseEvent.m_currentMouseDownItem = m_events.getMouseDownItem(eventData->m_event.m_mouseEvent.m_mouseType, eventData->m_event.m_mouseEvent.m_releaseWoCallback);
             }
             ret = m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
-            if (ret == TgEventResult::EventResultNotCompleted
-                && eventData->m_type == TgEventType::EventTypeCharacterCallback
-                && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
-                && eventData->m_event.m_keyEvent.m_key == '\t') {
-                tmpEventData.m_type = TgEventType::EventTypeSelectFirstItem;
-                tmpEventData.m_event.m_keyEvent.m_previousItem2d = eventData->m_event.m_keyEvent.m_previousItem2d;
-                m_currentItem->handleEventsChildren(&tmpEventData, &m_windowInfo);
+            if (eventData->m_type == TgEventType::EventTypeSelectNextItem
+                && ret == TgEventResult::EventResultNotCompleted) {
+                eventData->m_type = TgEventType::EventTypeSelectFirstItem;
+                m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
+            } else if (eventData->m_type == TgEventType::EventTypeCharacterCallback
+                       && ret == TgEventResult::EventResultNotCompleted
+                       && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
+                       && eventData->m_event.m_keyEvent.m_key == '\t') {
+                if ((eventData->m_event.m_keyEvent.m_pressModsKeyDown & static_cast<int>(TgPressModsKeyDown::PressModsKeyDown_Shift)) == 0) {
+                    eventData->m_type = TgEventType::EventTypeSelectFirstItem;
+                } else {
+                    eventData->m_type = TgEventType::EventTypeSelectLastItem;
+                    eventData->m_event.m_selectLastItem.m_nextItem2d = nullptr;
+                }
+                eventData->m_event.m_selectLastItem.m_previousItem2d = nullptr;
+                m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
+                if (eventData->m_type == TgEventType::EventTypeSelectLastItem
+                    && eventData->m_event.m_selectLastItem.m_nextItem2d) {
+                    if (eventData->m_event.m_selectLastItem.m_previousItem2d) {
+                        eventData->m_event.m_selectLastItem.m_previousItem2d->setSelected(false);
+                    }
+                    eventData->m_event.m_selectLastItem.m_nextItem2d->setSelected(true);
+                }
+            } else if (eventData->m_type == TgEventType::EventTypeSelectLastItem) {
+                if (!eventData->m_event.m_selectLastItem.m_nextItem2d) {
+                    m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
+                }
+                if (eventData->m_event.m_selectLastItem.m_nextItem2d) {
+                    eventData->m_event.m_selectLastItem.m_previousItem2d->setSelected(false);
+                    eventData->m_event.m_selectLastItem.m_nextItem2d->setSelected(true);
+                }
             }
             if (eventData->m_type == TgEventType::EventTypeMousePress) {
                 m_events.setMouseDownItem(

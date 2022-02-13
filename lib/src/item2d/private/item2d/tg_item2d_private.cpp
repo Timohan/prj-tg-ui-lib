@@ -18,7 +18,7 @@
 TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
     TgItem2dVisible(parent, this),
     TgItem2dPosition(parent, this),
-    TgItem2dSelected(parent, this),
+    TgItem2dSelected(parent, current, this),
     m_internalCallback(nullptr),
     m_parent(parent),
     m_currentItem(current),
@@ -34,7 +34,7 @@ TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
 TgItem2dPrivate::TgItem2dPrivate(float x, float y, float width, float height, TgItem2d *parent, TgItem2d *current) :
     TgItem2dVisible(parent, this),
     TgItem2dPosition(x, y, width, height, parent, this),
-    TgItem2dSelected(parent, this),
+    TgItem2dSelected(parent, current, this),
     m_internalCallback(nullptr),
     m_parent(parent),
     m_currentItem(current),
@@ -131,6 +131,8 @@ TgEventResult TgItem2dPrivate::handleEventsChildren(TgEventData *eventData, cons
     TgEventResult ret = TgEventResult::EventResultNotCompleted;
     for (size_t i=0;i<m_listChildren.size();i++) {
         if (eventData->m_type == TgEventType::EventTypeCharacterCallback
+            || eventData->m_type == TgEventType::EventTypeSelectLastItem
+            || eventData->m_type == TgEventType::EventTypeSelectNextItem
             || eventData->m_type == TgEventType::EventTypeSelectFirstItem) {
             ret = m_listChildren[i]->handleEvent(eventData, windowInfo);
             if (ret == TgEventResult::EventResultCompleted) {

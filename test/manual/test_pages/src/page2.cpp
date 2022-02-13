@@ -7,10 +7,10 @@ Page2::Page2(TgPages *parent) :
     m_pages(parent),
     m_buttonChange(this, 20, 20, 250, 50, "Change page to page 0"),
     m_buttonChangeSwitchTypeDirect(this, 20, 90, 250, 50, "Change Switch to Direct"),
-    m_buttonChangeSwitchTypeFromTop(this, 20, 90, 300, 50, "Change Switch to From up"),
-    m_buttonChangeSwitchTypeFromBottom(this, 20, 160, 300, 50, "Change Switch to From bottom"),
-    m_buttonChangeSwitchTypeFromLeft(this, 20, 250, 300, 50, "Change Switch to From left"),
-    m_buttonChangeSwitchTypeFromRight(this, 20, 320, 300, 50, "Change Switch to From right")
+    m_buttonChangeSwitchTypeFromTop(this, 20, 160, 300, 50, "Change Switch to From up"),
+    m_buttonChangeSwitchTypeFromBottom(this, 20, 250, 300, 50, "Change Switch to From bottom"),
+    m_buttonChangeSwitchTypeFromLeft(this, 20, 320, 300, 50, "Change Switch to From left"),
+    m_buttonChangeSwitchTypeFromRight(this, 20, 390, 300, 50, "Change Switch to From right")
 {
     m_buttonChange.connectOnMouseClicked( std::bind(&Page2::onButtonClickPage0, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeSwitchTypeDirect.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromDirect, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );

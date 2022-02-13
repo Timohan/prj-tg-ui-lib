@@ -39,7 +39,9 @@ enum TgEventType {
     EventTypeKeyRepeat,             /**< keyboard repeat (key is pressed down long time and during this time, number of repeat callbacks happens) */
     EventTypeKeyRelease,            /**< keyboard released */
     EventTypeCharacterCallback,     /**< keyboard character, defines the difference between capital and lower case characters */
-    EventTypeSelectFirstItem,       /**< changes to next item (tab key press) */
+    EventTypeSelectFirstItem,       /**< changes (select) to next item (tab key press) */
+    EventTypeSelectNextItem,        /**< changes (select) to next item (tab key press) */
+    EventTypeSelectLastItem,        /**< changes (select) to last item (shift-tab key press) */
     EventTypeWindowResize,          /**< when window resize this event is called */
     EventTypeSetItem2dToTop,        /**< when this item is set to top of parent, this is called */
 };
@@ -67,6 +69,18 @@ enum TgPressReleaseKey
 {
     PressReleaseKey_NormalKey = 0, /**< normal key */
     PressReleaseKey_KP_Enter,      /**< keypad enter */
+};
+
+/*!
+ * \brief TgPressModsKeyDown
+ * This will define if any mods key is down (shift, alt, ctrl...)
+ */
+enum TgPressModsKeyDown
+{
+    PressModsKeyDown_NoKey    = 0,             /**< No mods key down */
+    PressModsKeyDown_Shift    = (1 << 1),      /**< shift mods key down */
+    PressModsKeyDown_Alt      = (2 << 1),      /**< alt mods key down */
+    PressModsKeyDown_Ctrl     = (3 << 1),      /**< ctrl mods key down */
 };
 
 /*!
@@ -98,8 +112,13 @@ struct TgEventData
         struct {
             uint32_t m_key;                         /**< key */
             TgPressReleaseKey m_pressReleaseKey;    /**< if this is PressReleaseKey_NormalKey, then only m_key is used */
+            int m_pressModsKeyDown;                 /**< Sets which mod(s) key are down */
             TgItem2d *m_previousItem2d;              /**< item of item2d */
         } m_keyEvent;
+        struct {
+            TgItem2d *m_previousItem2d;             /**< item of current selected item2d */
+            TgItem2d *m_nextItem2d;                 /**< item of next selected item2d */
+        } m_selectLastItem;
         struct {
             int32_t m_width;                        /**< new width of application */
             int32_t m_height;                       /**< new height of application */

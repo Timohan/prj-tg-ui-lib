@@ -10,6 +10,7 @@
  */
 
 #include "tg_item2d.h"
+#include <string.h>
 #include "private/item2d/tg_item2d_private.h"
 #include "../global/tg_global_log.h"
 
@@ -160,43 +161,19 @@ void TgItem2d::sendMessageToChildren(const TgItem2dPrivateMessage *message)
 TgEventResult TgItem2d::handleEvent(TgEventData *eventData, const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
-    if (((eventData->m_type == TgEventType::EventTypeCharacterCallback
+    if (((eventData->m_type == TgEventType::EventTypeCharacterCallback 
         && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey)
+        || eventData->m_type == TgEventType::EventTypeSelectNextItem
+        || eventData->m_type == TgEventType::EventTypeSelectLastItem
         || eventData->m_type == TgEventType::EventTypeSelectFirstItem)
             && !getVisible()) {
         TG_FUNCTION_END();
         return TgEventResult::EventResultNotCompleted;
     }
-
-    if (eventData->m_type == TgEventType::EventTypeCharacterCallback
-        && !eventData->m_event.m_keyEvent.m_previousItem2d
-        && getSelected()
-        && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
-        && eventData->m_event.m_keyEvent.m_key == '\t') {
-        eventData->m_event.m_keyEvent.m_previousItem2d = this;
+    TgEventResult ret = TgEventResult::EventResultNotCompleted;
+    if (m_private->handleEventSelected(eventData, ret)) {
         TG_FUNCTION_END();
-        return TgEventResult::EventResultNotCompleted;
-    }
-
-    if (eventData->m_type == TgEventType::EventTypeCharacterCallback
-        && eventData->m_event.m_keyEvent.m_previousItem2d
-        && getCanSelect()
-        && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
-        && eventData->m_event.m_keyEvent.m_key == '\t') {
-        eventData->m_event.m_keyEvent.m_previousItem2d->setSelected(false);
-        setSelected(true);
-        TG_FUNCTION_END();
-        return TgEventResult::EventResultCompleted;
-    }
-
-    if (eventData->m_type == TgEventType::EventTypeSelectFirstItem
-        && getCanSelect()) {
-        if (eventData->m_event.m_keyEvent.m_previousItem2d) {
-            eventData->m_event.m_keyEvent.m_previousItem2d->setSelected(false);
-        }
-        setSelected(true);
-        TG_FUNCTION_END();
-        return TgEventResult::EventResultCompleted;
+        return ret;
     }
     if (eventData->m_type == TgEventType::EventTypeSetItem2dToTop
         && eventData->m_event.m_setItem2dToTop.m_parent == this) {

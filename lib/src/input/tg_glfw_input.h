@@ -20,6 +20,16 @@ struct GLFWwindow;
 
 #define GLFW_REPEAT_CAN_CAUSE_EXTRA_PRESS_RELEASE_AFTER_REPEAT
 
+struct TgGlfwInputModsKeyDown
+{
+    bool m_shiftLeft  : 1;  /**< left shift down or up */
+    bool m_shiftRight : 1;  /**< right shift down or up */
+    bool m_ctrlLeft   : 1;  /**< left ctrl down or up */
+    bool m_ctrlRight  : 1;  /**< right ctrl down or up */
+    bool m_altLeft    : 1;  /**< left alt down or up */
+    bool m_altRight   : 1;  /**< right alt down or up */
+};
+
 class TgGlfwInput
 {
 public:
@@ -40,6 +50,7 @@ private:
 #endif
     std::recursive_mutex m_mutex;
     std::vector<TgMouseType>m_listMouseTypeDown;
+    TgGlfwInputModsKeyDown m_modsKeyDown;
 
     static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
@@ -52,7 +63,7 @@ private:
     void mousePress(GLFWwindow *window, TgMouseType mouseType);
     void mouseRelease(GLFWwindow *window, TgMouseType mouseType);
     void scrollMove(GLFWwindow *window, double xoffset, double yoffset);
-    void keyboardCallback(GLFWwindow* window, int key, int action);
+    void keyboardCallback(GLFWwindow* window, int key, int action, int mods);
 
     bool getMousePressed(TgMouseType type);
     void clearMousePressed(TgMouseType type);

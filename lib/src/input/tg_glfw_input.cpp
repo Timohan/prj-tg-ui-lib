@@ -266,11 +266,11 @@ void TgGlfwInput::keyboard_callback(GLFWwindow* window,
                                     int key,
                                     int /* scancode */,
                                     int action,
-                                    int /* mods */
+                                    int mods
                                    )
 {
     TG_FUNCTION_BEGIN();
-    TgGlfwInput::instance()->keyboardCallback(window, key, action);
+    TgGlfwInput::instance()->keyboardCallback(window, key, action, mods);
     TG_FUNCTION_END();
 }
 
@@ -283,7 +283,7 @@ void TgGlfwInput::keyboard_callback(GLFWwindow* window,
  * \param key key
  * \param action action
  */
-void TgGlfwInput::keyboardCallback(GLFWwindow* window, int key, int action)
+void TgGlfwInput::keyboardCallback(GLFWwindow* window, int key, int action, int mods)
 {
     TG_FUNCTION_BEGIN();
     TgEventData eventData;
@@ -334,14 +334,70 @@ void TgGlfwInput::keyboardCallback(GLFWwindow* window, int key, int action)
 
     eventData.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_NormalKey;
     eventData.m_event.m_keyEvent.m_previousItem2d = nullptr;
+    eventData.m_event.m_keyEvent.m_pressModsKeyDown = TgPressModsKeyDown::PressModsKeyDown_NoKey;
+    if (mods & GLFW_MOD_SHIFT) {
+        eventData.m_event.m_keyEvent.m_pressModsKeyDown |= static_cast<int>(TgPressModsKeyDown::PressModsKeyDown_Shift);
+    }
+    if (mods & GLFW_MOD_ALT) {
+        eventData.m_event.m_keyEvent.m_pressModsKeyDown |= static_cast<int>(TgPressModsKeyDown::PressModsKeyDown_Alt);
+    }
+    if (mods & GLFW_MOD_CONTROL) {
+        eventData.m_event.m_keyEvent.m_pressModsKeyDown |= static_cast<int>(TgPressModsKeyDown::PressModsKeyDown_Ctrl);
+    }
     switch (key) {
+        case GLFW_KEY_LEFT_SHIFT:
+            if (action == GLFW_RELEASE) {
+                m_modsKeyDown.m_shiftLeft = false;
+            } else {
+                m_modsKeyDown.m_shiftLeft = true;
+            }
+            break;
+        case GLFW_KEY_RIGHT_SHIFT:
+            if (action == GLFW_RELEASE) {
+                m_modsKeyDown.m_shiftRight = false;
+            } else {
+                m_modsKeyDown.m_shiftRight = true;
+            }
+            break;
+        case GLFW_KEY_LEFT_ALT:
+            if (action == GLFW_RELEASE) {
+                m_modsKeyDown.m_altLeft = false;
+            } else {
+                m_modsKeyDown.m_altLeft = true;
+            }
+            break;
+        case GLFW_KEY_RIGHT_ALT:
+            if (action == GLFW_RELEASE) {
+                m_modsKeyDown.m_altRight = false;
+            } else {
+                m_modsKeyDown.m_altRight = true;
+            }
+            break;
+        case GLFW_KEY_LEFT_CONTROL:
+            if (action == GLFW_RELEASE) {
+                m_modsKeyDown.m_ctrlLeft = false;
+            } else {
+                m_modsKeyDown.m_ctrlLeft = true;
+            }
+            break;
+        case GLFW_KEY_RIGHT_CONTROL:
+            if (action == GLFW_RELEASE) {
+                m_modsKeyDown.m_ctrlRight = false;
+            } else {
+                m_modsKeyDown.m_ctrlRight = true;
+            }
+            break;
         case GLFW_KEY_TAB:
             eventData.m_event.m_keyEvent.m_key = static_cast<uint32_t>('\t');
             TgGlobalApplication::getInstance()->addEvent(window, &eventData);
             if (eventData.m_type == TgEventType::EventTypeKeyRelease) {
-                character_callback(window, static_cast<unsigned int>('\t'));
+                eventData.m_type = TgEventType::EventTypeCharacterCallback;
+                eventData.m_event.m_keyEvent.m_previousItem2d = nullptr;
+                eventData.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_NormalKey;
+                TgGlobalApplication::getInstance()->addEvent(window, &eventData);
             }
-        break;
+            m_mutex.unlock();
+            return;
         case GLFW_KEY_ENTER:
             eventData.m_event.m_keyEvent.m_key = static_cast<uint32_t>('\n');
             TgGlobalApplication::getInstance()->addEvent(window, &eventData);
