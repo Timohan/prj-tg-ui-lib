@@ -41,6 +41,10 @@ void MainWindow::onButtonAddClick(TgMouseType type, float x, float y)
     std::cout << "Adding the button  - callback by button: " << type << "\n";
     m_buttonAdded = new TgButton(this, 20, 90, 200, 50, "Added button");
     m_buttonAdded->connectOnMouseClicked( std::bind(&MainWindow::onButtonAddedClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonRemove.setNextTabItem(m_buttonAdded);
+    m_buttonAdded->setPrevTabItem(&m_buttonRemove);
+    m_buttonAdded->setNextTabItem(&m_buttonAddCount);
+    m_buttonAddCount.setPrevTabItem(m_buttonAdded);
 }
 
 /*!

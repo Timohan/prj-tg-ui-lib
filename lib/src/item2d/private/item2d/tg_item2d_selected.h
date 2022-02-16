@@ -13,10 +13,12 @@
 #define TG_ITEM_2D_PRIVATE_SELECTED_H
 
 #include <functional>
+#include <mutex>
 #include "../../../event/tg_event_data.h"
 
 class TgItem2d;
 class TgItem2dPrivate;
+class TgItem2dPrivateMessage;
 
 class TgItem2dSelected
 {
@@ -32,13 +34,19 @@ public:
     void connectOnSelectedChanged(std::function<void(bool)> selectedChanged);
     void disconnectOnSelectedChanged();
 
+    void setNextTabItem(TgItem2d *nextTabItem);
+    void setPrevTabItem(TgItem2d *prevTabItem);
 protected:
     bool handleEventSelected(TgEventData *eventData, TgEventResult &result);
+    void handleMessageToChildren(const TgItem2dPrivateMessage *message);
 
 private:
     TgItem2d *m_parent;
     TgItem2d *m_currentItem;
     TgItem2dPrivate *m_currentItem2dPrivate;
+    TgItem2d *m_nextTabItem;
+    TgItem2d *m_prevTabItem;
+    std::mutex m_mutex;
 
     bool m_selected;
     bool m_canSelect;

@@ -19,6 +19,8 @@ TgItem2dSelected::TgItem2dSelected(TgItem2d *parent, TgItem2d *currentItem, TgIt
     m_parent(parent),
     m_currentItem(currentItem),
     m_currentItem2dPrivate(currentItem2dPrivate),
+    m_nextTabItem(nullptr),
+    m_prevTabItem(nullptr),
     m_selected(false),
     m_canSelect(false),
     f_selectedChanged(nullptr)
@@ -187,6 +189,17 @@ bool TgItem2dSelected::handleEventSelected(TgEventData *eventData, TgEventResult
     if ((eventData->m_event.m_keyEvent.m_pressModsKeyDown & static_cast<int>(TgPressModsKeyDown::PressModsKeyDown_Shift)) == 0) {
         // it is '\t' without shift
         if (getSelected()) {
+            m_mutex.lock();
+            if (m_nextTabItem && m_nextTabItem->getCanSelect() && m_nextTabItem->getVisible()) {
+                setSelected(false);
+                m_nextTabItem->setSelected(true);
+                m_mutex.unlock();
+                result = TgEventResult::EventResultCompleted;
+                TG_FUNCTION_END();
+                return true;
+            }
+            m_mutex.unlock();
+
             eventData->m_type = TgEventType::EventTypeSelectNextItem;
             eventData->m_event.m_selectLastItem.m_previousItem2d = m_currentItem;
             eventData->m_event.m_selectLastItem.m_nextItem2d = nullptr;
@@ -197,6 +210,16 @@ bool TgItem2dSelected::handleEventSelected(TgEventData *eventData, TgEventResult
     } else if ((eventData->m_event.m_keyEvent.m_pressModsKeyDown & static_cast<int>(TgPressModsKeyDown::PressModsKeyDown_Shift))) {
         // it is '\t' with shift
         if (getSelected()) {
+            m_mutex.lock();
+            if (m_prevTabItem && m_prevTabItem->getCanSelect() && m_prevTabItem->getVisible()) {
+                setSelected(false);
+                m_prevTabItem->setSelected(true);
+                m_mutex.unlock();
+                result = TgEventResult::EventResultCompleted;
+                TG_FUNCTION_END();
+                return true;
+            }
+            m_mutex.unlock();
             if (eventData->m_event.m_keyEvent.m_previousItem2d) {
                 // it's selected item, and previous item was already found
                 setSelected(false);
@@ -223,4 +246,59 @@ bool TgItem2dSelected::handleEventSelected(TgEventData *eventData, TgEventResult
     result = TgEventResult::EventResultNotCompleted;
     TG_FUNCTION_END();
     return true;
+}
+
+/*!
+ * \brief TgItem2dSelected::setNextTabItem
+ *
+ * set item to be selected with tab
+ *
+ * \param nextTabItem item to be selected with tab
+ * NOTE: this item must be selectable
+ */
+void TgItem2dSelected::setNextTabItem(TgItem2d *nextTabItem)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    m_nextTabItem = nextTabItem;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2dSelected::setPrevTabItem
+ *
+ * set item to be selected with shift+tab
+ *
+ * \param prevTabItem item to be selected with shift+tab
+ * NOTE: this item must be selectable
+ */
+void TgItem2dSelected::setPrevTabItem(TgItem2d *prevTabItem)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    m_prevTabItem = prevTabItem;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+}
+
+/*! /brief TgItem2dSelected::handleMessageToChildren
+ * handles the messages that are sent from sendMessageToChildren
+ * (or sendMessageToChildrenBegin)
+ * \param message
+ */
+void TgItem2dSelected::handleMessageToChildren(const TgItem2dPrivateMessage *message)
+{
+    TG_FUNCTION_BEGIN();
+    if (message->m_type == TgItem2dPrivateMessageType::RemovingItem2d) {
+        m_mutex.lock();
+        if (message->m_fromItem == m_nextTabItem) {
+            m_nextTabItem = nullptr;
+        }
+        if (message->m_fromItem == m_prevTabItem) {
+            m_prevTabItem = nullptr;
+        }
+        m_mutex.unlock();
+    }
+    TG_FUNCTION_END();
 }

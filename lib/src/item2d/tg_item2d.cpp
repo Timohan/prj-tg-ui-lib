@@ -833,3 +833,33 @@ void TgItem2d::setUseRoundedPositionValues(bool useRoundedPositionValues)
 {
     m_private->setUseRoundedPositionValues(useRoundedPositionValues);
 }
+
+/*!
+ * \brief TgItem2d::setNextTabItem
+ *
+ * set item to be selected with tab
+ *
+ * \param nextTabItem item to be selected with tab
+ * NOTE: this item must be selectable
+ */
+void TgItem2d::setNextTabItem(TgItem2d *nextTabItem)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setNextTabItem(nextTabItem);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2d::setPrevTabItem
+ *
+ * set item to be selected with shift+tab
+ *
+ * \param prevTabItem item to be selected with shift+tab
+ * NOTE: this item must be selectable
+ */
+void TgItem2d::setPrevTabItem(TgItem2d *prevTabItem)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setPrevTabItem(prevTabItem);
+    TG_FUNCTION_END();
+}

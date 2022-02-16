@@ -192,9 +192,11 @@ void TgItem2dPrivate::sendMessageToChildren(const TgItem2dPrivateMessage *messag
                 setUseRoundedPositionValues(false);
                 break;
         }
+        handleMessageToChildren(message);
     }
 
     for (size_t i=0;i<m_listChildren.size();i++) {
+        m_listChildren[i]->m_private->handleMessageToChildren(message);
         switch (message->m_type) {
             case TgItem2dPrivateMessageType::PositionChanged:
                 m_listChildren[i]->setPositionChanged(true);

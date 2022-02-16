@@ -2,7 +2,6 @@
 
 There is many things to do, but few important:
 
-* Tab usage improvements, setting next and previous tab functions
 * Multiple fonts support in textfield
 * TextEdit field
 * Menu
