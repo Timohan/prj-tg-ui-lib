@@ -13,9 +13,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <algorithm>
-#include "../global/tg_global_log.h"
-#include "../global/tg_global_application.h"
-#include "../event/tg_events.h"
+#include "../../global/tg_global_log.h"
+#include "../../global/tg_global_application.h"
+#include "../../event/tg_events.h"
 
 static TgGlfwInput *m_TgGlfwInput = nullptr;
 

@@ -13,8 +13,8 @@
 #define TG_GLFW_INPUT_H
 
 struct GLFWwindow;
-#include "../event/tg_event_data.h"
-#include "../common/time_difference.h"
+#include "../../event/tg_event_data.h"
+#include "../../common/time_difference.h"
 #include <mutex>
 #include <vector>
 

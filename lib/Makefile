@@ -72,10 +72,6 @@ font_SRCDIR:=$(CURRENT_DIR)src/font
 font_SRCS:=$(wildcard $(font_SRCDIR)/*.cpp)
 font_OBJS:=$(font_SRCS:.cpp=.o)
 
-input_SRCDIR:=$(CURRENT_DIR)src/input
-input_SRCS:=$(wildcard $(input_SRCDIR)/*.cpp)
-input_OBJS:=$(input_SRCS:.cpp=.o)
-
 event_SRCDIR:=$(CURRENT_DIR)src/event
 event_SRCS:=$(wildcard $(event_SRCDIR)/*.cpp)
 event_OBJS:=$(event_SRCS:.cpp=.o)
@@ -88,10 +84,17 @@ render_SRCDIR:=$(CURRENT_DIR)src/render
 render_SRCS:=$(wildcard $(render_SRCDIR)/*.cpp)
 render_OBJS:=$(render_SRCS:.cpp=.o)
 
+mainwindow_glfw_SRCDIR:=$(CURRENT_DIR)src/window/glfw
+mainwindow_glfw_SRCS:=$(wildcard $(mainwindow_glfw_SRCDIR)/*.cpp)
+mainwindow_glfw_OBJS:=$(mainwindow_glfw_SRCS:.cpp=.o)
+
 all: default
 
-default: $(render_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(input_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
-	$(CCX) $(render_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(input_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
+default: $(render_OBJS) $(mainwindow_glfw_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
+	$(CCX) $(render_OBJS) $(mainwindow_glfw_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
+
+$(mainwindow_glfw_OBJS):%.o: %.cpp
+	$(CCX) $(CXXFLAGS) -c $< -o $@
 
 $(application_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
@@ -129,9 +132,6 @@ $(image_OBJS):%.o: %.cpp
 $(font_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
-$(input_OBJS):%.o: %.cpp
-	$(CCX) $(CXXFLAGS) -c $< -o $@
-
 $(event_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
@@ -143,6 +143,7 @@ clean:
 	rm -f src/application/*.o
 	rm -f src/global/*.o
 	rm -f src/window/*.o
+	rm -f src/window/glfw/*.o
 	rm -f src/shader/*.o
 	rm -f src/item2d/*.o
 	rm -f src/item2d/private/*.o
@@ -151,7 +152,6 @@ clean:
 	rm -f src/math/*.o
 	rm -f src/image/*.o
 	rm -f src/font/*.o
-	rm -f src/input/*.o
 	rm -f src/event/*.o
 	rm -f src/common/*.o
 	rm -f src/render/*.o

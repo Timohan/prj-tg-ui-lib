@@ -10,16 +10,13 @@
  */
 
 #include "tg_mainwindow_private.h"
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 #include "../global/tg_global_log.h"
 #include "../global/tg_global_application.h"
-#include "../input/tg_glfw_input.h"
 #include "../item2d/tg_item2d.h"
+#include "glfw/tg_mainwindow_glfw.h"
 
 /*!
  * \brief TgWindowInfo::TgWindowInfo
@@ -41,7 +38,6 @@ TgWindowInfo::TgWindowInfo(int width, int height) :
 
 TgMainWindowPrivate::TgMainWindowPrivate(int width, int height, TgItem2d *item) :
     m_currentItem(item),
-    m_window(nullptr),
     m_windowInfo(width, height)
 {
     TG_FUNCTION_BEGIN();
@@ -51,10 +47,6 @@ TgMainWindowPrivate::TgMainWindowPrivate(int width, int height, TgItem2d *item) 
 TgMainWindowPrivate::~TgMainWindowPrivate()
 {
     TG_FUNCTION_BEGIN();
-    if (m_window) {
-        glfwDestroyWindow(m_window);
-    }
-    glfwTerminate();
     TG_FUNCTION_END();
 }
 
@@ -91,36 +83,11 @@ void TgMainWindowPrivate::errorCallback(int error, const char* description)
 int TgMainWindowPrivate::initWindow(const char *windowTitle)
 {
     TG_FUNCTION_BEGIN();
-    if (!glfwInit()) {
-        TG_ERROR_LOG("glfwInit failed");
+    if (TgMainWindowGlfw::initWindow(windowTitle, &m_windowInfo)) {
         TG_FUNCTION_END();
         return EXIT_FAILURE;
     }
-
-    glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-
-    m_window = glfwCreateWindow(m_windowInfo.m_windowWidth, m_windowInfo.m_windowHeight, windowTitle, nullptr, nullptr);
-    if (!m_window) {
-        TG_ERROR_LOG("glfwCreateWindow failed");
-        glfwTerminate();
-        TG_FUNCTION_END();
-        return EXIT_FAILURE;
-    }
-
-    glfwMakeContextCurrent(m_window);
-    glfwSwapInterval(1);
-    TgGlfwInput::instance()->setup(m_window);
-
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
-    if (GLEW_OK != err) {
-        TG_ERROR_LOG("glewInit failed");
-        TG_FUNCTION_END();
-        return EXIT_FAILURE;
-    }
-
-    glfwShowWindow(m_window);
+    
     if (m_shader2d.init() != 0) {
         TG_FUNCTION_END();
         return EXIT_FAILURE;
@@ -221,7 +188,7 @@ void TgMainWindowPrivate::handleEvents()
 bool TgMainWindowPrivate::setupViewForRender()
 {
     TG_FUNCTION_BEGIN();
-    if (glfwWindowShouldClose(m_window)) {
+    if (!TgMainWindowGlfw::setupViewForRender()) {
         TG_FUNCTION_END();
         return false;
     }
@@ -264,10 +231,8 @@ bool TgMainWindowPrivate::setup2DShaderToUniforms()
 bool TgMainWindowPrivate::renderEnd()
 {
     TG_FUNCTION_BEGIN();
-    glfwSwapBuffers(m_window);
-    glfwPollEvents();
     TG_FUNCTION_END();
-    return true;
+    return TgMainWindowGlfw::renderEnd();
 }
 
 /*!
@@ -279,17 +244,6 @@ const TgWindowInfo *TgMainWindowPrivate::getWindowInfo() const
 {
     return &m_windowInfo;
 }
-
-/*!
- * \brief TgMainWindowPrivate::getWindow
- *
- * \return get GLFWwindow window of this window
- */
-GLFWwindow *TgMainWindowPrivate::getWindow()
-{
-    return m_window;
-}
-
 /*!
  * \brief TgMainWindowPrivate::addEvent
  *

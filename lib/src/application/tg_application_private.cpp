@@ -11,7 +11,7 @@
 #include "tg_application_private.h"
 #include "../global/tg_global_log.h"
 #include "../global/tg_global_application.h"
-#include "../input/tg_glfw_input.h"
+#include "../window/glfw/tg_glfw_input.h"
 #include "../image/tg_image_assets.h"
 #include <string>
 

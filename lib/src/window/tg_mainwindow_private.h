@@ -16,8 +16,8 @@
 #include "../shader/tg_shader_2d.h"
 #include "../math/tg_matrix4x4.h"
 #include "../event/tg_events.h"
+#include "glfw/tg_mainwindow_glfw.h"
 
-struct GLFWwindow;
 class TgItem2d;
 
 struct TgWindowInfo
@@ -49,7 +49,7 @@ struct TgWindowInfo
     int m_maxRenderValues;
 };
 
-class TgMainWindowPrivate
+class TgMainWindowPrivate : public TgMainWindowGlfw
 {
 public:
     explicit TgMainWindowPrivate(int width, int height, TgItem2d *item);
@@ -58,17 +58,15 @@ public:
     void handleEvents();
     bool setupViewForRender();
     bool renderEnd();
-    const TgWindowInfo *getWindowInfo() const;
-    GLFWwindow *getWindow();
     void addEvent(const TgEventData *eventData);
     bool setup2DShaderToUniforms();
+    const TgWindowInfo *getWindowInfo() const;
 
     void setAllowedNumberMouseButtonCount(size_t allowedNumberMouseButtonDownCount);
     size_t getAllowedNumberMouseButtonCount();
 
 private:
     TgItem2d *m_currentItem;
-    GLFWwindow *m_window;
     TgWindowInfo m_windowInfo;
     TgShader2d m_shader2d;
     TgEvents m_events;
