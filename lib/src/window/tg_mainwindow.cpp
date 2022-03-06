@@ -87,6 +87,7 @@ void TgMainWindow::render(const TgWindowInfo *)
     TG_FUNCTION_END();
 }
 
+#ifdef USE_GLFW
 /*!
  * \brief TgMainWindow::addEvent
  *
@@ -103,6 +104,7 @@ void TgMainWindow::addEvent(GLFWwindow *window, const TgEventData *eventData)
     }
     TG_FUNCTION_END();
 }
+#endif
 
 /*!
  * \brief TgMainWindow::exit

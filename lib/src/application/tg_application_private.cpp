@@ -11,7 +11,11 @@
 #include "tg_application_private.h"
 #include "../global/tg_global_log.h"
 #include "../global/tg_global_application.h"
+#ifdef USE_GLFW
 #include "../window/glfw/tg_glfw_input.h"
+#else
+
+#endif
 #include "../image/tg_image_assets.h"
 #include <string>
 
@@ -46,7 +50,11 @@ int TgApplicationPrivate::exec()
     while (!TgGlobalApplication::getInstance()->getExit()) {
         TgGlobalApplication::getInstance()->render();
     }
+#ifdef USE_GLFW
     TgGlfwInput::clear();
+#else
+
+#endif
     TG_FUNCTION_END();
     return ret;
 }

@@ -16,7 +16,11 @@
 #include "../shader/tg_shader_2d.h"
 #include "../math/tg_matrix4x4.h"
 #include "../event/tg_events.h"
+#ifdef USE_GLFW
 #include "glfw/tg_mainwindow_glfw.h"
+#else
+#include "x11/tg_mainwindow_x11.h"
+#endif
 
 class TgItem2d;
 
@@ -49,7 +53,12 @@ struct TgWindowInfo
     int m_maxRenderValues;
 };
 
-class TgMainWindowPrivate : public TgMainWindowGlfw
+class TgMainWindowPrivate
+#ifdef USE_GLFW
+: public TgMainWindowGlfw
+#else
+: public TgMainWindowX11
+#endif
 {
 public:
     explicit TgMainWindowPrivate(int width, int height, TgItem2d *item);

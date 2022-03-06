@@ -143,6 +143,7 @@ void TgGlobalApplication::render()
     m_mutex.unlock();
 }
 
+#ifdef USE_GLFW
 /*!
  * \brief TgGlobalApplication::addEvent
  *
@@ -159,7 +160,7 @@ void TgGlobalApplication::addEvent(GLFWwindow *window, const TgEventData *eventD
     }
     m_mutex.unlock();
 }
-
+#endif
 /*!
  * \brief TgGlobalApplication::exit
  *

@@ -37,6 +37,9 @@ TgWindowInfo::TgWindowInfo(int width, int height) :
 }
 
 TgMainWindowPrivate::TgMainWindowPrivate(int width, int height, TgItem2d *item) :
+#ifndef USE_GLFW
+    TgMainWindowX11(this),
+#endif
     m_currentItem(item),
     m_windowInfo(width, height)
 {
@@ -83,7 +86,11 @@ void TgMainWindowPrivate::errorCallback(int error, const char* description)
 int TgMainWindowPrivate::initWindow(const char *windowTitle)
 {
     TG_FUNCTION_BEGIN();
+#ifdef USE_GLFW
     if (TgMainWindowGlfw::initWindow(windowTitle, &m_windowInfo)) {
+#else
+    if (TgMainWindowX11::initWindow(windowTitle, &m_windowInfo)) {
+#endif
         TG_FUNCTION_END();
         return EXIT_FAILURE;
     }
@@ -188,7 +195,11 @@ void TgMainWindowPrivate::handleEvents()
 bool TgMainWindowPrivate::setupViewForRender()
 {
     TG_FUNCTION_BEGIN();
+#ifdef USE_GLFW
     if (!TgMainWindowGlfw::setupViewForRender()) {
+#else
+    if (!TgMainWindowX11::setupViewForRender()) {
+#endif
         TG_FUNCTION_END();
         return false;
     }
@@ -232,7 +243,11 @@ bool TgMainWindowPrivate::renderEnd()
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
+#ifdef USE_GLFW
     return TgMainWindowGlfw::renderEnd();
+#else
+    return TgMainWindowX11::renderEnd();
+#endif
 }
 
 /*!

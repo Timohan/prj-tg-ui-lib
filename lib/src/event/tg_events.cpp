@@ -28,14 +28,6 @@ void TgEvents::addEvent(const TgEventData *eventData)
 {
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
-    /*
-    if (eventData->m_type == TgEventType::EventTypeMouseMove && !m_eventData.empty()
-        && m_eventData.back().m_type == TgEventType::EventTypeMouseMove) {
-        m_eventData[m_eventData.size()-1] = *eventData;
-        m_mutex.unlock();
-        TG_FUNCTION_END();
-        return;
-    }*/
     if (eventData->m_type == TgEventType::EventTypeMouseScrollMove && !m_eventData.empty()
         && m_eventData.back().m_type == TgEventType::EventTypeMouseScrollMove
         && m_eventData[m_eventData.size()-1].m_event.m_mouseEvent.m_scroll_move_y > 0

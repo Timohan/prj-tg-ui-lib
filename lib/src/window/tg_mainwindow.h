@@ -48,8 +48,9 @@ private:
 
     int initWindow();
     virtual void addNewEvent(TgEventData *event) override;
+#ifdef USE_GLFW
     void addEvent(GLFWwindow *window, const TgEventData *eventData);
-
+#endif
     friend class TgGlobalApplication;
 };
 

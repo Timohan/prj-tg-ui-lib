@@ -9,5 +9,4 @@ There is many things to do, but few important:
 * Avoid non-requried rendering
 * ListView
 * Functional test
-* Get rid of glfw (libinput & create window)
 

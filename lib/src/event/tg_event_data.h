@@ -81,6 +81,7 @@ enum TgPressModsKeyDown
     PressModsKeyDown_Shift    = (1 << 1),      /**< shift mods key down */
     PressModsKeyDown_Alt      = (2 << 1),      /**< alt mods key down */
     PressModsKeyDown_Ctrl     = (3 << 1),      /**< ctrl mods key down */
+    PressModsKeyDown_AltGr    = (4 << 1),      /**< alt gr mods key down */
 };
 
 /*!

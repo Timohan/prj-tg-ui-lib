@@ -20,7 +20,9 @@
 #include "../font/tg_font_default.h"
 
 class TgMainWindow;
+#ifdef USE_GLFW
 struct GLFWwindow;
+#endif
 struct TgEventData;
 
 class TG_MAINWINDOW_EXPORT TgGlobalApplication
@@ -36,7 +38,9 @@ public:
     TgImageAssets *getImageAssets();
     TgFontCache *getFontCache();
     TgFontDefault *getFontDefault();
+#ifdef USE_GLFW
     void addEvent(GLFWwindow *window, const TgEventData *eventData);
+#endif
     void exit();
     bool getExit();
 

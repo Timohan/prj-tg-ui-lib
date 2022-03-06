@@ -24,7 +24,8 @@ CXXFLAGS+=-Wuninitialized -Wconversion -Wshadow -Wpointer-arith \
 CXXFLAGS+=-Werror
 CXXFLAGS+=-O2
 CXXFLAGS+=-g -fPIC -std=c++17
-LDFLAGS+=-shared -lpng -lGL -lGLEW -lglfw $(PKGFLAGS)
+LDFLAGS+=-shared -lpng -lGL -lGLEW $(PKGFLAGS)
+GLFW:=$(if $(USE_GLFW),$(USE_GLFW),off)
 
 CURRENT_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
@@ -84,16 +85,24 @@ render_SRCDIR:=$(CURRENT_DIR)src/render
 render_SRCS:=$(wildcard $(render_SRCDIR)/*.cpp)
 render_OBJS:=$(render_SRCS:.cpp=.o)
 
-mainwindow_glfw_SRCDIR:=$(CURRENT_DIR)src/window/glfw
-mainwindow_glfw_SRCS:=$(wildcard $(mainwindow_glfw_SRCDIR)/*.cpp)
-mainwindow_glfw_OBJS:=$(mainwindow_glfw_SRCS:.cpp=.o)
+ifeq ($(USE_GLFW),on)
+LDFLAGS+=-lglfw
+mainwindow_window_manager_SRCDIR:=$(CURRENT_DIR)src/window/glfw
+mainwindow_window_manager_SRCS:=$(wildcard $(mainwindow_window_manager_SRCDIR)/*.cpp)
+mainwindow_window_manager_OBJS:=$(mainwindow_window_manager_SRCS:.cpp=.o)
+CXXFLAGS+=-DUSE_GLFW
+else
+mainwindow_window_manager_SRCDIR:=$(CURRENT_DIR)src/window/x11
+mainwindow_window_manager_SRCS:=$(wildcard $(mainwindow_window_manager_SRCDIR)/*.cpp)
+mainwindow_window_manager_OBJS:=$(mainwindow_window_manager_SRCS:.cpp=.o)
+endif
 
 all: default
 
-default: $(render_OBJS) $(mainwindow_glfw_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
-	$(CCX) $(render_OBJS) $(mainwindow_glfw_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
+default: $(render_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
+	$(CCX) $(render_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
 
-$(mainwindow_glfw_OBJS):%.o: %.cpp
+$(mainwindow_window_manager_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
 $(application_OBJS):%.o: %.cpp
@@ -143,6 +152,7 @@ clean:
 	rm -f src/application/*.o
 	rm -f src/global/*.o
 	rm -f src/window/*.o
+	rm -f src/window/x11/*.o
 	rm -f src/window/glfw/*.o
 	rm -f src/shader/*.o
 	rm -f src/item2d/*.o
