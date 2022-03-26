@@ -50,7 +50,7 @@ TgTextfieldPrivate::~TgTextfieldPrivate()
  * generate transform position
  *
  */
-void TgTextfieldPrivate::generateTransform(const TgWindowInfo *windowInfo, TgItem2d *currentItem)
+void TgTextfieldPrivate::generateTransform(TgItem2d *currentItem)
 {
     size_t i;
     float x, y;
@@ -58,16 +58,17 @@ void TgTextfieldPrivate::generateTransform(const TgWindowInfo *windowInfo, TgIte
     if (!m_fontInfo) {
         return;
     }
+
     switch (m_alignHorizontal) {
         case TgTextfieldHorizontalAlign::AlignLeft:
         default:
             x = currentItem->getXonWindow();
             break;
         case TgTextfieldHorizontalAlign::AlignCenterH:
-            x = (currentItem->getXmaxOnVisible(windowInfo)+currentItem->getXonWindow())/2 - m_characterPositions.m_textWidth/2;
+            x = currentItem->getWidth()/2+currentItem->getXonWindow() - m_characterPositions.m_textWidth/2;
             break;
         case TgTextfieldHorizontalAlign::AlignRight:
-            x = currentItem->getXmaxOnVisible(windowInfo) - m_characterPositions.m_textWidth;
+            x = currentItem->getWidth()+currentItem->getXonWindow() - m_characterPositions.m_textWidth;
             break;
     }
     switch (m_alignVertical) {
@@ -76,10 +77,10 @@ void TgTextfieldPrivate::generateTransform(const TgWindowInfo *windowInfo, TgIte
             y = currentItem->getYonWindow();
             break;
         case TgTextfieldVerticalAlign::AlignCenterV:
-            y = (currentItem->getYmaxOnVisible(windowInfo)+currentItem->getYonWindow())/2 - m_fontInfo->m_fontHeight/2;
+            y = currentItem->getHeight()/2+currentItem->getYonWindow() - m_fontInfo->m_fontHeight/2;
             break;
         case TgTextfieldVerticalAlign::AlignBottom:
-            y = currentItem->getYmaxOnVisible(windowInfo) - m_fontInfo->m_fontHeight;
+            y = currentItem->getHeight()+currentItem->getYonWindow() - m_fontInfo->m_fontHeight;
             break;
     }
 
@@ -114,7 +115,7 @@ void TgTextfieldPrivate::setText(const char *text, TgItem2d *currentItem)
  * Checks position values before rendering starts
  * \param currentItem
  */
-void TgTextfieldPrivate::checkPositionValues(const TgWindowInfo *windowInfo, TgItem2d *currentItem)
+void TgTextfieldPrivate::checkPositionValues(TgItem2d *currentItem)
 {
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
@@ -124,7 +125,7 @@ void TgTextfieldPrivate::checkPositionValues(const TgWindowInfo *windowInfo, TgI
         m_initDone = true;
     }
     if (currentItem->getPositionChanged()) {
-        generateTransform(windowInfo, currentItem);
+        generateTransform(currentItem);
         currentItem->setAddMinMaxHeightOnVisible(m_characterPositions.m_visibleTopY,  m_characterPositions.m_visibleBottomY);
         currentItem->setPositionChanged(false);
     }

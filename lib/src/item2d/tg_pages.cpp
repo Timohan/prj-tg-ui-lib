@@ -171,7 +171,7 @@ void TgPages::render(const TgWindowInfo *)
  * Checks position values before rendering starts
  * \param windowInfo
  */
-void TgPages::checkPositionValues(const TgWindowInfo *)
+void TgPages::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     m_private->checkPositionValues();

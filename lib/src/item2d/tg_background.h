@@ -40,7 +40,7 @@ public:
 
 protected:
     virtual void render(const TgWindowInfo *windowInfo) override;
-    virtual void checkPositionValues(const TgWindowInfo *windowInfo) override;
+    virtual void checkPositionValues() override;
 
 private:
     TgBackgroundPrivate *m_private;

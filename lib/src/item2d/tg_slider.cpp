@@ -80,9 +80,8 @@ void TgSlider::render(const TgWindowInfo *)
  * \brief TgSlider::checkPositionValues
  *
  * Checks position values before rendering starts
- * \param windowInfo
  */
-void TgSlider::checkPositionValues(const TgWindowInfo *)
+void TgSlider::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();

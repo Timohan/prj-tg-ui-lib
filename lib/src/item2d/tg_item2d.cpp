@@ -129,7 +129,7 @@ void TgItem2d::render(const TgWindowInfo *)
  * because this is virtual function
   * \param windowInfo
 */
-void TgItem2d::checkPositionValues(const TgWindowInfo *)
+void TgItem2d::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();

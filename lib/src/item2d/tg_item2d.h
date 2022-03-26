@@ -97,7 +97,7 @@ public:
     void setPrevTabItem(TgItem2d *prevTabItem);
 protected:
     virtual void render(const TgWindowInfo *windowInfo);
-    virtual void checkPositionValues(const TgWindowInfo *windowInfo);
+    virtual void checkPositionValues();
 
     void renderChildren(const TgWindowInfo *windowInfo);
     void checkPositionValuesChildren(const TgWindowInfo *windowInfo);

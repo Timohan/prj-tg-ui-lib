@@ -273,9 +273,8 @@ void TgImagePart::render(const TgWindowInfo *windowInfo)
  * \brief TgImagePart::checkPositionValues
  *
  * Checks position values before rendering starts
- * \param
  */
-void TgImagePart::checkPositionValues(const TgWindowInfo *)
+void TgImagePart::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {

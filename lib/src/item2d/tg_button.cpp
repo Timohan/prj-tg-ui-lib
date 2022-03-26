@@ -133,7 +133,7 @@ void TgButton::render(const TgWindowInfo *windowInfo)
  *
  * Checks position values before rendering starts
  */
-void TgButton::checkPositionValues(const TgWindowInfo *)
+void TgButton::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {

@@ -97,15 +97,14 @@ void TgTextfield::render(const TgWindowInfo *windowInfo)
  * \brief TgTextfield::checkPositionValues
  *
  * Checks position values before rendering starts
- * \param windowInfo
  */
-void TgTextfield::checkPositionValues(const TgWindowInfo *windowInfo)
+void TgTextfield::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
         return;
     }
-    m_private->checkPositionValues(windowInfo, this);
+    m_private->checkPositionValues(this);
     TG_FUNCTION_END();
 }
 

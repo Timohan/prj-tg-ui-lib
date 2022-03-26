@@ -52,7 +52,7 @@ protected:
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo) override;
 
     virtual void render(const TgWindowInfo *windowInfo) override;
-    virtual void checkPositionValues(const TgWindowInfo *windowInfo) override;
+    virtual void checkPositionValues() override;
 
 private:
     TgSliderPrivate *m_private;

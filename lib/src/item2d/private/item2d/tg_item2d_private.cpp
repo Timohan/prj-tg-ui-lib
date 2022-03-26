@@ -110,7 +110,7 @@ void TgItem2dPrivate::checkPositionValuesChildren(const TgWindowInfo *windowInfo
     TG_FUNCTION_BEGIN();
     for (size_t i=0;i<m_listChildren.size();i++) {
         reCheckChildrenVisibility();
-        m_listChildren[i]->checkPositionValues(windowInfo);
+        m_listChildren[i]->checkPositionValues();
         m_listChildren[i]->checkPositionValuesChildren(windowInfo);
     }
     TG_FUNCTION_END();

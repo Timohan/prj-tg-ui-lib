@@ -56,7 +56,7 @@ public:
 protected:
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo) override;
     virtual void render(const TgWindowInfo *windowInfo) override;
-    virtual void checkPositionValues(const TgWindowInfo *windowInfo) override;
+    virtual void checkPositionValues() override;
     virtual void onHoverChanged(bool hover) override;
     virtual void onDownChanged(bool down) override;
     virtual void onEnabledChanged(bool enabled) override;

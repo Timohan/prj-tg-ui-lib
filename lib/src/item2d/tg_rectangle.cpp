@@ -101,7 +101,7 @@ void TgRectangle::render(const TgWindowInfo *windowInfo)
  *
  * Checks position values before rendering starts
  */
-void TgRectangle::checkPositionValues(const TgWindowInfo *)
+void TgRectangle::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {

@@ -77,7 +77,7 @@ private:
     TgImagePartPrivate *m_private;
 
     virtual void render(const TgWindowInfo *windowInfo) override;
-    virtual void checkPositionValues(const TgWindowInfo *windowInfo) override;
+    virtual void checkPositionValues() override;
 };
 
 #endif // TG_IMAGE_PART_H

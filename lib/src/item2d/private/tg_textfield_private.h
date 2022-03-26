@@ -29,7 +29,7 @@ public:
     explicit TgTextfieldPrivate(const char *text, const char *fontFile, float fontSize, uint8_t r, uint8_t g, uint8_t b);
     ~TgTextfieldPrivate();
     void render(const TgWindowInfo *windowInfo, TgItem2d *current);
-    void checkPositionValues(const TgWindowInfo *windowInfo, TgItem2d *currentItem);
+    void checkPositionValues(TgItem2d *currentItem);
     void setHorizontalAlign(TgItem2d *currentItem, TgTextfieldHorizontalAlign align);
     void setVerticalAlign(TgItem2d *currentItem, TgTextfieldVerticalAlign align);
     TgTextfieldHorizontalAlign getAlignHorizontal() const;
@@ -50,7 +50,7 @@ private:
     TgTextfieldVerticalAlign m_alignVertical;
     std::recursive_mutex m_mutex;
 
-    void generateTransform(const TgWindowInfo *windowInfo, TgItem2d *currentItem);
+    void generateTransform(TgItem2d *currentItem);
 };
 
 #endif // TG_TEXTFIELD_PRIVATE_H

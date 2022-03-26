@@ -79,9 +79,8 @@ void TgPage::render(const TgWindowInfo *)
  * \brief TgPage::checkPositionValues
  *
  * Checks position values before rendering starts
- * \param windowInfo
  */
-void TgPage::checkPositionValues(const TgWindowInfo *)
+void TgPage::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();

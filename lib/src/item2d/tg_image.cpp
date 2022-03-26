@@ -122,7 +122,7 @@ void TgImage::render(const TgWindowInfo *windowInfo)
  *
  * Checks position values before rendering starts
  */
-void TgImage::checkPositionValues(const TgWindowInfo *)
+void TgImage::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
