@@ -25,23 +25,31 @@
  * window resolution and so on.
  * \param width window width
  * \param height window height
+ * \param minWidth min width of the window
+ * \param minHeight min height of the window
+ * \param maxWidth max width of the window
+ * \param maxHeight max height of the window
  */
-TgWindowInfo::TgWindowInfo(int width, int height) :
+TgWindowInfo::TgWindowInfo(int width, int height, int minWidth, int minHeight, int maxWidth, int maxHeight) :
     m_windowWidth(width),
     m_windowHeight(height),
     m_shaderTransformIndex(0),
     m_shaderRenderTypeIndex(0),
     m_shaderColorIndex(0),
-    m_maxRenderValues(0)
+    m_maxRenderValues(0),
+    m_minWidth(minWidth),
+    m_minHeight(minHeight),
+    m_maxWidth(maxWidth),
+    m_maxHeight(maxHeight)
 {
 }
 
-TgMainWindowPrivate::TgMainWindowPrivate(int width, int height, TgItem2d *item) :
+TgMainWindowPrivate::TgMainWindowPrivate(int width, int height, TgItem2d *item, int minWidth, int minHeight, int maxWidth, int maxHeight) :
 #ifndef USE_GLFW
     TgMainWindowX11(this),
 #endif
     m_currentItem(item),
-    m_windowInfo(width, height)
+    m_windowInfo(width, height, minWidth, minHeight, maxWidth, maxHeight)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
@@ -246,7 +254,7 @@ bool TgMainWindowPrivate::renderEnd()
 #ifdef USE_GLFW
     return TgMainWindowGlfw::renderEnd();
 #else
-    return TgMainWindowX11::renderEnd();
+    return TgMainWindowX11::renderEnd(&m_windowInfo);
 #endif
 }
 

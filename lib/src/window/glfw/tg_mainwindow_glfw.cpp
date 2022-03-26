@@ -51,7 +51,11 @@ int TgMainWindowGlfw::initWindow(const char *windowTitle, const TgWindowInfo *in
     }
 
     glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, info->m_minWidth == info->m_windowWidth
+                                   && info->m_maxWidth == info->m_windowWidth
+                                   && info->m_minHeight == info->m_windowHeight
+                                   && info->m_maxHeight == info->m_windowHeight
+                                    ? GL_FALSE : GL_TRUE);
 
     m_window = glfwCreateWindow(info->m_windowWidth, info->m_windowHeight, windowTitle, nullptr, nullptr);
     if (!m_window) {
@@ -60,6 +64,7 @@ int TgMainWindowGlfw::initWindow(const char *windowTitle, const TgWindowInfo *in
         TG_FUNCTION_END();
         return EXIT_FAILURE;
     }
+    glfwSetWindowSizeLimits(m_window, info->m_minWidth, info->m_minHeight, info->m_maxWidth, info->m_maxHeight);
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1);
     TgGlfwInput::instance()->setup(m_window);

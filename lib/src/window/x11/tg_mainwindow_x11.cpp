@@ -110,7 +110,7 @@ int TgMainWindowX11::initWindow(const char *windowTitle, const TgWindowInfo *inf
                                            visualInfo->visual, AllocNone);
     setWindowAttrb.background_pixmap = None;
     setWindowAttrb.border_pixel = 0;
-    setWindowAttrb.event_mask = StructureNotifyMask | PointerMotionMask | ButtonPressMask | Button1MotionMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | ResizeRedirectMask;
+    setWindowAttrb.event_mask = StructureNotifyMask | PointerMotionMask | ButtonPressMask | Button1MotionMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask;
 
     m_window = XCreateWindow(m_display, RootWindow( m_display, visualInfo->screen),
                              0, 0, info->m_windowWidth, info->m_windowHeight, 0,
@@ -126,10 +126,10 @@ int TgMainWindowX11::initWindow(const char *windowTitle, const TgWindowInfo *inf
     XStoreName(m_display, m_window, windowTitle);
     XSizeHints hints;
     hints.flags = PMinSize | PMaxSize;
-    hints.min_width = info->m_windowWidth;
-    hints.min_height = info->m_windowHeight;
-    hints.max_width = info->m_windowWidth;
-    hints.max_height = info->m_windowHeight;
+    hints.min_width = info->m_minWidth;
+    hints.min_height = info->m_minHeight;
+    hints.max_width = info->m_maxWidth;
+    hints.max_height = info->m_maxHeight;
     XSetWMNormalHints(m_display, m_window, &hints);
 
     glXCreateContextAttribsARBProc glXCreateContextAttribsARB = nullptr;
@@ -168,32 +168,38 @@ bool TgMainWindowX11::setupViewForRender()
 /*!
  * \brief TgMainWindowX11::renderEnd
  * end of rendering
+ * \param info current window info
  */
-bool TgMainWindowX11::renderEnd()
+bool TgMainWindowX11::renderEnd(const TgWindowInfo *info)
 {
     glXSwapBuffers (m_display, m_window);
-    inputListener();
+    inputListener(info);
     return true;
 }
 
 /*!
  * \brief TgMainWindowX11::inputListener
  * listens input (mouse, key press/release and so on)
+ * \param info current window info
  */
-void TgMainWindowX11::inputListener()
+void TgMainWindowX11::inputListener(const TgWindowInfo *info)
 {
     TG_FUNCTION_BEGIN();
     XEvent xevent;
     TgEventData eventData;
+
+    XWindowAttributes attr;
+    XGetWindowAttributes(m_display, m_window, &attr);
+    if (attr.width != info->m_windowWidth
+        || attr.height != info->m_windowHeight) {
+        eventData.m_type = TgEventType::EventTypeWindowResize;
+        eventData.m_event.m_windowResize.m_width = attr.width;
+        eventData.m_event.m_windowResize.m_height = attr.height;
+        m_mainWindowPrivate->addEvent(&eventData);
+    }
     while (1) {
         if (XCheckMaskEvent(m_display, PointerMotionMask | ButtonPressMask | Button1MotionMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | ResizeRedirectMask, &xevent)) {
             switch (xevent.type) {
-                case ResizeRequest:
-                    eventData.m_type = TgEventType::EventTypeWindowResize;
-                    eventData.m_event.m_windowResize.m_width = xevent.xresizerequest.width;
-                    eventData.m_event.m_windowResize.m_height = xevent.xresizerequest.height;
-                    m_mainWindowPrivate->addEvent(&eventData);
-                    break;
                 case MotionNotify:
                     eventData.m_type = TgEventType::EventTypeMouseMove;
                     eventData.m_event.m_mouseEvent.m_x = xevent.xmotion.x;

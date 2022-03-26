@@ -27,7 +27,7 @@ class TgEventData;
 class TG_MAINWINDOW_EXPORT TgMainWindow : public TgItem2d
 {
 public:
-    explicit TgMainWindow(int width, int height, const char *windowTitle);
+    explicit TgMainWindow(int width, int height, const char *windowTitle, int minWidth = -1, int minHeight = -1, int maxWidth = -1, int maxHeight = -1);
     ~TgMainWindow();
 
     virtual void render(const TgWindowInfo *windowInfo) override;

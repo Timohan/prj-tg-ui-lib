@@ -22,10 +22,18 @@
  * \param width width of window
  * \param height height of window
  * \param windowTitle window title
+ * \param minWidth min width of the window, if <= -1, then ignored (same as width)
+ * \param minHeight min height of the window, if <= -1, then ignored (same as height)
+ * \param maxWidth max width of the window, if  <= -1, then ignored (same as width)
+ * \param maxHeight max height of the window, if <= -1, then ignored (same as height)
  */
-TgMainWindow::TgMainWindow(int width, int height, const char *windowTitle) :
+TgMainWindow::TgMainWindow(int width, int height, const char *windowTitle, int minWidth, int minHeight, int maxWidth, int maxHeight) :
     TgItem2d(nullptr, 0, 0, static_cast<float>(width), static_cast<float>(height)),
-    m_mainwindowPrivate(new TgMainWindowPrivate(width, height, this)),
+    m_mainwindowPrivate(new TgMainWindowPrivate(width, height, this,
+                        minWidth <= -1 ? width : minWidth,
+                        minHeight <= -1 ? height : minHeight,
+                        maxWidth <= -1 ? width : maxWidth,
+                        maxHeight <= -1 ? height : maxHeight)),
     m_windowTitle(windowTitle),
     m_firstTimeRender(true)
 {

@@ -32,7 +32,7 @@ public:
 
     int initWindow(const char *windowTitle, const TgWindowInfo *info);
     bool setupViewForRender();
-    bool renderEnd();
+    bool renderEnd(const TgWindowInfo *info);
 
 private:
     TgMainWindowPrivate *m_mainWindowPrivate;
@@ -42,7 +42,7 @@ private:
     Colormap m_colorMap;
     TimeDifference m_startTime;
 
-    void inputListener();
+    void inputListener(const TgWindowInfo *info);
     static TgMouseType getButtonType(unsigned int button);
 };
 

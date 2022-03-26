@@ -26,7 +26,7 @@ class TgItem2d;
 
 struct TgWindowInfo
 {
-    TgWindowInfo(int width, int height);
+    TgWindowInfo(int width, int height, int minWidth, int minHeight, int maxWidth, int maxHeight);
     /*!
      * current window width
      */
@@ -51,6 +51,23 @@ struct TgWindowInfo
      * shader's max render of values index (uniform)
      */
     int m_maxRenderValues;
+
+    /*!
+     * min window width
+     */
+    int m_minWidth;
+    /*!
+     * min window height
+     */
+    int m_minHeight;
+    /*!
+     * max window width
+     */
+    int m_maxWidth;
+    /*!
+     * max window height
+     */
+    int m_maxHeight;
 };
 
 class TgMainWindowPrivate
@@ -61,7 +78,7 @@ class TgMainWindowPrivate
 #endif
 {
 public:
-    explicit TgMainWindowPrivate(int width, int height, TgItem2d *item);
+    explicit TgMainWindowPrivate(int width, int height, TgItem2d *item, int minWidth, int minHeight, int maxWidth, int maxHeight);
     ~TgMainWindowPrivate();
     int initWindow(const char *windowTitle);
     void handleEvents();
