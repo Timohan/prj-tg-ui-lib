@@ -103,6 +103,14 @@ float TgItem2dPosition::getY()
 float TgItem2dPosition::getWidth()
 {
     TG_FUNCTION_BEGIN();
+    if (m_anchor == TgItem2dAnchor::AnchorRelativeToParentXyFollowParentSize) {
+        if (m_useRoundedPositionValues) {
+            TG_FUNCTION_END();
+            return std::roundf(m_parent->getWidth());
+        }
+        TG_FUNCTION_END();
+        return m_parent->getWidth();
+    }
     if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize) {
         if (m_useRoundedPositionValues) {
             TG_FUNCTION_END();
@@ -135,6 +143,14 @@ float TgItem2dPosition::getWidth()
 float TgItem2dPosition::getHeight()
 {
     TG_FUNCTION_BEGIN();
+    if (m_anchor == TgItem2dAnchor::AnchorRelativeToParentXyFollowParentSize) {
+        if (m_useRoundedPositionValues) {
+            TG_FUNCTION_END();
+            return std::roundf(m_parent->getHeight());
+        }
+        TG_FUNCTION_END();
+        return m_parent->getHeight();
+    }
     if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize) {
         if (m_useRoundedPositionValues) {
             TG_FUNCTION_END();

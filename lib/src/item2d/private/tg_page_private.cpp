@@ -35,7 +35,7 @@ TgPagePrivate::~TgPagePrivate()
 void TgPagePrivate::setPageOutsideParent()
 {
     TG_FUNCTION_BEGIN();
-    m_currentPage->setAnchorState(TgItem2dAnchor::AnchorRelativeToParent);
+    m_currentPage->setAnchorState(TgItem2dAnchor::AnchorRelativeToParentXyFollowParentSize);
     m_currentPage->setX(-m_currentPage->getWidth() - 10);
     m_currentPage->setY(0);
     m_currentPage->setWidth(m_currentPage->getWidth());
@@ -53,7 +53,7 @@ void TgPagePrivate::setPageOutsideParent()
 void TgPagePrivate::setPageOnTopOfParent()
 {
     TG_FUNCTION_BEGIN();
-    m_currentPage->setAnchorState(TgItem2dAnchor::AnchorRelativeToParent);
+    m_currentPage->setAnchorState(TgItem2dAnchor::AnchorRelativeToParentXyFollowParentSize);
     m_currentPage->setX(0);
     m_currentPage->setY(0);
     m_currentPage->setWidth(m_currentPage->getWidth());
@@ -66,7 +66,7 @@ void TgPagePrivate::setPageOnTopOfParent()
 void TgPagePrivate::setPageToMoving(TgPagesPageSwitchType type)
 {
     TG_FUNCTION_BEGIN();
-    m_currentPage->setAnchorState(TgItem2dAnchor::AnchorRelativeToParent);
+    m_currentPage->setAnchorState(TgItem2dAnchor::AnchorRelativeToParentXyFollowParentSize);
     switch (type) {
         case TgPagesPageSwitchType::PageSwitchType_Direct:
         default:

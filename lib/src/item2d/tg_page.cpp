@@ -28,6 +28,7 @@ TgPage::TgPage(TgPages *parent, const char *imageFilename) :
 {
     TG_FUNCTION_BEGIN();
     parent->addPage(this);
+    setAnchorState(TgItem2dAnchor::AnchorRelativeToParentXyFollowParentSize);
     TG_FUNCTION_END();
 }
 
@@ -48,6 +49,7 @@ TgPage::TgPage(TgPages *parent, const unsigned char r, const unsigned char g, co
 {
     TG_FUNCTION_BEGIN();
     parent->addPage(this);
+    setAnchorState(TgItem2dAnchor::AnchorRelativeToParentXyFollowParentSize);
     TG_FUNCTION_END();
 }
 

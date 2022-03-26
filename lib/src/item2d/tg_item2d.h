@@ -27,6 +27,7 @@ enum TgItem2dAnchor {
     AnchorRelativeToParent = 0, /*!< item have it's own size but it's inside the parent item with relative position (using x/y/width/height) */
     AnchorFollowParentSize,     /*!< item follows the parent size and ignores x/y/width/height, however, size can be
                                  * modified with margin functions, for example setMargin() */
+    AnchorRelativeToParentXyFollowParentSize, /*!< item have it's own xy, but follow parent item with size (using parent's width/height), this is used with TgPage */
 };
 
 /*!
