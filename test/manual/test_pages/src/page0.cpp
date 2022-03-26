@@ -9,7 +9,9 @@ Page0::Page0(TgPages *parent, MainWindow *mainWindow) :
     m_mainWindow(mainWindow),
     m_buttonChangeToPage1(this, 20, 20, 250, 50, "Change page to page 1"),
     m_buttonChangeToPage2(this, 290, 20, 250, 50, "Change page to page 2"),
-    m_buttonClose(this, 20, 90, 200, 50, "Close button")
+    m_buttonClose(this, 20, 90, 200, 50, "Close button"),
+    m_textFieldForTestBottomRight(this, "Bottom Right", "", 21, 0, 0, 0),
+    m_textFieldForTestTopLeft(this, "Top Left", "", 21, 0, 0, 0)
 {
     m_buttonChangeToPage1.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage1, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeToPage2.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage2, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
@@ -20,6 +22,14 @@ Page0::Page0(TgPages *parent, MainWindow *mainWindow) :
     m_buttonChangeToPage1.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedChangeToPage1Changed, this, std::placeholders::_1) );
     m_buttonChangeToPage2.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedChangeToPage2Changed, this, std::placeholders::_1) );
     m_buttonClose.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedCloseChanged, this, std::placeholders::_1) );
+    m_textFieldForTestBottomRight.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignRight);
+    m_textFieldForTestBottomRight.setVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
+    m_textFieldForTestTopLeft.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignLeft);
+    m_textFieldForTestTopLeft.setVerticalAlign(TgTextfieldVerticalAlign::AlignTop);
+    m_textFieldForTestBottomRight.setMarginBottom(10);
+    m_textFieldForTestBottomRight.setMarginRight(15);
+    m_textFieldForTestTopLeft.setMarginLeft(10);
+    m_textFieldForTestTopLeft.setMarginTop(5);
 }
 
 Page0::~Page0()

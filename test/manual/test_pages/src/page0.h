@@ -3,6 +3,7 @@
 
 #include <item2d/tg_page.h>
 #include <item2d/tg_button.h>
+#include <item2d/tg_textfield.h>
 class TgPages;
 class MainWindow;
 
@@ -19,6 +20,8 @@ private:
     TgButton m_buttonChangeToPage1;
     TgButton m_buttonChangeToPage2;
     TgButton m_buttonClose;
+    TgTextfield m_textFieldForTestBottomRight;
+    TgTextfield m_textFieldForTestTopLeft;
 
     void onButtonClickPage1(TgMouseType type, float x, float y);
     void onButtonClickPage2(TgMouseType type, float x, float y);
