@@ -2,7 +2,7 @@
 #include <iostream>
 
 MainWindow::MainWindow(int width, int height) :
-    TgMainWindow(width, height, "TestApp1"),
+    TgMainWindow(width, height, "TestApp1", width - 300, height - 300),
     m_buttonClose(this, 20, 20, 200, 50, "Close button"),
     m_buttonAdd(this, 240, 20, 200, 50, "Add button"),
     m_buttonRemove(this, 460, 20, 200, 50, "Remove button"),
