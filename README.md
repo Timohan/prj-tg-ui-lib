@@ -38,3 +38,14 @@ Tests are in test/manual folder.
 when using X11 (default build without glfw):  
 error: "X Error of failed request: GLXBadFBConfig"  
 solution: export MESA_GL_VERSION_OVERRIDE=4.0  
+
+## functional tests with X11
+
+tests requires compiling lib with USE_FUNCTIONAL_TEST=on:
+
+cd lib  
+make USE_FUNCTIONAL_TEST=on  
+sudo make install
+
+tests are in test/functional folder
+No glfw supported functional tests. (only manual tests works with glfw too)

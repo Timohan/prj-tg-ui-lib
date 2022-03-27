@@ -85,6 +85,10 @@ render_SRCDIR:=$(CURRENT_DIR)src/render
 render_SRCS:=$(wildcard $(render_SRCDIR)/*.cpp)
 render_OBJS:=$(render_SRCS:.cpp=.o)
 
+ifeq ($(USE_FUNCTIONAL_TEST),on)
+CXXFLAGS+=-DFUNCIONAL_TEST
+endif
+
 ifeq ($(USE_GLFW),on)
 LDFLAGS+=-lglfw
 mainwindow_window_manager_SRCDIR:=$(CURRENT_DIR)src/window/glfw

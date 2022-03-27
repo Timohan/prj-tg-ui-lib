@@ -212,3 +212,14 @@ size_t TgMainWindow::getAllowedNumberMouseButtonCount()
 {
     return m_mainwindowPrivate->getAllowedNumberMouseButtonCount();
 }
+
+#ifdef FUNCIONAL_TEST
+Display *TgMainWindow::getDisplay()
+{
+    return m_mainwindowPrivate->getDisplay();
+}
+Window *TgMainWindow::getWindow()
+{
+    return m_mainwindowPrivate->getWindow();
+}
+#endif

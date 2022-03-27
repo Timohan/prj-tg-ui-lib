@@ -8,5 +8,5 @@ There is many things to do, but few important:
 * MessageBox in app
 * Avoid non-requried rendering
 * ListView
-* Functional test
+
 

@@ -14,6 +14,9 @@
 
 #include "../global/tg_global_macros.h"
 #include "../item2d/tg_item2d.h"
+#ifdef FUNCIONAL_TEST
+#include <X11/Xlib.h>
+#endif
 
 struct TgMainWindowPrivate;
 struct TgItem2dPrivateMessage;
@@ -35,6 +38,12 @@ public:
 
     void setAllowedNumberMouseButtonCount(size_t allowedNumberMouseButtonDownCount);
     size_t getAllowedNumberMouseButtonCount();
+
+#ifdef FUNCIONAL_TEST
+    Display *getDisplay();
+    Window *getWindow();
+#endif
+
 protected:
     virtual void handlePrivateMessage(const TgItem2dPrivateMessage *message) override;
     virtual int initCustomShader();

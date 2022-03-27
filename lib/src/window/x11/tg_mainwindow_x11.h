@@ -33,6 +33,10 @@ public:
     int initWindow(const char *windowTitle, const TgWindowInfo *info);
     bool setupViewForRender();
     bool renderEnd(const TgWindowInfo *info);
+#ifdef FUNCIONAL_TEST
+    Display *getDisplay();
+    Window *getWindow();
+#endif
 
 private:
     TgMainWindowPrivate *m_mainWindowPrivate;

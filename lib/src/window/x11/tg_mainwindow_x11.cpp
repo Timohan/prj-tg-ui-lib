@@ -266,3 +266,15 @@ TgMouseType TgMainWindowX11::getButtonType(unsigned int button)
     }
     return TgMouseType::NoButton;
 }
+
+#ifdef FUNCIONAL_TEST
+Display *TgMainWindowX11::getDisplay()
+{
+    return m_display;
+}
+Window *TgMainWindowX11::getWindow()
+{
+    return &m_window;
+}
+#endif
+
