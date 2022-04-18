@@ -19,7 +19,7 @@
 #include <mutex>
 #include "../tg_textfield.h"
 
-struct TgFontInfo;
+struct TgFontText;
 class TgItem2d;
 struct TgWindowInfo;
 
@@ -38,14 +38,13 @@ public:
     void setFontSize(float fontSize);
 
 private:
-    TgFontInfo *m_fontInfo;
+    TgFontText *m_fontText;
     float m_r, m_g, m_b;
     std::string m_text;
     std::string m_fontFile;
     float m_fontSize;
     bool m_initDone;
     std::vector<TgMatrix4x4>m_listTransform;
-    TgCharPosition m_characterPositions;
     TgTextfieldHorizontalAlign m_alignHorizontal;
     TgTextfieldVerticalAlign m_alignVertical;
     std::recursive_mutex m_mutex;

@@ -13,6 +13,7 @@
 #define TG_APPLICATION_PRIVATE_H
 
 #include <GL/glew.h>
+#include <string>
 
 class TgApplicationPrivate
 {
@@ -25,6 +26,9 @@ public:
 
     const char *getDefaultFont();
     void setDefaultFont(const char *fullFilePathFont);
+    size_t getFontCount();
+    size_t setFont(const std::string &fullFilePathFont, size_t position = UINT64_MAX);
+    std::string getFont(size_t i);
 private:
 };
 

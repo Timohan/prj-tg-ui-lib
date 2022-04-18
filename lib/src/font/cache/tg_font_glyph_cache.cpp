@@ -1,28 +1,29 @@
 /*!
  * \file
- * \brief file tg_font_cache.cpp
+ * \brief file tg_font_glyph_cache.cpp
  *
- * font cache
+ * font glyph cache
  *
  * Copyright of Timo Hannukkala. All rights reserved.
  *
  * \author Timo Hannukkala <timohannukkala@hotmail.com>
  */
 
-#include "tg_font_cache.h"
+#include "tg_font_glyph_cache.h"
 #include <cstring>
 #include <algorithm>
-#include "../global/tg_global_log.h"
-#include "../shader/tg_shader_2d.h"
-#include "tg_character_positions.h"
-
+#include "../../global/tg_global_log.h"
+#include "../../shader/tg_shader_2d.h"
+#include "../tg_character_positions.h"
+#include "../tg_font_text.h"
+#include "../../global/tg_global_application.h"
 #define FONT_ACCURACY_VALUE 5
 
-TgFontCache::TgFontCache()
+TgFontGlyphCache::TgFontGlyphCache()
 {
 }
 
-TgFontCache::~TgFontCache()
+TgFontGlyphCache::~TgFontGlyphCache()
 {
     std::vector<TgFontInfo *>::iterator it;
     std::vector<TgRender *>::iterator itRender;
@@ -38,114 +39,93 @@ TgFontCache::~TgFontCache()
 }
 
 /*!
- * \brief TgFontCache::isFontCached
+ * \brief TgFontGlyphCache::isFontCached
  *
  * searches if font is already cached for it can use same vertixes
  * and texture
  *
- * \param text contains all charactes to make vertices and texture
+ * \param listCharacters contains all charactes to make vertices and texture
  * \param fontFile full file path of the font file
  * \param fontSize font size
  * \return nullptr if not, otherwise cached TgFontInfo
  */
-TgFontInfo *TgFontCache::isFontCached(const char *text, const char *fontFile, float fontSize)
+TgFontInfo *TgFontGlyphCache::isFontCached(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize)
 {
     TG_FUNCTION_BEGIN();
     bool notFound;
-    size_t i;
-    uint32_t *list_characters = nullptr, list_characters_size = 0;
     std::vector<TgFontInfo *>::iterator it;
+    std::vector<uint32_t>::const_iterator itListCharacters;
     for (it=m_listCachedFont.begin();it!=m_listCachedFont.end();it++) {
         if (memcmp(&(*it)->m_fontSize, &fontSize, sizeof(float)) == 0
             && (*it)->m_fontFile.compare(fontFile) == 0) {
-            if (!list_characters) {
-                if (prj_ttf_reader_get_characters(text, &list_characters, &list_characters_size)
-                    || !list_characters_size) {
-                    free(list_characters);
-                    return nullptr;
-                }
-            }
             notFound = false;
-            for (i=0;i<list_characters_size;i++) {
-                if (std::find((*it)->m_listCharacter.begin(), (*it)->m_listCharacter.end(), list_characters[i]) == (*it)->m_listCharacter.end()) {
+            for (itListCharacters=listCharacters.begin();itListCharacters!=listCharacters.end();itListCharacters++) {
+                if (std::find((*it)->m_listCharacter.begin(), (*it)->m_listCharacter.end(), (*itListCharacters)) == (*it)->m_listCharacter.end()) {
                     notFound = true;
                     break;
                 }
             }
             if (!notFound) {
-                free(list_characters);
                 TG_FUNCTION_END();
                 return (*it);
             }
         }
     }
-    free(list_characters);
     TG_FUNCTION_END();
     return nullptr;
 }
 
 /*!
- * \brief TgFontCache::generateCacheForText
+ * \brief TgFontGlyphCache::generateCacheForText
  *
- * generates image's vertices and texture for text (but also adds extra latin characters
+ * generates image's vertices and texture for text (from list of characters)
  * if possible for using these vertices and textures in others
  *
- * \param text contains all charactes to make vertices and texture
+ * \param listCharacters list of characters
  * \param fontFile full file path of the font file
  * \param fontSize font size
  * \return nullptr if fails, generated TgFontInfo otherwise
  */
-TgFontInfo *TgFontCache::generateCacheForText(const char *text, const char *fontFile, float fontSize)
+TgFontInfo *TgFontGlyphCache::generateCacheForText(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize)
 {
     TG_FUNCTION_BEGIN();
-    TgFontInfo *ret = isFontCached(text, fontFile, fontSize);
+    TgFontInfo *ret = isFontCached(listCharacters, fontFile, fontSize);
     if (ret) {
         return ret;
     }
-    std::string charactersToGlyph = "ABCQjWERTYUIOPÅSDFGHJKLÖÄZXVNMqwertyuiopasdfghklöäzxcvbnm<>|;:,.-_€'*~^1234567890+'!\"#¤%&/()=?½@£$‰‚{[]} ";
-    uint32_t *list_characters = nullptr, list_characters_size;
-    if (prj_ttf_reader_get_characters(charactersToGlyph.c_str(), &list_characters, &list_characters_size)
-            || !list_characters_size) {
-        free(list_characters);
-        TG_FUNCTION_END();
-        return nullptr;
-    }
-    char newCharacter[5];
-    uint32_t *list_characters2 = nullptr, list_characters_size2, i;
-    if (prj_ttf_reader_get_characters(text, &list_characters2, &list_characters_size2)
-            || !list_characters_size2) {
-        free(list_characters);
-        free(list_characters2);
+
+    std::string additionalCharactersToGlyph = "ABCQjWERTYUIOPÅSDFGHJKLÖÄZXVNMqwertyuiopasdfghklöäzxcvbnm<>|;:,.-_€'*~^1234567890+'!\"#¤%&/()=?½@£$‰‚{[]} ";
+    uint32_t *list_additonal_characters = nullptr, list_additonal_characters_size;
+    if (prj_ttf_reader_get_characters(additionalCharactersToGlyph.c_str(), &list_additonal_characters, &list_additonal_characters_size)
+            || !list_additonal_characters_size) {
         TG_FUNCTION_END();
         return nullptr;
     }
 
-    for (i=0;i<list_characters_size2;i++) {
-        if (!isCharacterInListOfCharacters(list_characters, list_characters_size, list_characters2[i])
-            && !isCharacterInListOfCharacters(list_characters2, i, list_characters2[i])) {
-            generateCharactedIndexToUtf8(list_characters2[i], newCharacter);
-            charactersToGlyph += newCharacter;
+    std::vector<uint32_t> newListCharacters = std::move(listCharacters);
+    for (uint32_t i=0;i<list_additonal_characters_size;i++) {
+        if (std::find(newListCharacters.begin(), newListCharacters.end(), list_additonal_characters[i]) == newListCharacters.end()
+            && TgGlobalApplication::getInstance()->getFontCharactersCache()->isCharacterForThisFont(list_additonal_characters[i], fontFile) ) {
+            newListCharacters.push_back(list_additonal_characters[i]);
         }
     }
-
-    ret = generateCache(charactersToGlyph.c_str(), fontFile, fontSize);
-    free(list_characters);
-    free(list_characters2);
+    ret = generateCache(newListCharacters, fontFile, fontSize);
+    free(list_additonal_characters);
     TG_FUNCTION_END();
     return ret;
 }
 
 /*!
- * \brief TgFontCache::generateCache
+ * \brief TgFontGlyphCache::generateCache
  *
  * generates image's vertices and texture
  *
- * \param text contains all charactes to make vertices and texture
+ * \param listCharacters list of characters
  * \param fontFile full file path of the font file
  * \param fontSize font size
  * \return nullptr if fails, generated TgFontInfo otherwise
  */
-TgFontInfo *TgFontCache::generateCache(const char *text, const char *fontFile, float fontSize)
+TgFontInfo *TgFontGlyphCache::generateCache(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize)
 {
     TG_FUNCTION_BEGIN();
     prj_ttf_reader_data_t *data;
@@ -155,7 +135,7 @@ TgFontInfo *TgFontCache::generateCache(const char *text, const char *fontFile, f
         TG_FUNCTION_END();
         return nullptr;
     }
-    if (prj_ttf_reader_generate_glyphs_utf8(text, fontFile, fontSize, FONT_ACCURACY_VALUE, data)
+    if (prj_ttf_reader_generate_glyphs_list_characters(listCharacters.data(), static_cast<uint32_t>(listCharacters.size()), fontFile, fontSize, FONT_ACCURACY_VALUE, data)
         || !data->image.width
         || !data->image.height) {
         prj_ttf_reader_clear_data(&data);
@@ -173,7 +153,7 @@ TgFontInfo *TgFontCache::generateCache(const char *text, const char *fontFile, f
         TG_FUNCTION_END();
         return nullptr;
     }
-    if (!generateTextVertices(newInfo, text)) {
+    if (!generateTextVertices(newInfo, listCharacters)) {
         TG_ERROR_LOG("creating the text vertices failed");
         prj_ttf_reader_clear_data(&data);
         delete newInfo;
@@ -188,57 +168,51 @@ TgFontInfo *TgFontCache::generateCache(const char *text, const char *fontFile, f
     return newInfo;
 }
 
-
 /*!
- * \brief TgFontCache::render
+ * \brief TgFontGlyphCache::render
  *
  * Renders the text
- * \param info
- * \param charPosition
+ * \param fontText
  * \param vertexTransformIndex vertex tranform index in shader's uniform location
  * \param listMatrix list of matrixes for each character to shader
  */
-void TgFontCache::render(const TgFontInfo *info, const TgCharPosition *charPosition, const int vertexTransformIndex, const std::vector<TgMatrix4x4>&listMatrix)
+void TgFontGlyphCache::render(TgFontText *fontText, const int vertexTransformIndex, const std::vector<TgMatrix4x4>&listMatrix)
 {
-    size_t i;
-    for (i=0;i<charPosition->m_listCharacterInFontInfoIndex.size();i++) {
+    size_t i, c = fontText->getCharacterCount();
+    for (i=0;i<c;i++) {
+        if (!fontText->getFontInfo(i)
+            || fontText->getCharacter(i)->m_fontFileNameIndex == -1) {
+            continue;
+        }
         glUniformMatrix4fv(vertexTransformIndex, 1, 0, listMatrix[i].getMatrixTable()->data);
-        info->m_listRender[ charPosition->m_listCharacterInFontInfoIndex.at(i) ]->render( info->m_textureImage, 0, 4, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        fontText->getFontInfo(i)->m_listRender[ fontText->getCharacter(i)->m_characterInFontInfoIndex ]->render( fontText->getFontInfo(i)->m_textureImage, 0, 4, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
 }
 
 /*!
- * \brief TgFontCache::generateTextVertices
+ * \brief TgFontGlyphCache::generateTextVertices
  *
  * generate text vertices for the text
  *
  * \param newInfo [in/out] info
- * \param text contains the text to render
+ * \param listCharacters contains the text to render
  * \return true on success
  */
-bool TgFontCache::generateTextVertices(TgFontInfo *newInfo, const char *text)
+bool TgFontGlyphCache::generateTextVertices(TgFontInfo *newInfo, const std::vector<uint32_t> &listCharacters)
 {
     TG_FUNCTION_BEGIN();
-    uint32_t i;
+    size_t i, c = listCharacters.size();
     float bottomY;
     bool firstTime = true;
     Vertice *vertices;
     const prj_ttf_reader_glyph_data_t *glyph;
-    uint32_t *list_characters = nullptr, list_characters_size;
-
-    if (prj_ttf_reader_get_characters(text, &list_characters, &list_characters_size)
-            || !list_characters_size) {
-        free(list_characters);
-        TG_FUNCTION_END();
-        return false;
-    }
 
     vertices = new Vertice[4];
-    for (i=0;i<list_characters_size;i++) {
+    for (i=0;i<c;i++) {
         newInfo->m_listRender.push_back(new TgRender());
-        newInfo->m_listCharacter.push_back(list_characters[i]);
+        newInfo->m_listCharacter.push_back(listCharacters.at(i));
 
-        glyph = prj_ttf_reader_get_character_glyph_data(list_characters[i], newInfo->m_data);
+        glyph = prj_ttf_reader_get_character_glyph_data(listCharacters.at(i), newInfo->m_data);
         if (!glyph) {
             continue;
         }
@@ -275,21 +249,20 @@ bool TgFontCache::generateTextVertices(TgFontInfo *newInfo, const char *text)
         newInfo->m_listRender.back()->init(vertices, 4, true);
     }
 
-    free(list_characters);
     delete[]vertices;
     TG_FUNCTION_END();
     return true;
 }
 
 /*!
- * \brief TgFontCache::addImage
+ * \brief TgFontGlyphCache::addImage
  *
  * Create image from data to 2D texture image in TgFontInfo
  *
  * \param newInfo [in/out] texture will be set here
  * \return true on success
  */
-bool TgFontCache::addImage(TgFontInfo *newInfo)
+bool TgFontGlyphCache::addImage(TgFontInfo *newInfo)
 {
     TG_FUNCTION_BEGIN();
     int x, y, i;
@@ -332,7 +305,7 @@ bool TgFontCache::addImage(TgFontInfo *newInfo)
  * \param character [in] fills character to newCharacter as utf8
  * \param newCharacter [out] character will be filled here as in utf8
  */
-void TgFontCache::generateCharactedIndexToUtf8(uint32_t character, char newCharacter[5])
+void TgFontGlyphCache::generateCharactedIndexToUtf8(uint32_t character, char newCharacter[5])
 {
     TG_FUNCTION_BEGIN();
     memset(newCharacter, '\0', 5);
@@ -368,25 +341,4 @@ void TgFontCache::generateCharactedIndexToUtf8(uint32_t character, char newChara
         return;
     }
     TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgFontCache::isCharacterInListOfCharacters
- *
- * checks if the character is in the list_characters
- *
- * \param list_characters
- * \param list_characters_size
- * \param character
- * \return true if the character is in the list_characters
- */
-bool TgFontCache::isCharacterInListOfCharacters(const uint32_t *list_characters, const uint32_t list_characters_size, const uint32_t character)
-{
-    uint32_t i;
-    for (i=0;i<list_characters_size;i++) {
-        if (list_characters[i] == character) {
-            return true;
-        }
-    }
-    return false;
 }

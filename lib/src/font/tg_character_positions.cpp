@@ -2,7 +2,8 @@
  * \file
  * \brief file tg_character_positions.cpp
  *
- * font words
+ * set character positions for text
+ * and fills them into TgFontText's TgFontInfo
  *
  * Copyright of Timo Hannukkala. All rights reserved.
  *
@@ -11,9 +12,11 @@
 
 #include "tg_character_positions.h"
 #include "../global/tg_global_log.h"
-#include "tg_font_cache.h"
+#include "cache/tg_font_glyph_cache.h"
+#include "tg_font_text_generator.h"
 #include <cstring>
 #include <prj-ttf-reader.h>
+#include "tg_font_text.h"
 
 TgCharacterPositions::TgCharacterPositions()
 {
@@ -47,66 +50,47 @@ size_t TgCharacterPositions::getCharacterIndex(const TgFontInfo *newInfo, uint32
 }
 
 /*!
- * \brief TgCharacterPositions::clear
- *
- * clears the positions
- *
- * \param positions [in/out] position that needs to be cleared
- */
-void TgCharacterPositions::clear(TgCharPosition &positions)
-{
-    positions.m_utf8text = "";
-    positions.m_listCharacterIndex.clear();
-    positions.m_listTransformX.clear();
-    positions.m_listCharacterInFontInfoIndex.clear();
-    positions.m_textWidth = 0;
-    positions.m_visibleTopY = 0;
-    positions.m_visibleBottomY = 0;
-}
-
-/*!
  * \brief TgCharacterPositions::generateTextCharacterPositioning
  *
  * generate text vertices for the text
  *
- * \param newInfo [in] info
- * \param text contains the text to render
- * \param positions [in/out] fills the character positions here
+ * \param fontText [in] info
  * \return true on success
  */
-bool TgCharacterPositions::generateTextCharacterPositioning(TgFontInfo *newInfo, const char *text, TgCharPosition &positions)
+bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText)
 {
     TG_FUNCTION_BEGIN();
-    clear(positions);
-
-    uint32_t *list_characters = nullptr, list_characters_size = 0, i;
-    if (!text || strlen(text) == 0) {
-        TG_FUNCTION_END();
-        return false;
-    }
-
-    if (prj_ttf_reader_get_characters(text, &list_characters, &list_characters_size)
-            || !list_characters_size) {
-        free(list_characters);
-        TG_ERROR_LOG("prj_ttf_reader_get_characters failed");
-        TG_FUNCTION_END();
-        return false;
-    }
-    size_t infoCharacterIndex = 0;
+    size_t i, c = fontText->getCharacterCount();
+    TgFontTextCharacterInfo *characterInfo;
+    TgFontTextCharacterInfo *leftCharacterInfo = nullptr;
+    TgFontInfo *fontInfo;
+    TgFontInfo *leftFontInfo = nullptr;
     const prj_ttf_reader_glyph_data_t *glyph;
     const prj_ttf_reader_glyph_data_t *left_glyph = nullptr;
-    float leftX = 0;
-    int32_t left_advance_x, left_bearing;
-    int32_t right_bearing;
+    float positionLeftX = 0;
+    size_t infoCharacterIndex = 0;
     float kerning = 0;
-    for (i=0;i<list_characters_size;i++) {
-        glyph = prj_ttf_reader_get_character_glyph_data(list_characters[i], newInfo->m_data);
+    int32_t left_advance_x, left_bearing, right_bearing;
+
+    fontText->setTextWidth(0);
+
+    for (i=0;i<c;i++) {
+        characterInfo = fontText->getCharacter(i);
+        if (characterInfo->m_fontFileNameIndex == -1) {
+            continue;
+        }
+        fontInfo = fontText->getFontInfo(i);
+        if (!fontInfo) {
+            continue;
+        }
+
+        glyph = prj_ttf_reader_get_character_glyph_data(characterInfo->m_character, fontInfo->m_data);
         if (!glyph) {
             continue;
         }
 
         if (i && left_glyph) {
-            left_glyph = prj_ttf_reader_get_character_glyph_data(list_characters[i-1], newInfo->m_data);
+            left_glyph = prj_ttf_reader_get_character_glyph_data(leftCharacterInfo->m_character, leftFontInfo->m_data);
             left_advance_x = static_cast<int32_t>(left_glyph->image_pixel_advance_x + 0.5f);
             left_bearing = static_cast<int32_t>(left_glyph->image_pixel_bearing);
             if (left_glyph->image_pixel_bearing < 0 && left_glyph->image_pixel_bearing > -1) {
@@ -118,34 +102,38 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontInfo *newInfo,
             if (glyph->image_pixel_bearing < 0 && glyph->image_pixel_bearing > -1) {
                 right_bearing = -1;
             }
-            kerning = prj_ttf_reader_get_kerning(list_characters[i-1], list_characters[i], newInfo->m_data) + static_cast<float>(right_bearing + left_advance_x);
 
-            leftX += static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
-            leftX += kerning;
+            kerning = prj_ttf_reader_get_kerning(leftCharacterInfo->m_character, characterInfo->m_character, fontInfo->m_data) + static_cast<float>(right_bearing + left_advance_x);
+
+            positionLeftX += static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+            positionLeftX += kerning;
         }
 
-        positions.m_listTransformX.push_back(leftX);
-        positions.m_listCharacterIndex.push_back(list_characters[i]);
-        infoCharacterIndex = getCharacterIndex(newInfo, list_characters[i]);
-        positions.m_listCharacterInFontInfoIndex.push_back(infoCharacterIndex);
+        characterInfo->positionLeftX = positionLeftX;
+
+        infoCharacterIndex = getCharacterIndex(fontInfo, characterInfo->m_character);
+        characterInfo->m_characterInFontInfoIndex = infoCharacterIndex;
         if (!left_glyph) {
-            positions.m_visibleTopY = newInfo->m_listTopPositionY.at(infoCharacterIndex);
-            positions.m_visibleBottomY = newInfo->m_listBottomPositionY.at(infoCharacterIndex);
+            fontText->setVisibleTopY(fontInfo->m_listTopPositionY.at(infoCharacterIndex));
+            fontText->setVisibleBottomY(fontInfo->m_listBottomPositionY.at(infoCharacterIndex));
         } else {
-            if (positions.m_visibleTopY > newInfo->m_listTopPositionY.at(infoCharacterIndex)) {
-                positions.m_visibleTopY = newInfo->m_listTopPositionY.at(infoCharacterIndex);
+            if (fontText->getVisibleTopY() > fontInfo->m_listTopPositionY.at(infoCharacterIndex)) {
+                fontText->setVisibleTopY(fontInfo->m_listTopPositionY.at(infoCharacterIndex));
             }
-            if (positions.m_visibleBottomY < newInfo->m_listBottomPositionY.at(infoCharacterIndex)) {
-                positions.m_visibleBottomY = newInfo->m_listBottomPositionY.at(infoCharacterIndex);
+            if (fontText->getVisibleBottomY() < fontInfo->m_listBottomPositionY.at(infoCharacterIndex)) {
+                fontText->setVisibleBottomY(fontInfo->m_listBottomPositionY.at(infoCharacterIndex));
             }
         }
+
         left_glyph = glyph;
+        leftCharacterInfo = characterInfo;
+        leftFontInfo = fontInfo;
     }
+
     if (left_glyph) {
-        positions.m_textWidth = leftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+        fontText->setTextWidth(positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x));
     }
-    positions.m_utf8text = text;
-    free(list_characters);
+
     TG_FUNCTION_END();
     return true;
 }

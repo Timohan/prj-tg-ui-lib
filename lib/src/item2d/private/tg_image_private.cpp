@@ -11,7 +11,6 @@
 
 #include "tg_image_private.h"
 #include "../../global/tg_global_application.h"
-#include "../../font/tg_font_cache.h"
 #include "../../global/tg_global_log.h"
 #include "../tg_item2d.h"
 #include "../../shader/tg_shader_2d.h"

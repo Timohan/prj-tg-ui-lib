@@ -82,3 +82,45 @@ void TgApplication::setDefaultFont(const char *fullFilePathFont)
     m_private->setDefaultFont(fullFilePathFont);
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgApplication::getFontCount
+ *
+ * get font count
+ *
+ * \return font count
+ */
+size_t TgApplication::getFontCount()
+{
+    return m_private->getFontCount();
+}
+
+/*!
+ * \brief TgApplication::setFont
+ *
+ * set/add font (full filepath) to font list into position
+ *
+ * \param fullFilePathFont add/set this font name
+ * \param position font to this position, this position is larger
+ * than current index (for example UINT64_MAX), then it adds/set this
+ * font to last of the list
+ * \return index position that font will be set/added
+ */
+size_t TgApplication::setFont(const std::string &fullFilePathFont, size_t position)
+{
+    return m_private->setFont(fullFilePathFont, position);
+}
+
+/*!
+ * \brief TgApplication::getFont
+ *
+ * get font by index
+ *
+ * \param i index of the font
+ * \return font (file path) by the index
+ * if index is larger than font list size, then it returns ""
+ */
+std::string TgApplication::getFont(size_t i)
+{
+    return m_private->getFont(i);
+}

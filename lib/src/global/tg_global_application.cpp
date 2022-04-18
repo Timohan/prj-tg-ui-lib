@@ -65,18 +65,33 @@ TgImageAssets *TgGlobalApplication::getImageAssets()
 }
 
 /*!
- * \brief TgGlobalApplication::getFontCache
+ * \brief TgGlobalApplication::getFontGlyphCache
  *
- * get font cache
+ * get font glyph cache
  *
- * \return global font cache
+ * \return global font glyph cache
  */
-TgFontCache *TgGlobalApplication::getFontCache()
+TgFontGlyphCache *TgGlobalApplication::getFontGlyphCache()
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
-    return &m_fontCache;
+    return &m_fontGlyphCache;
 }
+
+/*!
+ * \brief TgGlobalApplication::getFontCharactersCache
+ *
+ * get font characters cache
+ *
+ * \return global font characters cache
+ */
+TgFontCharactersCache *TgGlobalApplication::getFontCharactersCache()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return &m_fontCharactersCache;
+}
+
 
 /*!
  * \brief TgGlobalApplication::getFontDefault

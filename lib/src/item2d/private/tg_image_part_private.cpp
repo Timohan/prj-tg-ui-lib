@@ -10,7 +10,6 @@
 #include "tg_image_part_private.h"
 #include <cmath>
 #include "../../global/tg_global_application.h"
-#include "../../font/tg_font_cache.h"
 #include "../../global/tg_global_log.h"
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"

@@ -13,6 +13,7 @@
 #define TG_APPLICATION_H
 
 #include <GL/glew.h>
+#include <string>
 #include "../global/tg_global_macros.h"
 
 struct TgApplicationPrivate;
@@ -32,6 +33,10 @@ public:
 
     const char *getDefaultFont();
     void setDefaultFont(const char *fullFilePathFont);
+
+    size_t getFontCount();
+    size_t setFont(const std::string &fullFilePathFont, size_t position);
+    std::string getFont(size_t i);
 private:
     TgApplicationPrivate *m_private;
 };

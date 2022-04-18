@@ -73,6 +73,10 @@ font_SRCDIR:=$(CURRENT_DIR)src/font
 font_SRCS:=$(wildcard $(font_SRCDIR)/*.cpp)
 font_OBJS:=$(font_SRCS:.cpp=.o)
 
+font_cache_SRCDIR:=$(CURRENT_DIR)src/font/cache
+font_cache_SRCS:=$(wildcard $(font_cache_SRCDIR)/*.cpp)
+font_cache_OBJS:=$(font_cache_SRCS:.cpp=.o)
+
 event_SRCDIR:=$(CURRENT_DIR)src/event
 event_SRCS:=$(wildcard $(event_SRCDIR)/*.cpp)
 event_OBJS:=$(event_SRCS:.cpp=.o)
@@ -103,8 +107,8 @@ endif
 
 all: default
 
-default: $(render_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
-	$(CCX) $(render_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
+default: $(render_OBJS) $(font_cache_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
+	$(CCX) $(render_OBJS) $(font_cache_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
 
 $(mainwindow_window_manager_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
@@ -145,6 +149,9 @@ $(image_OBJS):%.o: %.cpp
 $(font_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
+$(font_cache_OBJS):%.o: %.cpp
+	$(CCX) $(CXXFLAGS) -c $< -o $@
+
 $(event_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
@@ -166,6 +173,7 @@ clean:
 	rm -f src/math/*.o
 	rm -f src/image/*.o
 	rm -f src/font/*.o
+	rm -f src/font/cache/*.o
 	rm -f src/event/*.o
 	rm -f src/common/*.o
 	rm -f src/render/*.o

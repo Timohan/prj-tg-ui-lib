@@ -14,16 +14,27 @@
 
 #include <vector>
 #include <string>
+#include <mutex>
 #include <prj-ttf-reader.h>
 
 class TgFontDefault
 {
 public:
+    TgFontDefault();
     std::string getDefaultFont();
     void setDefaultFont(std::string fullFilePathFont);
 
+    size_t getFontCount();
+    size_t setFont(const std::string &fullFilePathFont, size_t position = UINT64_MAX);
+    std::string getFont(size_t i);
+    std::vector<std::string> getListFont();
 private:
     std::string m_defaultFont;
+    std::mutex m_fontMutex;
+
+    std::vector<std::string>m_listFont;
+
+    static void movePosition(std::vector<std::string> &vec, size_t from, size_t to);
 };
 
 #endif // TG_FONT_DEFAULT_H
