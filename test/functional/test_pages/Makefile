@@ -21,12 +21,16 @@ CXXFLAGS+=-DFUNCIONAL_TEST
 LDFLAGS:=$(PKGFLAGS)
 LDFLAGS+=-lpthread
 LDFLAGS+=-lX11
+LDFLAGS+=-lpng
 # set current make dir
 CURRENT_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 src_SRCDIR:=$(CURRENT_DIR)src
 src_SRCS:=$(wildcard $(src_SRCDIR)/*.cpp)
 src_OBJS:=$(src_SRCS:.cpp=.o)
+
+IMAGES_TO_COMPARE_DIR=$(CURRENT_DIR)images_to_compare
+CXXFLAGS+=-DIMAGES_TO_COMPARE_DIR=\"$(IMAGES_TO_COMPARE_DIR)\"
 
 all: default
 

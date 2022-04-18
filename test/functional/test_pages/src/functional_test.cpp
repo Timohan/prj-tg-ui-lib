@@ -6,6 +6,7 @@
 #include <X11/Xutil.h>
 #include <string.h>
 #include "mainwindow.h"
+#include "functional_test_image.h"
 
 static FunctionalTest m_test;
 
@@ -35,6 +36,29 @@ void FunctionalTest::start()
     std::thread([this]() {
         int i;
         sleep(2);
+
+        if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image0.png", 800, 600)) {
+            m_returnIndex = 1;
+            m_mainWindow->exit();
+            return;
+        }
+        for (i=0;i<20;i++) {
+            sendButtonClick(1, 320, 70, 1);
+            std::string tmp;
+            if ((i % 8) == 0 && i != 0) {
+                tmp = "image_text" + std::to_string(i % 8) + "_second.png";
+            } else {
+                tmp = "image_text" + std::to_string(i % 8) + ".png";
+            }
+            if (!FunctionalTestImage::isImageToEqual(m_mainWindow, tmp.c_str(), 800, 600)) {
+                sleep(1);
+                m_returnIndex = 1;
+                m_mainWindow->exit();
+                return;
+            }
+        }
+
+        sendButtonClick(1, 155, 70, 1);
 
         sendButtonClick(1, 155, 70, 1);
         if (m_mainWindow->getPages()->getCurrentPageIndex() != 1) {
@@ -95,6 +119,8 @@ void FunctionalTest::start()
             m_mainWindow->exit();
             return;
         }
+
+        TG_INFO_LOG("All tests ok");
         sleep(1);
         m_mainWindow->exit();
     }).detach();

@@ -4,13 +4,16 @@
 
 Page2::Page2(TgPages *parent) :
     TgPage(parent, 0, 0, 255),
+    m_centerTextIndex(0),
     m_pages(parent),
     m_buttonChange(this, 20, 20, 250, 50, "Change page to page 0"),
     m_buttonChangeSwitchTypeDirect(this, 20, 90, 250, 50, "Change Switch to Direct"),
     m_buttonChangeSwitchTypeFromTop(this, 20, 160, 300, 50, "Change Switch to From up"),
     m_buttonChangeSwitchTypeFromBottom(this, 20, 250, 300, 50, "Change Switch to From bottom"),
     m_buttonChangeSwitchTypeFromLeft(this, 20, 320, 300, 50, "Change Switch to From left"),
-    m_buttonChangeSwitchTypeFromRight(this, 20, 390, 300, 50, "Change Switch to From right")
+    m_buttonChangeSwitchTypeFromRight(this, 20, 390, 300, 50, "Change Switch to From right"),
+    m_buttonChangeText(this, 290, 20, 250, 50, "Change text"),
+    m_textFieldForTestCenter(this, "Center text", "", 21, 255, 255, 255)
 {
     m_buttonChange.connectOnMouseClicked( std::bind(&Page2::onButtonClickPage0, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeSwitchTypeDirect.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromDirect, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
@@ -18,6 +21,7 @@ Page2::Page2(TgPages *parent) :
     m_buttonChangeSwitchTypeFromBottom.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromBottom, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeSwitchTypeFromLeft.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromLeft, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeSwitchTypeFromRight.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromRight, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonChangeText.connectOnMouseClicked( std::bind(&Page2::onButtonChangeTextClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     this->connectOnVisibleChanged( std::bind(&Page2::onPageVisibleChanged, this, std::placeholders::_1) );
 
     m_buttonChange.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSelectedChanged, this, std::placeholders::_1) );
@@ -26,6 +30,9 @@ Page2::Page2(TgPages *parent) :
     m_buttonChangeSwitchTypeFromBottom.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSwitchTypeFromBottomChanged, this, std::placeholders::_1) );
     m_buttonChangeSwitchTypeFromLeft.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSwitchTypeFromLeftChanged, this, std::placeholders::_1) );
     m_buttonChangeSwitchTypeFromRight.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSwitchTypeFromRightChanged, this, std::placeholders::_1) );
+
+    m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignCenterH);
+    m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignCenterV);
 }
 
 Page2::~Page2()
@@ -134,4 +141,42 @@ TgButton *Page2::getButton(int index)
             break;
     }
     return nullptr;
+}
+
+/*!
+ * \brief Page2::onButtonChangeTextClick
+ *
+ * callback when button added is clicked
+ */
+void Page2::onButtonChangeTextClick(TgMouseType type, float x, float y)
+{
+    std::cout << "Change text button clicked\n";
+    m_centerTextIndex++;
+    switch (m_centerTextIndex) {
+        case 1:
+            m_textFieldForTestCenter.setText("Changed text to \"1\"");
+            break;
+        case 2:
+            m_textFieldForTestCenter.setText("Changed text to \"1\" with ગુજરાતી યુનિકોડ ફોન્ટ");
+            break;
+        case 3:
+            m_textFieldForTestCenter.setText("Changed text to \"1\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ");
+            break;
+        case 4:
+            m_textFieldForTestCenter.setText("Changed text to \"1\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ and some more");
+            break;
+        case 5:
+            m_textFieldForTestCenter.setText("ગુજરાતી યુનિકોડ ફોન્ટ");
+            break;
+        case 6:
+            m_textFieldForTestCenter.setText("中国");
+            break;
+        case 7:
+            m_textFieldForTestCenter.setText("一些中文文本 language");
+            break;
+        default:
+            m_textFieldForTestCenter.setText("Change text");
+            m_centerTextIndex = 0;
+            break;
+    }
 }

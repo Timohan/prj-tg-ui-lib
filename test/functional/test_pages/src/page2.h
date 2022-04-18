@@ -3,6 +3,7 @@
 
 #include <item2d/tg_page.h>
 #include <item2d/tg_button.h>
+#include <item2d/tg_textfield.h>
 class TgPages;
 
 class Page2 : public TgPage
@@ -14,6 +15,7 @@ public:
     TgButton *getButton(int index);
 
 private:
+    int m_centerTextIndex;
     TgPages *m_pages;
 
     TgButton m_buttonChange;
@@ -23,6 +25,8 @@ private:
     TgButton m_buttonChangeSwitchTypeFromBottom;
     TgButton m_buttonChangeSwitchTypeFromLeft;
     TgButton m_buttonChangeSwitchTypeFromRight;
+    TgButton m_buttonChangeText;
+    TgTextfield m_textFieldForTestCenter;
 
     void onButtonClickPage0(TgMouseType type, float x, float y);
     void onButtonClickFromDirect(TgMouseType type, float x, float y);
@@ -30,6 +34,7 @@ private:
     void onButtonClickFromBottom(TgMouseType type, float x, float y);
     void onButtonClickFromLeft(TgMouseType type, float x, float y);
     void onButtonClickFromRight(TgMouseType type, float x, float y);
+    void onButtonChangeTextClick(TgMouseType type, float x, float y);
     void onPageVisibleChanged(bool visible);
 
     void onButtonChangeSelectedChanged(bool selected);

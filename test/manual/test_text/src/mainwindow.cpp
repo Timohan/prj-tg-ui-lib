@@ -38,7 +38,7 @@ void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
 }
 
 /*!
- * \brief MainWindow::onButtonAddedClick
+ * \brief MainWindow::onButtonChangeTextClick
  *
  * callback when button added is clicked
  */
@@ -48,16 +48,16 @@ void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y)
     m_centerTextIndex++;
     switch (m_centerTextIndex) {
         case 1:
-            m_textFieldForTestCenter.setText("Changed text to \"1\"");
+            m_textFieldForTestCenter.setText("Changed text to \"1x\"");
             break;
         case 2:
-            m_textFieldForTestCenter.setText("Changed text to \"1\" with ગુજરાતી યુનિકોડ ફોન્ટ");
+            m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ");
             break;
         case 3:
-            m_textFieldForTestCenter.setText("Changed text to \"1\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ");
+            m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ");
             break;
         case 4:
-            m_textFieldForTestCenter.setText("Changed text to \"1\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ and some more");
+            m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ and some more");
             break;
         case 5:
             m_textFieldForTestCenter.setText("ગુજરાતી યુનિકોડ ફોન્ટ");
