@@ -259,3 +259,16 @@ TgEventResult TgButton::handleEvent(TgEventData *eventData, const TgWindowInfo *
     TG_FUNCTION_END();
     return TgMouseCapture::handleEvent(eventData, windowInfo);
 }
+
+/*!
+ * \brief TgButton::setText
+ *
+ * set button text
+ * \param text button text
+ */
+void TgButton::setText(const char *text)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setText(text);
+    TG_FUNCTION_END();
+}

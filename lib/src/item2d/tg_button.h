@@ -52,6 +52,7 @@ public:
     void setImage(TgButtonState state, const char *filename);
     bool getButtonDown() const;
     void setFontSize(float fontSize);
+    void setText(const char *text);
 
 protected:
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo) override;

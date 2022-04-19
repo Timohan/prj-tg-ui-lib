@@ -41,6 +41,7 @@ public:
 
     bool getButtonDown() const;
     void setFontSize(float fontSize);
+    void setText(const char *text);
 
 private:
     TgItem2d *m_currentItem;

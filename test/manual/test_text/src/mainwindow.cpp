@@ -49,12 +49,15 @@ void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y)
     switch (m_centerTextIndex) {
         case 1:
             m_textFieldForTestCenter.setText("Changed text to \"1x\"");
+            m_buttonChangeText.setText("\"1x\"");
             break;
         case 2:
             m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ");
+            m_buttonChangeText.setText("ગુજરાતી યુનિકોડ ફોન્ટ");
             break;
         case 3:
             m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ");
+            m_buttonChangeText.setText("and યુનિકોડ 未来");
             break;
         case 4:
             m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ and some more");
@@ -64,6 +67,7 @@ void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y)
             break;
         case 6:
             m_textFieldForTestCenter.setText("中国");
+            m_buttonChangeText.setText("中国");
             break;
         case 7:
             m_textFieldForTestCenter.setText("一些中文文本 language");
