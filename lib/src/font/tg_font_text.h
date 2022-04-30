@@ -25,6 +25,10 @@ struct TgFontTextCharacterInfo
 
     float positionLeftX;            /*!< glyph X position, generated in TgCharacterPositions::generateTextCharacterPositioning */
     size_t m_characterInFontInfoIndex; /*!< glyph index in TgFontInfo, generated in TgCharacterPositions::generateTextCharacterPositioning */
+
+    uint8_t m_textColorR;
+    uint8_t m_textColorG;
+    uint8_t m_textColorB;
 };
 
 class TgFontText
@@ -33,7 +37,7 @@ public:
     TgFontText();
 
     void setFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames);
-    void addCharacter(uint32_t character);
+    void addCharacter(uint32_t character, uint8_t r, uint8_t g, uint8_t b);
     void generateFontTextInfoGlyphs(float fontSize);
 
     size_t getCharacterCount();

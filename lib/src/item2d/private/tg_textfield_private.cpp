@@ -23,16 +23,22 @@
 TgTextfieldPrivate::TgTextfieldPrivate(const char *text, const char *fontFile, float fontSize,
                                        uint8_t r, uint8_t g, uint8_t b) :
     m_fontText(nullptr),
-    m_r(static_cast<float>(r)/255.0f),
-    m_g(static_cast<float>(g)/255.0f),
-    m_b(static_cast<float>(b)/255.0f),
-    m_text(text),
+    m_r(r),
+    m_g(g),
+    m_b(b),
     m_fontFile(fontFile),
     m_fontSize(fontSize),
     m_initDone(false),
     m_alignHorizontal(TgTextfieldHorizontalAlign::AlignLeft),
     m_alignVertical(TgTextfieldVerticalAlign::AlignTop)
 {
+    TgTextFieldText t;
+    t.m_text = text;
+    t.m_textColorR = r;
+    t.m_textColorG = g;
+    t.m_textColorB = b;
+    m_listText.push_back(t);
+
     if (!fontFile || m_fontFile.empty()) {
         m_fontFile = TgGlobalApplication::getInstance()->getFontDefault()->getDefaultFont();
     } 
@@ -100,18 +106,102 @@ void TgTextfieldPrivate::generateTransform(TgItem2d *currentItem)
  * \brief TgTextfieldPrivate::setText
  *
  * \param text text
+ * \param currentItem
  */
 void TgTextfieldPrivate::setText(const char *text, TgItem2d *currentItem)
 {
     TG_FUNCTION_BEGIN();
-    if (m_text.compare(text) == 0) {
-        TG_FUNCTION_END();
-        return;
+    std::vector<TgTextFieldText> listText;
+    TgTextFieldText newText;
+    newText.m_text = text;
+    newText.m_textColorR = m_r;
+    newText.m_textColorG = m_g;
+    newText.m_textColorB = m_b;
+    listText.push_back(newText);
+    setText(listText, currentItem);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgTextfieldPrivate::setText
+ *
+ * sets multi color text
+ *
+ * \param listText list of text with different colors
+ * \param currentItem
+ */
+void TgTextfieldPrivate::setText(const std::vector<TgTextFieldText> &listText, TgItem2d *currentItem)
+{
+    TG_FUNCTION_BEGIN();
+    if (isEqualText(listText)) {
+        if (isEqualTextColor(listText)) {
+            TG_FUNCTION_END();
+            return;
+        }
+        size_t i;
+        for (i=0;i<listText.size();i++) {
+            m_listText[i].m_textColorR = listText.at(i).m_textColorR;
+            m_listText[i].m_textColorG = listText.at(i).m_textColorG;
+            m_listText[i].m_textColorB = listText.at(i).m_textColorB;
+        }
+        if (TgFontTextGenerator::changeTextColor(listText, m_fontText)) {
+            TG_FUNCTION_END();
+            return;
+        }
     }
-    m_text = text;
+
+    m_listText = std::move(listText);
     m_initDone = false;
     currentItem->setPositionChanged(true);
     TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgTextfieldPrivate::isEqualText
+ *
+ * Checks if text is equal as before
+ * \param listText
+ * \return true if it was equal text
+ */
+bool TgTextfieldPrivate::isEqualText(const std::vector<TgTextFieldText> &listText)
+{
+    if (m_listText.size() != listText.size()) {
+        return false;
+    }
+    size_t i;
+    for (i=0;i<listText.size();i++) {
+        if (m_listText.at(i).m_text != listText.at(i).m_text) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/*!
+ * \brief TgTextfieldPrivate::isEqualTextColor
+ *
+ * Checks if text color is equal as before
+ * \param listText
+ * \return true if it was equal text color
+ */
+bool TgTextfieldPrivate::isEqualTextColor(const std::vector<TgTextFieldText> &listText)
+{
+    if (m_listText.size() != listText.size()) {
+        return false;
+    }
+    size_t i;
+    for (i=0;i<listText.size();i++) {
+        if (m_listText.at(i).m_textColorR != listText.at(i).m_textColorR) {
+            return false;
+        }
+        if (m_listText.at(i).m_textColorB != listText.at(i).m_textColorB) {
+            return false;
+        }
+        if (m_listText.at(i).m_textColorG != listText.at(i).m_textColorG) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /*!
@@ -128,7 +218,7 @@ void TgTextfieldPrivate::checkPositionValues(TgItem2d *currentItem)
         if (m_fontText) {
             delete m_fontText;
         }
-        m_fontText = TgFontTextGenerator::generateFontTextInfo(m_text.c_str(), m_fontFile.c_str());
+        m_fontText = TgFontTextGenerator::generateFontTextInfo(m_listText, m_fontFile.c_str());
         m_fontText->generateFontTextInfoGlyphs(m_fontSize);
         TgCharacterPositions::generateTextCharacterPositioning(m_fontText);
         m_initDone = true;
@@ -149,6 +239,7 @@ void TgTextfieldPrivate::checkPositionValues(TgItem2d *currentItem)
  *
  * Renders the text
  * \param windowInfo
+ * \param currentItem
  */
 void TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem)
 {
@@ -159,14 +250,14 @@ void TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *curren
     }
 
     glUniform1i( windowInfo->m_shaderRenderTypeIndex, 1);
-    glUniform4f( windowInfo->m_shaderColorIndex, m_r, m_g, m_b, 1);
     glUniform4f(windowInfo->m_maxRenderValues,
                 currentItem->getXminOnVisible(), currentItem->getYminOnVisible(),
                 currentItem->getXmaxOnVisible(windowInfo),
                 currentItem->getYmaxOnVisible(windowInfo));
 
     if (m_fontText) {
-        TgGlobalApplication::getInstance()->getFontGlyphCache()->render(m_fontText, windowInfo->m_shaderTransformIndex, m_listTransform);
+        TgGlobalApplication::getInstance()->getFontGlyphCache()->render(m_fontText, windowInfo->m_shaderTransformIndex,
+            windowInfo->m_shaderColorIndex, m_listTransform);
     }
 
     glUniform1i( windowInfo->m_shaderRenderTypeIndex, 0);

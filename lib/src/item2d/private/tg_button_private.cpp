@@ -424,17 +424,4 @@ void TgButtonPrivate::onSelectedCallback()
     TG_FUNCTION_END();
 }
 
-/*!
- * \brief TgButtonPrivate::setText
- *
- * set button text
- * \param text button text
- */
-void TgButtonPrivate::setText(const char *text)
-{
-    TG_FUNCTION_BEGIN();
-    m_textfield.setText(text);
-    TG_FUNCTION_END();
-}
-
 

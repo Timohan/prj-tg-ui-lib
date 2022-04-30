@@ -63,8 +63,11 @@ void TgFontText::setFontFileNames(const std::string &mainFontFile, const std::ve
  * setFontFileNames must be called first before this function
  *
  * \param character [in] character to add into m_listCharacter
+ * \param r text red color
+ * \param g text green color
+ * \param b text blue color
  */
-void TgFontText::addCharacter(uint32_t character)
+void TgFontText::addCharacter(uint32_t character, uint8_t r, uint8_t g, uint8_t b)
 {
     TgFontTextCharacterInfo charInfo;
     std::string fontFileName;
@@ -76,6 +79,9 @@ void TgFontText::addCharacter(uint32_t character)
 
     charInfo.m_fontFileNameIndex = TgGlobalApplication::getInstance()->getFontCharactersCache()->getFontIndexForCharacter(character, fontFileName, m_listFontFileNames);
     charInfo.m_character = character;
+    charInfo.m_textColorR = r;
+    charInfo.m_textColorG = g;
+    charInfo.m_textColorB = b;
 
     m_listCharacter.push_back(charInfo);
 }

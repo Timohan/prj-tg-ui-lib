@@ -14,6 +14,7 @@
 
 #include "tg_mouse_capture.h"
 #include "../global/tg_global_macros.h"
+#include "tg_textfield.h"
 
 class TgButtonPrivate;
 struct TgWindowInfo;
@@ -53,6 +54,7 @@ public:
     bool getButtonDown() const;
     void setFontSize(float fontSize);
     void setText(const char *text);
+    void setText(const std::vector<TgTextFieldText> &listText);
 
 protected:
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo) override;

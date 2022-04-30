@@ -25,9 +25,9 @@
  * \param text text in UTF-8
  * \param fontFile full filepath of ttf file, if empty (""), then use default font
  * \param fontSize font size
- * \param r red color of text
- * \param g green color of text
- * \param b blue color of text
+ * \param r base red color of text
+ * \param g base green color of text
+ * \param b base blue color of text
  */
 TgTextfield::TgTextfield(TgItem2d *parent, const char *text, const char *fontFile, float fontSize, uint8_t r, uint8_t g, uint8_t b) :
     TgItem2d(parent),
@@ -55,9 +55,9 @@ TgTextfield::TgTextfield(TgItem2d *parent, const char *text, const char *fontFil
  * \param text text in UTF-8
  * \param fontFile full filepath of ttf file, if empty (""), then use default font
  * \param fontSize font size
- * \param r red color of text
- * \param g green color of text
- * \param b blue color of text
+ * \param r base red color of text
+ * \param g base green color of text
+ * \param b base blue color of text
  */
 TgTextfield::TgTextfield(TgItem2d *parent, float x, float y, float width, float height, const char *text, const char *fontFile, float fontSize,
                          uint8_t r, uint8_t g, uint8_t b) :
@@ -161,6 +161,9 @@ TgTextfieldVerticalAlign TgTextfield::getAlignVertical() const
 /*!
  * \brief TgTextfield::setText
  *
+ * sets single color text
+ * color of the text is base color
+ *
  * \param text text
  */
 void TgTextfield::setText(const char *text)
@@ -171,7 +174,21 @@ void TgTextfield::setText(const char *text)
 }
 
 /*!
- * \brief setFontSize::setFontSize
+ * \brief TgTextfield::setText
+ *
+ * sets multi color text
+ *
+ * \param listText list of text with different colors
+ */
+void TgTextfield::setText(const std::vector<TgTextFieldText> &listText)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setText(listText, this);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgTextfield::setFontSize
  *
  * \param fontSize fon size for text
  */

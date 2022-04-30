@@ -35,12 +35,13 @@ public:
     TgTextfieldHorizontalAlign getAlignHorizontal() const;
     TgTextfieldVerticalAlign getAlignVertical() const;
     void setText(const char *text, TgItem2d *currentItem);
+    void setText(const std::vector<TgTextFieldText> &listText, TgItem2d *currentItem);
     void setFontSize(float fontSize);
 
 private:
     TgFontText *m_fontText;
-    float m_r, m_g, m_b;
-    std::string m_text;
+    uint8_t m_r, m_g, m_b;
+    std::vector<TgTextFieldText> m_listText;
     std::string m_fontFile;
     float m_fontSize;
     bool m_initDone;
@@ -50,6 +51,8 @@ private:
     std::recursive_mutex m_mutex;
 
     void generateTransform(TgItem2d *currentItem);
+    bool isEqualText(const std::vector<TgTextFieldText> &listText);
+    bool isEqualTextColor(const std::vector<TgTextFieldText> &listText);
 };
 
 #endif // TG_TEXTFIELD_PRIVATE_H

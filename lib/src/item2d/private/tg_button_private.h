@@ -41,7 +41,6 @@ public:
 
     bool getButtonDown() const;
     void setFontSize(float fontSize);
-    void setText(const char *text);
 
 private:
     TgItem2d *m_currentItem;
@@ -68,6 +67,8 @@ private:
     std::string getImageFileName();
     void setImagePositions();
     virtual void onSelectedCallback() override;
+
+    friend class TgButton;
 };
 
 #endif // TG_BUTTON_PRIVATE_H

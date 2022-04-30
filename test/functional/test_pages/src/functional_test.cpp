@@ -45,10 +45,10 @@ void FunctionalTest::start()
         for (i=0;i<20;i++) {
             sendButtonClick(1, 320, 70, 1);
             std::string tmp;
-            if ((i % 8) == 0 && i != 0) {
-                tmp = "image_text" + std::to_string(i % 8) + "_second.png";
+            if ((i % 11) == 0 && i != 0) {
+                tmp = "image_text" + std::to_string(i % 11) + "_second.png";
             } else {
-                tmp = "image_text" + std::to_string(i % 8) + ".png";
+                tmp = "image_text" + std::to_string(i % 11) + ".png";
             }
             if (!FunctionalTestImage::isImageToEqual(m_mainWindow, tmp.c_str(), 800, 600)) {
                 sleep(1);

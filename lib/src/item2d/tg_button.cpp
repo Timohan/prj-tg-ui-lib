@@ -269,6 +269,19 @@ TgEventResult TgButton::handleEvent(TgEventData *eventData, const TgWindowInfo *
 void TgButton::setText(const char *text)
 {
     TG_FUNCTION_BEGIN();
-    m_private->setText(text);
+    m_private->m_textfield.setText(text);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgButton::setText
+ *
+ * set button text
+ * \param listText button text
+ */
+void TgButton::setText(const std::vector<TgTextFieldText> &listText)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->m_textfield.setText(listText);
     TG_FUNCTION_END();
 }

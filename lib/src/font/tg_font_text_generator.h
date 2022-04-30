@@ -17,21 +17,16 @@
 #include <string>
 
 #include "tg_character_positions.h"
+#include "../item2d/tg_textfield.h"
 
-class TgFontText;
-
-/*struct TgFontTextInfo
-{
-    std::vector<TgFontInfo *>m_listFontInfo;
-    float m_fontHeight;
-    std::vector<TgCharPosition>m_listCharPosition;
-    std::vector<TgFontText *>m_listTextForFont;
-};
-*/
 class TgFontTextGenerator
 {
 public:
-    static TgFontText *generateFontTextInfo(const std::string &utf8text, const std::string &mainFontFile);
+    static TgFontText *generateFontTextInfo(const std::vector<TgTextFieldText> &listText, const std::string &mainFontFile);
+    static bool changeTextColor(const std::vector<TgTextFieldText> &listText, TgFontText *fontText);
+
+private:
+    static std::string generateSingleLineText(const std::vector<TgTextFieldText> &listText);
 };
 
 #endif // TG_FONT_TEXT_GENERATOR_H

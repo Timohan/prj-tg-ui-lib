@@ -151,6 +151,10 @@ TgButton *Page2::getButton(int index)
 void Page2::onButtonChangeTextClick(TgMouseType type, float x, float y)
 {
     std::cout << "Change text button clicked\n";
+    std::vector<TgTextFieldText>listText;
+    TgTextFieldText t0;
+    TgTextFieldText t1;
+    TgTextFieldText t2;
     m_centerTextIndex++;
     switch (m_centerTextIndex) {
         case 1:
@@ -174,8 +178,54 @@ void Page2::onButtonChangeTextClick(TgMouseType type, float x, float y)
         case 7:
             m_textFieldForTestCenter.setText("一些中文文本 language");
             break;
+        case 8:
+            t0.m_text = "Changed text to";
+            t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
+            listText.push_back(t0);
+            t1.m_text = " color";
+            t1.m_textColorR = 255;
+            t1.m_textColorG = t1.m_textColorB = 0;
+            listText.push_back(t1);
+            t2.m_text = " and here";
+            t2.m_textColorR = t2.m_textColorG = t2.m_textColorB = 255;
+            listText.push_back(t2);
+            m_textFieldForTestCenter.setText(listText);
+            listText[0].m_text = "button";
+            m_buttonChangeText.setText(listText);
+            break;
+        case 9:
+            t0.m_text = "Changed text to";
+            t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
+            listText.push_back(t0);
+            t1.m_text = " color";
+            t1.m_textColorR = t1.m_textColorG = t1.m_textColorB = 255;
+            listText.push_back(t1);
+            t2.m_text = " and here";
+            t2.m_textColorR = t2.m_textColorG = t2.m_textColorB = 255;
+            listText.push_back(t2);
+            m_textFieldForTestCenter.setText(listText);
+            listText[0].m_text = "button";
+            m_buttonChangeText.setText(listText);
+            break;
+        case 10:
+            t0.m_text = "x text to";
+            t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
+            listText.push_back(t0);
+            t1.m_text = " યુનિકોડ";
+            t1.m_textColorG = 255;
+            t1.m_textColorR = t1.m_textColorB = 0;
+            listText.push_back(t1);
+            t2.m_text = " 未来";
+            t2.m_textColorR = 255;
+            t2.m_textColorG = t2.m_textColorB = 0;
+            listText.push_back(t2);
+            m_textFieldForTestCenter.setText(listText);
+            listText[0].m_text = "button";
+            m_buttonChangeText.setText(listText);
+           break;
         default:
             m_textFieldForTestCenter.setText("Change text");
+            m_buttonChangeText.setText("Change text");
             m_centerTextIndex = 0;
             break;
     }

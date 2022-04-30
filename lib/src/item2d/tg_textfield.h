@@ -39,6 +39,19 @@ enum TgTextfieldVerticalAlign {
 };
 
 /*!
+ * \brief TgTextFieldText
+ * this is used with function setText(const std::vector<TgTextFieldText> &listText)
+ * to set multicolor text
+ */
+struct TgTextFieldText
+{
+    std::string m_text;     /*!< utf8 text */
+    uint8_t m_textColorR;   /*!< m_text's red color */
+    uint8_t m_textColorG;   /*!< m_text's green color */
+    uint8_t m_textColorB;   /*!< m_text's blue color */
+};
+
+/*!
  * \brief TgTextfield
  * handles text field label functionality (just drawing the text)
  */
@@ -53,6 +66,7 @@ public:
     TgTextfieldHorizontalAlign getAlignHorizontal() const;
     TgTextfieldVerticalAlign getAlignVertical() const;
     void setText(const char *text);
+    void setText(const std::vector<TgTextFieldText> &listText);
     void setFontSize(float fontSize);
 
 protected:

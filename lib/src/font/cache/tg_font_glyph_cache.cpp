@@ -174,17 +174,34 @@ TgFontInfo *TgFontGlyphCache::generateCache(const std::vector<uint32_t> &listCha
  * Renders the text
  * \param fontText
  * \param vertexTransformIndex vertex tranform index in shader's uniform location
+ * \param shaderColorIndex shader color index
  * \param listMatrix list of matrixes for each character to shader
  */
-void TgFontGlyphCache::render(TgFontText *fontText, const int vertexTransformIndex, const std::vector<TgMatrix4x4>&listMatrix)
+void TgFontGlyphCache::render(TgFontText *fontText, const int vertexTransformIndex, const int shaderColorIndex, const std::vector<TgMatrix4x4>&listMatrix)
 {
     size_t i, c = fontText->getCharacterCount();
+    uint8_t r = 0, g = 0, b = 0;
+    bool colorFirstTime = true;
     for (i=0;i<c;i++) {
         if (!fontText->getFontInfo(i)
             || fontText->getCharacter(i)->m_fontFileNameIndex == -1) {
             continue;
         }
         glUniformMatrix4fv(vertexTransformIndex, 1, 0, listMatrix[i].getMatrixTable()->data);
+        if (fontText->getCharacter(i)->m_textColorR != r
+            || fontText->getCharacter(i)->m_textColorG != g
+            || fontText->getCharacter(i)->m_textColorB != b
+            || colorFirstTime) {
+            glUniform4f(shaderColorIndex,
+                static_cast<float>(fontText->getCharacter(i)->m_textColorR )/255.0f,
+                static_cast<float>(fontText->getCharacter(i)->m_textColorG )/255.0f,
+                static_cast<float>(fontText->getCharacter(i)->m_textColorB )/255.0f, 1);
+            r = fontText->getCharacter(i)->m_textColorR;
+            g = fontText->getCharacter(i)->m_textColorG;
+            b = fontText->getCharacter(i)->m_textColorB;
+            colorFirstTime = false;
+        }
+
         fontText->getFontInfo(i)->m_listRender[ fontText->getCharacter(i)->m_characterInFontInfoIndex ]->render( fontText->getFontInfo(i)->m_textureImage, 0, 4, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
 }

@@ -40,7 +40,7 @@ public:
     explicit TgFontGlyphCache();
     ~TgFontGlyphCache();
     TgFontInfo *generateCacheForText(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize);
-    void render(TgFontText *fontText, const int vertexTransformIndex, const std::vector<TgMatrix4x4>&listMatrix);
+    void render(TgFontText *fontText, const int vertexTransformIndex, const int shaderColorIndex, const std::vector<TgMatrix4x4>&listMatrix);
 
 private:
     std::vector<TgFontInfo *>m_listCachedFont;
