@@ -38,6 +38,7 @@ TgTextfieldPrivate::TgTextfieldPrivate(const char *text, const char *fontFile, f
     t.m_textColorG = g;
     t.m_textColorB = b;
     m_listText.push_back(t);
+    TgFontTextGenerator::getCharacters(m_listText, m_listCharacter);
 
     if (!fontFile || m_fontFile.empty()) {
         m_fontFile = TgGlobalApplication::getInstance()->getFontDefault()->getDefaultFont();
@@ -133,8 +134,10 @@ void TgTextfieldPrivate::setText(const char *text, TgItem2d *currentItem)
 void TgTextfieldPrivate::setText(const std::vector<TgTextFieldText> &listText, TgItem2d *currentItem)
 {
     TG_FUNCTION_BEGIN();
+    m_mutex.lock();
     if (isEqualText(listText)) {
         if (isEqualTextColor(listText)) {
+            m_mutex.unlock();
             TG_FUNCTION_END();
             return;
         }
@@ -145,14 +148,17 @@ void TgTextfieldPrivate::setText(const std::vector<TgTextFieldText> &listText, T
             m_listText[i].m_textColorB = listText.at(i).m_textColorB;
         }
         if (TgFontTextGenerator::changeTextColor(listText, m_fontText)) {
+            m_mutex.unlock();
             TG_FUNCTION_END();
             return;
         }
     }
 
     m_listText = std::move(listText);
+    TgFontTextGenerator::getCharacters(m_listText, m_listCharacter);
     m_initDone = false;
     currentItem->setPositionChanged(true);
+    m_mutex.unlock();
     TG_FUNCTION_END();
 }
 
@@ -335,4 +341,41 @@ void TgTextfieldPrivate::setFontSize(float fontSize)
     m_initDone = false;
     m_mutex.unlock();
     TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgTextfieldPrivate::getCharacterCount
+ *
+ * \return get count of characters in this text
+ */
+size_t TgTextfieldPrivate::getCharacterCount()
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    size_t ret = m_listCharacter.size();
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgTextfieldPrivate::getCharacterByIndex
+ *
+ * \param index of the character
+ * \return the uint32 value of the character by the index
+ * returns 0, if index larger than character count
+ */
+uint32_t TgTextfieldPrivate::getCharacterByIndex(size_t index)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    if (m_listCharacter.size() <= index) {
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return 0;
+    }
+    uint32_t ret = m_listCharacter.at(index);
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
 }

@@ -37,6 +37,8 @@ public:
     void setText(const char *text, TgItem2d *currentItem);
     void setText(const std::vector<TgTextFieldText> &listText, TgItem2d *currentItem);
     void setFontSize(float fontSize);
+    size_t getCharacterCount();
+    uint32_t getCharacterByIndex(size_t index);
 
 private:
     TgFontText *m_fontText;
@@ -45,6 +47,7 @@ private:
     std::string m_fontFile;
     float m_fontSize;
     bool m_initDone;
+    std::vector<uint32_t>m_listCharacter;
     std::vector<TgMatrix4x4>m_listTransform;
     TgTextfieldHorizontalAlign m_alignHorizontal;
     TgTextfieldVerticalAlign m_alignVertical;

@@ -199,3 +199,28 @@ void TgTextfield::setFontSize(float fontSize)
     TG_FUNCTION_END();
 }
 
+/*!
+ * \brief TgTextfield::getCharacterCount
+ *
+ * \return get count of characters in this text
+ */
+size_t TgTextfield::getCharacterCount()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getCharacterCount();
+}
+
+/*!
+ * \brief TgTextfield::getCharacterByIndex
+ *
+ * \param index of the character
+ * \return the uint32 value of the character by the index
+ * returns 0, if index larger than character count
+ */
+uint32_t TgTextfield::getCharacterByIndex(size_t index)
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getCharacterByIndex(index);
+}

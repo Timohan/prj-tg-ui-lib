@@ -24,6 +24,7 @@ private:
 
     static int moveValueToDirection(int currentValue, int directionValue);
     void changeResolution(uint32_t waitBefore, int width, int height, uint32_t waitAfter);
+    bool makeCharacterCountTest();
 };
 
 FunctionalTest *getTest();

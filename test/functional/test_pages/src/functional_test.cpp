@@ -119,6 +119,11 @@ void FunctionalTest::start()
             m_mainWindow->exit();
             return;
         }
+        if (!makeCharacterCountTest()) {
+            m_returnIndex = 1;
+            m_mainWindow->exit();
+            return;
+        }
 
         TG_INFO_LOG("All tests ok");
         sleep(1);
@@ -291,4 +296,65 @@ bool FunctionalTest::isCorrectButtonSelected(int page, int index)
         TG_ERROR_LOG("Error: Correct button is not selected, page: ", page, " index: ", index);
     }
     return found;
+}
+
+bool FunctionalTest::makeCharacterCountTest()
+{
+    m_mainWindow->getTextfield()->setText("meh");
+    if (m_mainWindow->getTextfield()->getCharacterCount() != 3) {
+        TG_ERROR_LOG("Character could is wrong for textifeld, it should be: 3, it is: ", m_mainWindow->getTextfield()->getCharacterCount());
+        return false;
+    }
+    m_mainWindow->getTextfield()->setText("mehä");
+    if (m_mainWindow->getTextfield()->getCharacterCount() != 4) {
+        TG_ERROR_LOG("Character could is wrong for textifeld, it should be: 4, it is: ", m_mainWindow->getTextfield()->getCharacterCount());
+        return false;
+    }
+    if (m_mainWindow->getTextfield()->getCharacterByIndex(0) != 'm'
+        || m_mainWindow->getTextfield()->getCharacterByIndex(1) != 'e'
+        || m_mainWindow->getTextfield()->getCharacterByIndex(2) != 'h'
+        || m_mainWindow->getTextfield()->getCharacterByIndex(3) != 0xe4
+        || m_mainWindow->getTextfield()->getCharacterByIndex(4) != 0) {
+        TG_ERROR_LOG("Text have invalid character",
+            m_mainWindow->getTextfield()->getCharacterByIndex(0), " ",
+            m_mainWindow->getTextfield()->getCharacterByIndex(1), " ",
+            m_mainWindow->getTextfield()->getCharacterByIndex(2), " ",
+            m_mainWindow->getTextfield()->getCharacterByIndex(3), " ",
+            m_mainWindow->getTextfield()->getCharacterByIndex(4));
+        return false;
+    }
+    std::vector<TgTextFieldText>listText;
+    TgTextFieldText t0;
+    TgTextFieldText t1;
+    TgTextFieldText t2;
+
+    t0.m_text = "x text to";
+    t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
+    listText.push_back(t0);
+    t1.m_text = " યુનિકોડ";
+    t1.m_textColorG = 255;
+    t1.m_textColorR = t1.m_textColorB = 0;
+    listText.push_back(t1);
+    t2.m_text = " 未来";
+    t2.m_textColorR = 255;
+    t2.m_textColorG = t2.m_textColorB = 0;
+    listText.push_back(t2);
+    m_mainWindow->getTextfield()->setText(listText);
+
+    if (m_mainWindow->getTextfield()->getCharacterCount() != 20) {
+        TG_ERROR_LOG("Character could is wrong for textifeld, it should be: 20, it is: ", m_mainWindow->getTextfield()->getCharacterCount());
+        return false;
+    }
+
+    m_mainWindow->getTextfield()->setText("");
+    if (m_mainWindow->getTextfield()->getCharacterCount() != 0) {
+        TG_ERROR_LOG("Character could is wrong for textifeld, it should be: 0, it is: ", m_mainWindow->getTextfield()->getCharacterCount());
+        return false;
+    }
+    m_mainWindow->getTextfield()->setText("中国");
+    if (m_mainWindow->getTextfield()->getCharacterCount() != 2) {
+        TG_ERROR_LOG("Character could is wrong for textifeld, it should be: 2, it is: ", m_mainWindow->getTextfield()->getCharacterCount());
+        return false;
+    }
+    return true;
 }

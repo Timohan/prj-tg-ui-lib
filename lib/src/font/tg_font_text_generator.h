@@ -22,6 +22,7 @@
 class TgFontTextGenerator
 {
 public:
+    static void getCharacters(const std::vector<TgTextFieldText> &listText, std::vector<uint32_t> &listCharacter);
     static TgFontText *generateFontTextInfo(const std::vector<TgTextFieldText> &listText, const std::string &mainFontFile);
     static bool changeTextColor(const std::vector<TgTextFieldText> &listText, TgFontText *fontText);
 
