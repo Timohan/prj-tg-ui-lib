@@ -7,7 +7,8 @@ MainWindow::MainWindow(int width, int height) :
     m_buttonClose(this, 20, 20, 200, 50, "Close button"),
     m_buttonChangeText(this, 240, 20, 200, 50, "Change text"),
     m_textFieldForTestBottomRight(this, "Bottom ગુજરાતી યુનિકોડ ફોન્ટ સૂચી 未来の文字コ Right", "", 21, 255, 255, 255),
-    m_textFieldForTestCenter(this, "Center text", "", 21, 255, 255, 255)
+    m_textFieldForTestCenter(this, "Center text", "", 21, 255, 255, 255),
+    m_textEmptyText(this, "", "", 21, 255, 255, 255)
 {
     m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeText.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTextClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
@@ -16,6 +17,11 @@ MainWindow::MainWindow(int width, int height) :
     m_textFieldForTestBottomRight.setVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
     m_textFieldForTestBottomRight.setMarginBottom(10);
     m_textFieldForTestBottomRight.setMarginRight(15);
+
+    m_textEmptyText.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignLeft);
+    m_textEmptyText.setVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
+    m_textEmptyText.setMarginBottom(10);
+    m_textEmptyText.setMarginRight(15);
 
     m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignCenterH);
     m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignCenterV);
@@ -121,7 +127,13 @@ void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y)
             listText[0].m_text = "button";
             m_buttonChangeText.setText(listText);
            break;
+        case 11:
+            m_textEmptyText.setText("Empty now");
+            m_textFieldForTestCenter.setText("");
+            m_buttonChangeText.setText("");
+            break;
         default:
+            m_textEmptyText.setText("");
             m_textFieldForTestCenter.setText("Change text");
             m_centerTextIndex = 0;
             break;

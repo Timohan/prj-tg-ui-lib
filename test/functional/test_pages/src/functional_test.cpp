@@ -42,16 +42,16 @@ void FunctionalTest::start()
             m_mainWindow->exit();
             return;
         }
-        for (i=0;i<20;i++) {
+        for (i=0;i<22;i++) {
             sendButtonClick(1, 320, 70, 1);
             std::string tmp;
-            if ((i % 11) == 0 && i != 0) {
-                tmp = "image_text" + std::to_string(i % 11) + "_second.png";
+            if ((i % 12) == 0 && i != 0) {
+                tmp = "image_text" + std::to_string(i % 12) + "_second.png";
             } else {
-                tmp = "image_text" + std::to_string(i % 11) + ".png";
+                tmp = "image_text" + std::to_string(i % 12) + ".png";
             }
             if (!FunctionalTestImage::isImageToEqual(m_mainWindow, tmp.c_str(), 800, 600)) {
-                sleep(1);
+                sleep(10);
                 m_returnIndex = 1;
                 m_mainWindow->exit();
                 return;

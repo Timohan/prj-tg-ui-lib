@@ -64,15 +64,19 @@ void TgFontTextGenerator::getCharacters(const std::vector<TgTextFieldText> &list
  */
 TgFontText *TgFontTextGenerator::generateFontTextInfo(const std::vector<TgTextFieldText> &listText, const std::string &mainFontFile)
 {
-
     TgFontText *ret = new TgFontText();
     std::vector<std::string> listFontFiles = TgGlobalApplication::getInstance()->getFontDefault()->getListFont();
     ret->setFontFileNames(mainFontFile, listFontFiles);
-
+    if (listText.empty()) {
+        return ret;
+    }
     uint32_t *list_characters = nullptr, list_characters_size;
     uint32_t characterIndex;
 
     for (size_t i=0;i<listText.size();i++) {
+        if (listText.at(i).m_text.empty()) {
+            continue;
+        }
         if (prj_ttf_reader_get_characters(listText.at(i).m_text.c_str(), &list_characters, &list_characters_size)) {
             TG_ERROR_LOG("Invalid UTF-8 text: ", generateSingleLineText(listText).c_str());
             return nullptr;

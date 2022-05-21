@@ -223,6 +223,10 @@ void Page2::onButtonChangeTextClick(TgMouseType type, float x, float y)
             listText[0].m_text = "button";
             m_buttonChangeText.setText(listText);
            break;
+        case 11:
+            m_textFieldForTestCenter.setText("");
+            m_buttonChangeText.setText("");
+            break;
         default:
             m_textFieldForTestCenter.setText("Change text");
             m_buttonChangeText.setText("Change text");

@@ -16,6 +16,7 @@ private:
     TgButton m_buttonChangeText;
     TgTextfield m_textFieldForTestBottomRight;
     TgTextfield m_textFieldForTestCenter;
+    TgTextfield m_textEmptyText;
 
     void onButtonCloseClick(TgMouseType type, float x, float y);
     void onButtonChangeTextClick(TgMouseType type, float x, float y);
