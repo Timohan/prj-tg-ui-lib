@@ -15,7 +15,7 @@
 #include "../../image/tg_image_assets.h"
 #include "../../math/tg_matrix4x4.h"
 #include "../tg_textfield.h"
-#include "../tg_image.h"
+#include "../tg_image_part.h"
 #include "../tg_button.h"
 #include "item2d/tg_item2d_private.h"
 #include <string>
@@ -48,24 +48,10 @@ private:
     bool m_buttonDown;
     std::recursive_mutex m_mutex;
 
-    TgImage m_imageTopLeft;
-    TgImage m_imageTopMiddle;
-    TgImage m_imageTopRight;
-
-    TgImage m_imageMiddleLeft;
-    TgImage m_imageMiddleMiddle;
-    TgImage m_imageMiddleRight;
-
-    TgImage m_imageBottomLeft;
-    TgImage m_imageBottomMiddle;
-    TgImage m_imageBottomRight;
-
+    TgImagePart m_backgroundImage;
     TgTextfield m_textfield;
-    float m_imageCropLeft, m_imageCropTop, m_imageCropRight, m_imageCropBottom;
-    float m_leftAreaSize, m_topAreaSize, m_rightAreaSize, m_bottomAreaSize;
 
     std::string getImageFileName();
-    void setImagePositions();
     virtual void onSelectedCallback() override;
 
     friend class TgButton;

@@ -31,30 +31,12 @@ TgButtonPrivate::TgButtonPrivate(TgItem2d *currentItem, const char *buttonText) 
                      std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-disabled.png")
     }),
     m_buttonDown(false),
-    m_imageTopLeft(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_imageTopMiddle(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_imageTopRight(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_imageMiddleLeft(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_imageMiddleMiddle(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_imageMiddleRight(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_imageBottomLeft(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_imageBottomMiddle(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_imageBottomRight(currentItem, 0, 0, 100, 100, getImageFileName().c_str()),
-    m_textfield(currentItem, buttonText, "", 21, 0, 0, 0),
-    m_imageCropLeft(0.0f),
-    m_imageCropTop(0.0f),
-    m_imageCropRight(0.0f),
-    m_imageCropBottom(0.0f),
-    m_leftAreaSize(0.0f),
-    m_topAreaSize(0.0f),
-    m_rightAreaSize(0.0f),
-    m_bottomAreaSize(0.0f)
+    m_backgroundImage(currentItem, getImageFileName().c_str()),
+    m_textfield(currentItem, buttonText, "", 21, 0, 0, 0)
 {
     TG_FUNCTION_BEGIN();
     currentItem->setCanSelect(true);
     currentItem->m_private->setInternalCallbacks(this);
-    setImageCropPosition(0.2f, 0.2f, 0.2f, 0.2f);
-    setImageAreaSize(10.0f, 10.0f, 10.0f, 10.0f);
     m_textfield.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignCenterH);
     m_textfield.setVerticalAlign(TgTextfieldVerticalAlign::AlignCenterV);
     TG_FUNCTION_END();
@@ -88,18 +70,7 @@ TgButtonPrivate::~TgButtonPrivate()
 void TgButtonPrivate::setImageCropPosition(float imageCropLeft, float imageCropTop, float imageCropRight, float imageCropBottom)
 {
     TG_FUNCTION_BEGIN();
-    if (std::fabs(m_imageCropLeft - imageCropLeft) <= std::numeric_limits<double>::epsilon()
-        || std::fabs(m_imageCropTop - imageCropTop) <= std::numeric_limits<double>::epsilon()
-        || std::fabs(m_imageCropRight - imageCropRight) <= std::numeric_limits<double>::epsilon()
-        || std::fabs(m_imageCropBottom - imageCropBottom) <= std::numeric_limits<double>::epsilon()) {
-        TG_FUNCTION_END();
-        return;
-    }
-    m_imageCropLeft = imageCropLeft;
-    m_imageCropTop = imageCropTop;
-    m_imageCropRight = imageCropRight;
-    m_imageCropBottom = imageCropBottom;
-    m_currentItem->setPositionChanged(true);
+    m_backgroundImage.setImageCropPosition(imageCropLeft, imageCropTop, imageCropRight, imageCropBottom);
     TG_FUNCTION_END();
 }
 
@@ -125,110 +96,7 @@ void TgButtonPrivate::setImageCropPosition(float imageCropLeft, float imageCropT
 void TgButtonPrivate::setImageAreaSize(float leftAreaSize, float topAreaSize, float rightAreaSize, float bottomAreaSize)
 {
     TG_FUNCTION_BEGIN();
-    if (std::fabs(m_leftAreaSize - leftAreaSize) <= std::numeric_limits<double>::epsilon()
-        || std::fabs(m_topAreaSize - topAreaSize) <= std::numeric_limits<double>::epsilon()
-        || std::fabs(m_rightAreaSize - rightAreaSize) <= std::numeric_limits<double>::epsilon()
-        || std::fabs(m_bottomAreaSize - bottomAreaSize) <= std::numeric_limits<double>::epsilon()) {
-        TG_FUNCTION_END();
-        return;
-    }
-    m_leftAreaSize = leftAreaSize;
-    m_topAreaSize = topAreaSize;
-    m_rightAreaSize = rightAreaSize;
-    m_bottomAreaSize = bottomAreaSize;
-    m_currentItem->setPositionChanged(true);
-    TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgButtonPrivate::setImagePositions
- *
- * set image positions for button images based by crop and image area size
- */
-void TgButtonPrivate::setImagePositions()
-{
-    TG_FUNCTION_BEGIN();
-    // top
-    m_imageTopLeft.setTextureST(0, 0,
-                                m_imageCropLeft, 0,
-                                m_imageCropLeft, m_imageCropTop,
-                                0, m_imageCropTop);
-    m_imageTopLeft.setWidth(m_leftAreaSize);
-    m_imageTopLeft.setHeight(m_topAreaSize);
-
-    m_imageTopMiddle.setTextureST(m_imageCropLeft, 0,
-                                  1.0f-m_imageCropRight, 0,
-                                  1.0f-m_imageCropRight, m_imageCropTop,
-                                  m_imageCropLeft, m_imageCropTop);
-    m_imageTopMiddle.setX(m_leftAreaSize);
-    m_imageTopMiddle.setY(0);
-    m_imageTopMiddle.setWidth(m_currentItem->getWidth()-m_leftAreaSize-m_rightAreaSize);
-    m_imageTopMiddle.setHeight(m_topAreaSize);
-
-    m_imageTopRight.setTextureST(1.0f-m_imageCropRight, 0,
-                                 1.0f, 0,
-                                 1.0f, m_imageCropTop,
-                                 1.0f-m_imageCropRight, m_imageCropTop);
-    m_imageTopRight.setX(m_currentItem->getWidth()-m_rightAreaSize);
-    m_imageTopRight.setY(0);
-    m_imageTopRight.setWidth(m_rightAreaSize);
-    m_imageTopRight.setHeight(m_topAreaSize);
-
-    // middle
-    m_imageMiddleLeft.setTextureST(0, m_imageCropTop,
-                                   m_imageCropLeft, m_imageCropTop,
-                                   m_imageCropLeft, 1.0f-m_imageCropBottom,
-                                   0, 1.0f-m_imageCropBottom);
-    m_imageMiddleLeft.setX(0);
-    m_imageMiddleLeft.setY(m_topAreaSize);
-    m_imageMiddleLeft.setWidth(m_leftAreaSize);
-    m_imageMiddleLeft.setHeight(m_currentItem->getHeight()-m_topAreaSize-m_bottomAreaSize);
-
-    m_imageMiddleMiddle.setTextureST(m_imageCropLeft, m_imageCropTop,
-                                  1.0f-m_imageCropRight, m_imageCropTop,
-                                  1.0f-m_imageCropRight, 1.0f-m_imageCropBottom,
-                                  m_imageCropLeft, 1.0f-m_imageCropBottom);
-    m_imageMiddleMiddle.setX(m_leftAreaSize);
-    m_imageMiddleMiddle.setY(m_topAreaSize);
-    m_imageMiddleMiddle.setWidth(m_currentItem->getWidth()-m_leftAreaSize-m_rightAreaSize);
-    m_imageMiddleMiddle.setHeight(m_currentItem->getHeight()-m_topAreaSize-m_bottomAreaSize);
-
-    m_imageMiddleRight.setTextureST(1.0f-m_imageCropRight, m_imageCropTop,
-                                 1.0f, m_imageCropTop,
-                                 1.0f, 1.0f-m_imageCropBottom,
-                                 1.0f-m_imageCropRight, 1.0f-m_imageCropBottom);
-    m_imageMiddleRight.setX(m_currentItem->getWidth()-m_rightAreaSize);
-    m_imageMiddleRight.setY(m_topAreaSize);
-    m_imageMiddleRight.setWidth(m_rightAreaSize);
-    m_imageMiddleRight.setHeight(m_currentItem->getHeight()-m_topAreaSize-m_bottomAreaSize);
-
-    //bottom
-    m_imageBottomLeft.setTextureST(0, 1.0f-m_imageCropBottom,
-                                   m_imageCropLeft, 1.0f-m_imageCropBottom,
-                                   m_imageCropLeft, 1,
-                                   0, 1);
-    m_imageBottomLeft.setX(0);
-    m_imageBottomLeft.setY(m_currentItem->getHeight()-m_bottomAreaSize);
-    m_imageBottomLeft.setWidth(m_leftAreaSize);
-    m_imageBottomLeft.setHeight(m_bottomAreaSize);
-
-    m_imageBottomMiddle.setTextureST(m_imageCropLeft, 1.0f-m_imageCropBottom,
-                                    1.0f-m_imageCropRight, 1.0f-m_imageCropBottom,
-                                    1.0f-m_imageCropRight, 1.0f,
-                                    m_imageCropLeft, 1.0f);
-    m_imageBottomMiddle.setX(m_leftAreaSize);
-    m_imageBottomMiddle.setY(m_currentItem->getHeight()-m_bottomAreaSize);
-    m_imageBottomMiddle.setWidth(m_currentItem->getWidth()-m_leftAreaSize-m_rightAreaSize);
-    m_imageBottomMiddle.setHeight(m_bottomAreaSize);
-
-    m_imageBottomRight.setTextureST(1.0f-m_imageCropRight, 1.0f-m_imageCropBottom,
-                                 1.0f, 1.0f-m_imageCropBottom,
-                                 1.0f, 1.0f,
-                                 1.0f-m_imageCropRight, 1.0f);
-    m_imageBottomRight.setX(m_currentItem->getWidth()-m_rightAreaSize);
-    m_imageBottomRight.setY(m_currentItem->getHeight()-m_bottomAreaSize);
-    m_imageBottomRight.setWidth(m_rightAreaSize);
-    m_imageBottomRight.setHeight(m_bottomAreaSize);
+    m_backgroundImage.setImageAreaSize(leftAreaSize, topAreaSize, rightAreaSize, bottomAreaSize);
     TG_FUNCTION_END();
 }
 
@@ -299,7 +167,6 @@ void TgButtonPrivate::checkPositionValues(TgItem2d *currentItem)
         return;
     }
 
-    setImagePositions();
     currentItem->setPositionChanged(false);
     TG_FUNCTION_END();
 }
@@ -314,15 +181,7 @@ void TgButtonPrivate::changeButtonImageFile()
 {
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
-    m_imageTopLeft.setImage(getImageFileName().c_str());
-    m_imageTopMiddle.setImage(getImageFileName().c_str());
-    m_imageTopRight.setImage(getImageFileName().c_str());
-    m_imageMiddleLeft.setImage(getImageFileName().c_str());
-    m_imageMiddleMiddle.setImage(getImageFileName().c_str());
-    m_imageMiddleRight.setImage(getImageFileName().c_str());
-    m_imageBottomLeft.setImage(getImageFileName().c_str());
-    m_imageBottomMiddle.setImage(getImageFileName().c_str());
-    m_imageBottomRight.setImage(getImageFileName().c_str());
+    m_backgroundImage.setImage(getImageFileName().c_str());
     m_mutex.unlock();
     TG_FUNCTION_END();
 }
@@ -369,15 +228,7 @@ void TgButtonPrivate::setImage(TgButtonState state, const char *filename)
     if (m_imageFileNames[state] != filename) {
         m_imageFileNames[state] = filename;
         m_currentItem->setPositionChanged(true);
-        m_imageTopLeft.setImage(getImageFileName().c_str());
-        m_imageTopMiddle.setImage(getImageFileName().c_str());
-        m_imageTopRight.setImage(getImageFileName().c_str());
-        m_imageMiddleLeft.setImage(getImageFileName().c_str());
-        m_imageMiddleMiddle.setImage(getImageFileName().c_str());
-        m_imageMiddleRight.setImage(getImageFileName().c_str());
-        m_imageBottomLeft.setImage(getImageFileName().c_str());
-        m_imageBottomMiddle.setImage(getImageFileName().c_str());
-        m_imageBottomRight.setImage(getImageFileName().c_str());
+        m_backgroundImage.setImage(getImageFileName().c_str());
     }
     m_mutex.unlock();
     TG_FUNCTION_END();
