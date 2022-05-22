@@ -12,7 +12,7 @@
 #define IMAGES_TO_COMPARE_DIR "DS"
 #endif
 
-bool FunctionalTestImage::isImageToEqual(MainWindow *mainWindow, const char *imageToCompare, int width, int height)
+bool FunctionalTestImage::isImageToEqual(MainWindow *mainWindow, const char *imageToCompare, int width, int height, bool canBeDifference)
 {
     std::string imagePath = IMAGES_TO_COMPARE_DIR;
     imagePath += "/";
@@ -47,9 +47,11 @@ bool FunctionalTestImage::isImageToEqual(MainWindow *mainWindow, const char *ima
             if (pngColors[0] !=  imageColors[0]
                 || pngColors[1] !=  imageColors[1]
                 || pngColors[2] !=  imageColors[2]) {
-                TG_ERROR_LOG("Image have a pixel: " + imagePath + " " + std::to_string(x) + "/" + std::to_string(y) +
-                    "(" + std::to_string(pngColors[0]) + "," + std::to_string(pngColors[1]) + "," + std::to_string(pngColors[2]) + ")" +
-                    "(" + std::to_string(imageColors[0]) + "," + std::to_string(imageColors[1]) + "," + std::to_string(imageColors[2]) + ")" );
+                if (!canBeDifference) {
+                    TG_ERROR_LOG("Image have a pixel: " + imagePath + " " + std::to_string(x) + "/" + std::to_string(y) +
+                        "(" + std::to_string(pngColors[0]) + "," + std::to_string(pngColors[1]) + "," + std::to_string(pngColors[2]) + ")" +
+                        "(" + std::to_string(imageColors[0]) + "," + std::to_string(imageColors[1]) + "," + std::to_string(imageColors[2]) + ")" );
+                }
                 ret = false;
             }
         }
@@ -58,6 +60,37 @@ bool FunctionalTestImage::isImageToEqual(MainWindow *mainWindow, const char *ima
     delete[] pngData;
     sleep(1);
     return ret;
+}
+
+bool FunctionalTestImage::isImagesToEqual(MainWindow *mainWindow, const char *imageToCompare0, const char *imageToCompare1, int width, int height)
+{
+    bool isEqual[2];
+    int equalCount[2];
+    int i2;
+    memset(equalCount, 0, sizeof(int)*2);
+    for (int i=0;i<10;i++) {
+        isEqual[0] = FunctionalTestImage::isImageToEqual(mainWindow, imageToCompare0, width, height, true);
+        isEqual[1] = FunctionalTestImage::isImageToEqual(mainWindow, imageToCompare1, width, height, true);
+        for (i2=0;i2<2;i2++) {
+            if (isEqual[i2]) {
+                equalCount[i2]++;
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    if (!equalCount[0] && !equalCount[1]) {
+        TG_ERROR_LOG("Both image comparisions are incorrect: ", imageToCompare0, " ", imageToCompare1);
+        return false;
+    }
+    if (!equalCount[0]) {
+        TG_ERROR_LOG("Image was not found during this period: ", imageToCompare0);
+        return false;
+    }
+    if (!equalCount[1]) {
+        TG_ERROR_LOG("Image was not found during this period: ", imageToCompare1);
+        return false;
+    }
+    return true;
 }
 
 bool FunctionalTestImage::getRgb(const unsigned char *pngData, int x, int y, int width, int height,

@@ -158,7 +158,8 @@ bool TgFontCharactersCache::isCharacterForThisFont(const uint32_t character, con
  * \param listFontFiles [in] list of fonts in files
  * \return index of font
  */
-int TgFontCharactersCache::getFontIndexForCharacter(const uint32_t character, const std::string &fontFileName, const std::vector<std::string>&listFontFiles)
+int TgFontCharactersCache::getFontIndexForCharacter(const uint32_t character, const std::string &fontFileName,
+                                                    const std::vector<std::string>&listFontFiles)
 {
     size_t i;
     if (isCharacterForThisFont(character, fontFileName)) {

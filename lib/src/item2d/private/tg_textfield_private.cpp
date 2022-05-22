@@ -10,18 +10,20 @@
  */
 
 #include "tg_textfield_private.h"
-#include  <cmath>
+#include <cmath>
+#include <string.h>
 #include "../../global/tg_global_application.h"
 #include "../../font/cache/tg_font_glyph_cache.h"
 #include "../../font/tg_font_default.h"
-#include "../../font/tg_font_text_generator.h"
 #include "../../font/tg_font_text.h"
 #include "../../global/tg_global_log.h"
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
 
-TgTextfieldPrivate::TgTextfieldPrivate(const char *text, const char *fontFile, float fontSize,
+TgTextfieldPrivate::TgTextfieldPrivate(TgItem2d *currentItem,
+                                       const char *text, const char *fontFile, float fontSize,
                                        uint8_t r, uint8_t g, uint8_t b) :
+    m_currentItem(currentItem),
     m_fontText(nullptr),
     m_r(r),
     m_g(g),
@@ -32,13 +34,15 @@ TgTextfieldPrivate::TgTextfieldPrivate(const char *text, const char *fontFile, f
     m_alignHorizontal(TgTextfieldHorizontalAlign::AlignLeft),
     m_alignVertical(TgTextfieldVerticalAlign::AlignTop)
 {
-    TgTextFieldText t;
-    t.m_text = text;
-    t.m_textColorR = r;
-    t.m_textColorG = g;
-    t.m_textColorB = b;
-    m_listText.push_back(t);
-    TgFontTextGenerator::getCharacters(m_listText, m_listCharacter);
+    if (strlen(text) > 0) {
+        TgTextFieldText t;
+        t.m_text = text;
+        t.m_textColorR = r;
+        t.m_textColorG = g;
+        t.m_textColorB = b;
+        m_listText.push_back(t);
+        TgFontTextGenerator::getCharacters(m_listText, m_listCharacter);
+    }
 
     if (!fontFile || m_fontFile.empty()) {
         m_fontFile = TgGlobalApplication::getInstance()->getFontDefault()->getDefaultFont();
@@ -214,9 +218,8 @@ bool TgTextfieldPrivate::isEqualTextColor(const std::vector<TgTextFieldText> &li
  * \brief TgTextfieldPrivate::checkPositionValues
  *
  * Checks position values before rendering starts
- * \param currentItem
  */
-void TgTextfieldPrivate::checkPositionValues(TgItem2d *currentItem)
+void TgTextfieldPrivate::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
@@ -229,12 +232,12 @@ void TgTextfieldPrivate::checkPositionValues(TgItem2d *currentItem)
         TgCharacterPositions::generateTextCharacterPositioning(m_fontText);
         m_initDone = true;
     }
-    if (currentItem->getPositionChanged()) {
-        generateTransform(currentItem);
-        currentItem->setAddMinMaxHeightOnVisible(
+    if (m_currentItem->getPositionChanged()) {
+        generateTransform(m_currentItem);
+        m_currentItem->setAddMinMaxHeightOnVisible(
             m_fontText->getVisibleTopY(),
             m_fontText->getVisibleBottomY());
-        currentItem->setPositionChanged(false);
+        m_currentItem->setPositionChanged(false);
     }
     m_mutex.unlock();
     TG_FUNCTION_END();
@@ -359,6 +362,17 @@ size_t TgTextfieldPrivate::getCharacterCount()
 }
 
 /*!
+ * \brief TgTextfieldPrivate::getTextCharacterIndex
+ *
+ * \param x [in]
+ * \return character index by the x
+ */
+size_t TgTextfieldPrivate::getTextCharacterIndex(float x)
+{
+    return TgGlobalApplication::getInstance()->getFontGlyphCache()->getTextCharacterIndex(m_fontText, x);
+}
+
+/*!
  * \brief TgTextfieldPrivate::getCharacterByIndex
  *
  * \param index of the character
@@ -374,8 +388,132 @@ uint32_t TgTextfieldPrivate::getCharacterByIndex(size_t index)
         TG_FUNCTION_END();
         return 0;
     }
-    uint32_t ret = m_listCharacter.at(index);
+    uint32_t ret = m_listCharacter.at(index).m_character;
     m_mutex.unlock();
     TG_FUNCTION_END();
     return ret;
+}
+
+/*!
+ * \brief TgTextfieldPrivate::getTextPosition
+ *
+ * \param cursorPosition [in] get position x/Y for this cursor position, 0 == first character
+ * \param positionX [out]
+ */
+void TgTextfieldPrivate::getTextPosition(const size_t cursorPosition, float &positionX)
+{
+    TgGlobalApplication::getInstance()->getFontGlyphCache()->getTextPosition(m_fontText, cursorPosition, positionX);
+}
+
+/*!
+ * \brief TgTextfieldPrivate::getFontFile
+ *
+ * \return get font file
+ */
+std::string TgTextfieldPrivate::getFontFile()
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    std::string ret = m_fontFile;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgTextfieldPrivate::getTextWidth
+ *
+ * \return text width (pixels)
+ */
+float TgTextfieldPrivate::getTextWidth()
+{
+    TG_FUNCTION_BEGIN();
+    float ret = 0;
+    m_mutex.lock();
+    if (m_fontText) {
+        ret = m_fontText->getTextWidth();
+    }
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgTextfieldPrivate::editText
+ *
+ * modifies the text
+ *
+ * \param listAddCharacter characters to add to startCharacterIndex
+ * \param startCharacterIndex starts adding the characters to this position
+ * \param characterCountToRemove number of characters to remove from startCharacterIndex
+ */
+void TgTextfieldPrivate::editText(std::vector<uint32_t>&listAddCharacter, const size_t startCharacterIndex, const size_t characterCountToRemove)
+{
+    m_mutex.lock();
+    if (characterCountToRemove) {
+        m_listCharacter.erase(m_listCharacter.begin()+startCharacterIndex, m_listCharacter.begin()+(startCharacterIndex+characterCountToRemove));
+    }
+
+    size_t i;
+    uint8_t r = m_listCharacter.empty()
+        ? m_r
+        : m_listCharacter.size() == startCharacterIndex
+         ? m_listCharacter.at(startCharacterIndex-1).m_r
+         : m_listCharacter.at(startCharacterIndex).m_r;
+    uint8_t g = m_listCharacter.empty()
+        ? m_g
+        : m_listCharacter.size() == startCharacterIndex
+         ? m_listCharacter.at(startCharacterIndex-1).m_g
+         : m_listCharacter.at(startCharacterIndex).m_g;
+    uint8_t b = m_listCharacter.empty()
+        ? m_b
+        : m_listCharacter.size() == startCharacterIndex
+         ? m_listCharacter.at(startCharacterIndex-1).m_b
+         : m_listCharacter.at(startCharacterIndex).m_b;
+
+    TgTextCharacter c;
+    for (i=0;i<listAddCharacter.size();i++) {
+        c.m_character = listAddCharacter.at(i);
+        c.m_r = r;
+        c.m_g = g;
+        c.m_b = b;
+        if (m_listCharacter.size() <= startCharacterIndex+i) {
+            m_listCharacter.push_back(c);
+        } else {
+            m_listCharacter.insert(m_listCharacter.begin()+(startCharacterIndex+i), c);
+        }
+    }
+
+    m_listText.clear();
+    if (!m_listCharacter.empty()) {
+        TgTextFieldText t;
+        char utf8Character[5];
+        t.m_textColorR = m_listCharacter.at(0).m_r;
+        t.m_textColorG = m_listCharacter.at(0).m_g;
+        t.m_textColorB = m_listCharacter.at(0).m_b;
+        TgFontGlyphCache::generateCharactedIndexToUtf8(m_listCharacter.at(0).m_character, utf8Character);
+        t.m_text = utf8Character;
+
+        for (i=1;i<m_listCharacter.size();i++) {
+            if (t.m_textColorR == m_listCharacter.at(i).m_r
+                && t.m_textColorG == m_listCharacter.at(i).m_g
+                && t.m_textColorB == m_listCharacter.at(i).m_b) {
+                TgFontGlyphCache::generateCharactedIndexToUtf8(m_listCharacter.at(i).m_character, utf8Character);
+                t.m_text += utf8Character;
+                continue;
+            }
+            m_listText.push_back(t);
+            t.m_textColorR = m_listCharacter.at(i).m_r;
+            t.m_textColorG = m_listCharacter.at(i).m_g;
+            t.m_textColorB = m_listCharacter.at(i).m_b;
+            TgFontGlyphCache::generateCharactedIndexToUtf8(m_listCharacter.at(i).m_character, utf8Character);
+            t.m_text = utf8Character;
+        }
+        m_listText.push_back(t);
+        TgFontTextGenerator::getCharacters(m_listText, m_listCharacter);
+    }
+
+    m_initDone = false;
+    m_currentItem->setPositionChanged(true);
+    m_mutex.unlock();
 }

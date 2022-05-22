@@ -35,25 +35,41 @@ TgFontText::TgFontText() :
  */
 void TgFontText::setFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames)
 {
+    getFontFileNames(mainFontFile, listFontFileNames, m_listFontFileNames);
+}
+
+/*!
+ * \brief TgFontText::getFontFileNames
+ *
+ * sets and re-generates the font list, sets main font file
+ * as first font file on the list
+ *
+ * \param mainFontFile [in]
+ * \param listFontFiles [in] sets mainFontFile as first to this list
+ * \param listFontFileNamesOut [out] sets mainFontFile as first to this list
+ */
+void TgFontText::getFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames,
+                                  std::vector<std::string> &listFontFileNamesOut)
+{
     std::vector<std::string>::iterator it;
-    m_listFontFileNames = std::move(listFontFileNames);
+    listFontFileNamesOut = std::move(listFontFileNames);
     if (mainFontFile.empty()
-        || (!m_listFontFileNames.empty() && m_listFontFileNames.at(0) == mainFontFile)) {
-        for (it=m_listFontFileNames.begin();it!=m_listFontFileNames.end();it++) {
+        || (!listFontFileNamesOut.empty() && listFontFileNamesOut.at(0) == mainFontFile)) {
+        for (it=listFontFileNamesOut.begin();it!=listFontFileNamesOut.end();it++) {
             TgGlobalApplication::getInstance()->getFontCharactersCache()->addFont(*it);
         }
         return;
     }
 
 
-    for (it=m_listFontFileNames.begin();it!=m_listFontFileNames.end();it++) {
+    for (it=listFontFileNamesOut.begin();it!=listFontFileNamesOut.end();it++) {
         if ((*it) == mainFontFile) {
-            m_listFontFileNames.erase(it);
+            listFontFileNamesOut.erase(it);
         }
         TgGlobalApplication::getInstance()->getFontCharactersCache()->addFont(*it);
     }
 
-    m_listFontFileNames.insert(m_listFontFileNames.begin(), mainFontFile);
+    listFontFileNamesOut.insert(listFontFileNamesOut.begin(), mainFontFile);
 }
 
 /*!

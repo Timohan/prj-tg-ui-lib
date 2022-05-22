@@ -19,10 +19,19 @@
 #include "tg_character_positions.h"
 #include "../item2d/tg_textfield.h"
 
+struct TgTextCharacter
+{
+    uint32_t m_character;
+    uint8_t m_r;
+    uint8_t m_g;
+    uint8_t m_b;
+};
+
 class TgFontTextGenerator
 {
 public:
     static void getCharacters(const std::vector<TgTextFieldText> &listText, std::vector<uint32_t> &listCharacter);
+    static void getCharacters(const std::vector<TgTextFieldText> &listText, std::vector<TgTextCharacter> &listCharacter);
     static TgFontText *generateFontTextInfo(const std::vector<TgTextFieldText> &listText, const std::string &mainFontFile);
     static bool changeTextColor(const std::vector<TgTextFieldText> &listText, TgFontText *fontText);
 

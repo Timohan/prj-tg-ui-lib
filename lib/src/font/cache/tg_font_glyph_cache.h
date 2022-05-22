@@ -41,7 +41,10 @@ public:
     ~TgFontGlyphCache();
     TgFontInfo *generateCacheForText(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize);
     void render(TgFontText *fontText, const int vertexTransformIndex, const int shaderColorIndex, const std::vector<TgMatrix4x4>&listMatrix);
+    void getTextPosition(TgFontText *fontText, size_t cursorPosition, float &positionX);
+    size_t getTextCharacterIndex(TgFontText *fontText, const float x);
 
+    static void generateCharactedIndexToUtf8(uint32_t character, char text[5]);
 private:
     std::vector<TgFontInfo *>m_listCachedFont;
     TgFontInfo *isFontCached(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize);
@@ -50,7 +53,6 @@ private:
     static bool generateTextVertices(TgFontInfo *newInfo, const std::vector<uint32_t> &listCharacters);
     static bool addImage(TgFontInfo *newInfo);
 
-    static void generateCharactedIndexToUtf8(uint32_t character, char text[5]);
 };
 
 #endif // TG_FONT_GLYPH_CACHE_H

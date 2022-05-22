@@ -12,8 +12,10 @@
 #include "tg_mouse_capture_private.h"
 #include <algorithm>
 #include "../../../global/tg_global_log.h"
+#include "../../tg_mouse_capture.h"
 
-TgMouseCapturePrivate::TgMouseCapturePrivate() :
+TgMouseCapturePrivate::TgMouseCapturePrivate(TgMouseCapture *currentMouseCapture) :
+    TgMouseCaptureClick(currentMouseCapture),
     m_mouseCursorOnHover(false),
     f_mousePressed(nullptr),
     f_mouseReleased(nullptr),
@@ -72,6 +74,28 @@ bool TgMouseCapturePrivate::getMousePressed(TgMouseType type, bool useLock)
 }
 
 /*!
+ * \brief TgMouseCapturePrivate::getMousePressedAnyButton
+ *
+ * get if this mouse capture area is pressed down for any button type
+ *
+ * \param useLock if true, uses mutex lock, false not (false is used in private)
+ * \return true if this mouse capture area is pressed down
+ */
+bool TgMouseCapturePrivate::getMousePressedAnyButton(bool useLock)
+{
+    TG_FUNCTION_BEGIN();
+    if (useLock) {
+        m_mutex.lock();
+    }
+    bool ret = !m_listButtonDown.empty();
+    if (useLock) {
+        m_mutex.unlock();
+    }
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
  * \brief TgMouseCapturePrivate::setMousePressed
  *
  * when mouse press (or release) happens, this is called
@@ -96,6 +120,7 @@ void TgMouseCapturePrivate::setMousePressed(TgMouseType type, bool mousePressed,
             if (f_mousePressed) {
                 f_mousePressed(type, x, y);
             }
+            m_currentMouseCapture->onMousePressed(type, x, y);
             TgMouseCaptureSwipe::swipePressed(type, x, y, time);
         }
     } else if (!mousePressed) {
@@ -106,6 +131,7 @@ void TgMouseCapturePrivate::setMousePressed(TgMouseType type, bool mousePressed,
                 if (f_mouseReleased) {
                     f_mouseReleased(type, inArea, x, y);
                 }
+                m_currentMouseCapture->onMouseReleased(type, inArea, x, y);
                 if (!TgMouseCaptureSwipe::swipeReleased(type, x, y, time, releaseWoCallback)
                     && !releaseWoCallback) {
                     TgMouseCaptureClick::setMouseReleased(type, inArea, x, y, time, releaseWoCallback);
@@ -114,6 +140,7 @@ void TgMouseCapturePrivate::setMousePressed(TgMouseType type, bool mousePressed,
             }
         }
     }
+
     m_mutex.unlock();
     TG_FUNCTION_END();
 }
@@ -135,17 +162,22 @@ void TgMouseCapturePrivate::clearMousePressed()
  * \brief TgMouseCapturePrivate::setMouseMove
  *
  * when mouse move happens on mouse capture, this is called
- *
+ * \param inArea true if mouse pressed (or released) happens in visible area of mouse capture
+ * -> pressed have true inArea always
+ * -> released can have true or false inArea
  * \return x mouse position (x)
  * \return y mouse position (y)
  */
-void TgMouseCapturePrivate::setMouseMove(float x, float y, double time)
+void TgMouseCapturePrivate::setMouseMove(bool inArea, float x, float y, double time)
 {
     TG_FUNCTION_BEGIN();
-    if (f_mouseMove) {
+    if (inArea && f_mouseMove) {
         f_mouseMove(x, y);
     }
-    swipeMove(x, y, time);
+    m_currentMouseCapture->onMouseMove(inArea, x, y);
+    if (inArea) {
+        swipeMove(x, y, time);
+    }
     TG_FUNCTION_END();
 }
 

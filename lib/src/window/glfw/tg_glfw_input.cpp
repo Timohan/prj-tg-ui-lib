@@ -387,6 +387,36 @@ void TgGlfwInput::keyboardCallback(GLFWwindow* window, int key, int action, int 
                 m_modsKeyDown.m_ctrlRight = true;
             }
             break;
+        case GLFW_KEY_LEFT:
+            eventData.m_event.m_keyEvent.m_key = 0;
+            eventData.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Left;
+            TgGlobalApplication::getInstance()->addEvent(window, &eventData);
+            return;
+        case GLFW_KEY_RIGHT:
+            eventData.m_event.m_keyEvent.m_key = 0;
+            eventData.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Right;
+            TgGlobalApplication::getInstance()->addEvent(window, &eventData);
+            return;
+        case GLFW_KEY_UP:
+            eventData.m_event.m_keyEvent.m_key = 0;
+            eventData.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Up;
+            TgGlobalApplication::getInstance()->addEvent(window, &eventData);
+            return;
+        case GLFW_KEY_DOWN:
+            eventData.m_event.m_keyEvent.m_key = 0;
+            eventData.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Down;
+            TgGlobalApplication::getInstance()->addEvent(window, &eventData);
+            return;
+        case GLFW_KEY_BACKSPACE:
+            eventData.m_event.m_keyEvent.m_key = 0;
+            eventData.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Backspace;
+            TgGlobalApplication::getInstance()->addEvent(window, &eventData);
+            return;
+        case GLFW_KEY_DELETE:
+            eventData.m_event.m_keyEvent.m_key = 0;
+            eventData.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Delete;
+            TgGlobalApplication::getInstance()->addEvent(window, &eventData);
+            return;
         case GLFW_KEY_TAB:
             eventData.m_event.m_keyEvent.m_key = static_cast<uint32_t>('\t');
             TgGlobalApplication::getInstance()->addEvent(window, &eventData);

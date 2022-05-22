@@ -1,7 +1,7 @@
 #ifndef TG_GLOBAL_DEFINES
 #define TG_GLOBAL_DEFINES
 
-#define IMAGES_PATH     "/usr/share/prj-tg-ui-lib/images/"
+#define IMAGES_PATH     "/usr/share/prj-tg-ui-lib/images"
 
 /*!
  * \brief The Vertice struct

@@ -19,14 +19,17 @@
 #include "tg_mouse_capture_swipe.h"
 #include "tg_mouse_capture_click.h"
 
+class TgMouseCapture;
+
 class TgMouseCapturePrivate : public TgMouseCaptureClick, public TgMouseCaptureSwipe
 {
 public:
-    explicit TgMouseCapturePrivate();
+    explicit TgMouseCapturePrivate(TgMouseCapture *currentMouseCapture);
+    bool getMousePressedAnyButton(bool useLock = true);
     bool getMousePressed(TgMouseType type, bool useLock = true);
     void setMousePressed(TgMouseType type, bool mousePressed, bool inArea, float x, float y, double time, bool releaseWoCallback);
 
-    void setMouseMove(float x, float y, double time);
+    void setMouseMove(bool inArea, float x, float y, double time);
     void setMouseScrollMove(double x, double y);
 
     void connectOnMousePressed(std::function<void(TgMouseType, float, float)> mousePressed);

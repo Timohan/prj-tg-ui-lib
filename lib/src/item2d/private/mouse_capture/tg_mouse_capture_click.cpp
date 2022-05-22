@@ -13,8 +13,10 @@
 #include <algorithm>
 #include <string.h>
 #include "../../../global/tg_global_log.h"
+#include "../../tg_mouse_capture.h"
 
-TgMouseCaptureClick::TgMouseCaptureClick() :
+TgMouseCaptureClick::TgMouseCaptureClick(TgMouseCapture *currentMouseCapture) :
+    m_currentMouseCapture(currentMouseCapture),
     f_mouseClicked(nullptr)
 {
 }
@@ -37,9 +39,15 @@ void TgMouseCaptureClick::setMouseReleased(TgMouseType type, bool inArea, float 
 {
     (void)time;
     m_mutex.lock();
-    if (inArea && !releaseWoCallback && f_mouseClicked) {
-        m_mutex.unlock();
-        f_mouseClicked(type, x, y);
+    if (inArea && !releaseWoCallback) {
+        if (f_mouseClicked) {
+            m_mutex.unlock();
+            f_mouseClicked(type, x, y);
+            m_currentMouseCapture->onMouseClicked(type, x, y);
+        } else {
+            m_mutex.unlock();
+            m_currentMouseCapture->onMouseClicked(type, x, y);
+        }
     } else {
         m_mutex.unlock();
     }
@@ -80,8 +88,12 @@ void TgMouseCaptureClick::sendMouseClickedNoButton()
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
     if (f_mouseClicked) {
+        m_mutex.unlock();
         f_mouseClicked(TgMouseType::NoButton, -1, -1);
+        m_currentMouseCapture->onMouseClicked(TgMouseType::NoButton, -1, -1);
+    } else {
+        m_mutex.unlock();
+        m_currentMouseCapture->onMouseClicked(TgMouseType::NoButton, -1, -1);
     }
-    m_mutex.unlock();
     TG_FUNCTION_END();
 }

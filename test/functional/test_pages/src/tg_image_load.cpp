@@ -105,20 +105,36 @@ unsigned char *TgImageLoad::loadPng(const char *filename, int &width, int &heigh
  */
 unsigned char *TgImageLoad::generateImageData(const png_bytep *rowPointers, int colorType, int width, int height)
 {
-    if (colorType != PNG_COLOR_TYPE_RGBA) {
-        TG_ERROR_LOG("Png color type is not PNG_COLOR_TYPE_RGBA");
+    if (colorType != PNG_COLOR_TYPE_RGBA
+        && colorType != PNG_COLOR_TYPE_RGB) {
+        TG_ERROR_LOG("Png color type is not PNG_COLOR_TYPE_RGBA or PNG_COLOR_TYPE_RGB");
         return nullptr;
     }
-
+    int x, y;
+    png_byte *row;
+    png_byte *ptr;
     unsigned char *ret = new unsigned char[width*height*4];
-    for (int y=0;y<height;y++) {
-        png_byte *row = rowPointers[y];
-        for (int x=0;x<width; x++) {
-            png_byte *ptr = &(row[x*4]);
+    if (colorType == PNG_COLOR_TYPE_RGBA) {
+        for (y=0;y<height;y++) {
+            row = rowPointers[y];
+            for (x=0;x<width; x++) {
+                ptr = &(row[x*4]);
+                ret[y*width*4+x*4+0] = ptr[0];
+                ret[y*width*4+x*4+1] = ptr[1];
+                ret[y*width*4+x*4+2] = ptr[2];
+                ret[y*width*4+x*4+3] = ptr[3];
+            }
+        }
+        return ret;
+    }
+    for (y=0;y<height;y++) {
+        row = rowPointers[y];
+        for (x=0;x<width; x++) {
+            ptr = &(row[x*3]);
             ret[y*width*4+x*4+0] = ptr[0];
             ret[y*width*4+x*4+1] = ptr[1];
             ret[y*width*4+x*4+2] = ptr[2];
-            ret[y*width*4+x*4+3] = ptr[3];
+            ret[y*width*4+x*4+3] = 255;
         }
     }
     return ret;

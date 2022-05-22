@@ -71,6 +71,10 @@ public:
     void setMarginTop(float top);
     void setMarginRight(float right);
     void setMarginBottom(float bottom);
+    float getMarginLeft();
+    float getMarginTop();
+    float getMarginRight();
+    float getMarginBottom();
 
     void connectOnResizeChanged(std::function<void(float x, float y, float width, float height)> resizeChanged);
     void disconnectOnResizeChanged();
@@ -125,6 +129,7 @@ private:
     friend class TgMainWindowPrivate;
     friend class TgTextfieldPrivate;
     friend class TgButtonPrivate;
+    friend class TgTexteditPrivate;
 };
 
 #endif // TG_ITEM_2D_H

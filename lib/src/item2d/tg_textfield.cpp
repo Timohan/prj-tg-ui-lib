@@ -31,7 +31,7 @@
  */
 TgTextfield::TgTextfield(TgItem2d *parent, const char *text, const char *fontFile, float fontSize, uint8_t r, uint8_t g, uint8_t b) :
     TgItem2d(parent),
-    m_private(new TgTextfieldPrivate(text, fontFile, fontSize, r, g, b))
+    m_private(new TgTextfieldPrivate(this, text, fontFile ? fontFile : "", fontSize, r, g, b))
 
 {
     TG_FUNCTION_BEGIN();
@@ -62,7 +62,7 @@ TgTextfield::TgTextfield(TgItem2d *parent, const char *text, const char *fontFil
 TgTextfield::TgTextfield(TgItem2d *parent, float x, float y, float width, float height, const char *text, const char *fontFile, float fontSize,
                          uint8_t r, uint8_t g, uint8_t b) :
     TgItem2d(parent, x, y, width, height),
-    m_private(new TgTextfieldPrivate(text, fontFile, fontSize, r, g, b))
+    m_private(new TgTextfieldPrivate(this, text, fontFile, fontSize, r, g, b))
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
@@ -104,7 +104,7 @@ void TgTextfield::checkPositionValues()
     if (!getVisible()) {
         return;
     }
-    m_private->checkPositionValues(this);
+    m_private->checkPositionValues();
     TG_FUNCTION_END();
 }
 

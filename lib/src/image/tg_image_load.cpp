@@ -77,12 +77,15 @@ unsigned char *TgImageLoad::loadPng(const char *filename, int &width, int &heigh
         return nullptr;
     }
 
-    rowPointers = new png_bytep[height]; //reinterpret_cast<png_bytep *>(malloc(sizeof(png_bytep) * height);
+    rowPointers = new png_bytep[height];
     for (int y=0;y<height;y++) {
-        rowPointers[y] = new png_byte[png_get_rowbytes(png, info)]; // (png_byte*) malloc(png_get_rowbytes(png, info));
+        rowPointers[y] = new png_byte[png_get_rowbytes(png, info)];
     }
     png_read_image(png, rowPointers);
     unsigned char *imageData = generateImageData(rowPointers, colorType, width, height);
+    if (!imageData) {
+        TG_ERROR_LOG("Filename: ", filename);
+    }
     png_destroy_read_struct(&png, &info, nullptr);
     for (int y=0;y<height;y++) {
         delete[] rowPointers[y];

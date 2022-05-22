@@ -6,7 +6,8 @@ MainWindow::MainWindow(int width, int height) :
     m_pages(this),
     m_page0(&m_pages, this),
     m_page1(&m_pages),
-    m_page2(&m_pages)
+    m_page2(&m_pages),
+    m_page3(&m_pages)
 {
 }
 
@@ -73,4 +74,9 @@ TgButton *MainWindow::getButton(int page, int index)
 TgTextfield *MainWindow::getTextfield()
 {
     return m_page0.getTextfield();
+}
+
+TgTextedit *MainWindow::getTextEdit()
+{
+    return m_page3.getTextEdit();
 }

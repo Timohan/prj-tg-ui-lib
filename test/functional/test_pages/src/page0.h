@@ -22,18 +22,21 @@ private:
 
     TgButton m_buttonChangeToPage1;
     TgButton m_buttonChangeToPage2;
+    TgButton m_buttonChangeToPage3;
     TgButton m_buttonClose;
 
     TgTextfield m_textField;
 
     void onButtonClickPage1(TgMouseType type, float x, float y);
     void onButtonClickPage2(TgMouseType type, float x, float y);
+    void onButtonClickPage3(TgMouseType type, float x, float y);
     void onButtonCloseClick(TgMouseType type, float x, float y);
     void onPageVisibleChanged(bool visible);
     void onButtonCloseVisibleChanged(bool visible);
 
     void onButtonSelectedChangeToPage1Changed(bool selected);
     void onButtonSelectedChangeToPage2Changed(bool selected);
+    void onButtonSelectedChangeToPage3Changed(bool selected);
     void onButtonSelectedCloseChanged(bool selected);
 };
 

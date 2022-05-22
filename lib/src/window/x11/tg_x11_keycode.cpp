@@ -93,6 +93,30 @@ bool TgX11KeyCode::keyCodeToEventDataPress(Display *display, unsigned int keyCod
     data.m_event.m_keyEvent.m_previousItem2d = nullptr;
     data.m_type = TgEventType::EventTypeKeyPress;
     switch (keySym) {
+        case XK_Left:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Left;
+            break;
+        case XK_Right:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Right;
+            break;
+        case XK_Up:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Up;
+            break;
+        case XK_Down:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Down;
+            break;
+        case XK_BackSpace:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Backspace;
+            break;
+        case XK_Delete:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Delete;
+            break;
         case XK_Tab:
         case XK_ISO_Left_Tab:
             data.m_event.m_keyEvent.m_key = static_cast<uint32_t>('\t');
@@ -115,6 +139,7 @@ bool TgX11KeyCode::keyCodeToEventDataPress(Display *display, unsigned int keyCod
             m_modsKeyDown.m_altGr = true;
             break;
         default:
+            data.m_type = TgEventType::EventTypeCharacterCallback;
             data.m_event.m_keyEvent.m_key = static_cast<uint32_t>(keySym);
             break;
     }
@@ -142,6 +167,30 @@ bool TgX11KeyCode::keyCodeToEventDataRelease(Display *display, unsigned int keyC
     data.m_event.m_keyEvent.m_previousItem2d = nullptr;
     data.m_type = TgEventType::EventTypeKeyRelease;
     switch (keySym) {
+        case XK_Left:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Left;
+            break;
+        case XK_Right:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Right;
+            break;
+        case XK_Up:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Up;
+            break;
+        case XK_Down:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Down;
+            break;
+        case XK_BackSpace:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Backspace;
+            break;
+        case XK_Delete:
+            data.m_event.m_keyEvent.m_key = 0;
+            data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Delete;
+            break;
         case XK_Tab:
         case XK_ISO_Left_Tab:
             data.m_event.m_keyEvent.m_key = static_cast<uint32_t>('\t');

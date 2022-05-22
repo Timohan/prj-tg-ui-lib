@@ -9,17 +9,20 @@ Page0::Page0(TgPages *parent, MainWindow *mainWindow) :
     m_mainWindow(mainWindow),
     m_buttonChangeToPage1(this, 20, 20, 250, 50, "Change page to page 1"),
     m_buttonChangeToPage2(this, 290, 20, 250, 50, "Change page to page 2"),
+    m_buttonChangeToPage3(this, 290, 90, 250, 50, "Change page to page 3"),
     m_buttonClose(this, 20, 90, 200, 50, "Close button"),
     m_textField(this, "test", "", 21, 0, 0, 0)
 {
     m_buttonChangeToPage1.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage1, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeToPage2.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage2, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonChangeToPage3.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage3, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonClose.connectOnMouseClicked( std::bind(&Page0::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     this->connectOnVisibleChanged( std::bind(&Page0::onPageVisibleChanged, this, std::placeholders::_1) );
     m_buttonClose.connectOnVisibleChanged( std::bind(&Page0::onButtonCloseVisibleChanged, this, std::placeholders::_1) );
 
     m_buttonChangeToPage1.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedChangeToPage1Changed, this, std::placeholders::_1) );
     m_buttonChangeToPage2.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedChangeToPage2Changed, this, std::placeholders::_1) );
+    m_buttonChangeToPage3.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedChangeToPage3Changed, this, std::placeholders::_1) );
     m_buttonClose.connectOnSelectedChanged( std::bind(&Page0::onButtonSelectedCloseChanged, this, std::placeholders::_1) );
 
     m_textField.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignRight);
@@ -48,6 +51,15 @@ void Page0::onButtonClickPage2(TgMouseType type, float x, float y)
     (void)y;
     std::cout << "Clicked page 0 button to page 2\n";
     m_pages->setPage(2);
+}
+
+void Page0::onButtonClickPage3(TgMouseType type, float x, float y)
+{
+    (void)type;
+    (void)x;
+    (void)y;
+    std::cout << "Clicked page 0 button to page 3\n";
+    m_pages->setPage(3);
 }
 
 /*!
@@ -81,6 +93,11 @@ void Page0::onButtonSelectedChangeToPage2Changed(bool selected)
     std::cout << "Page0::ChangeToPage2 Button selected changed: " << selected << "\n";
 }
 
+void Page0::onButtonSelectedChangeToPage3Changed(bool selected)
+{
+    std::cout << "Page0::ChangeToPage3 Button selected changed: " << selected << "\n";
+}
+
 void Page0::onButtonSelectedCloseChanged(bool selected)
 {
     std::cout << "Page0::Close Button selected changed: " << selected << "\n";
@@ -91,7 +108,8 @@ TgButton *Page0::getButton(int index)
     switch (index) {
         case 0: return &m_buttonChangeToPage1;
         case 1: return &m_buttonChangeToPage2;
-        case 2: return &m_buttonClose;
+        case 2: return &m_buttonChangeToPage3;
+        case 3: return &m_buttonClose;
         default:
             break;
     }

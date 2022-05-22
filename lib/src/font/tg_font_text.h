@@ -37,6 +37,8 @@ public:
     TgFontText();
 
     void setFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames);
+    static void getFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames,
+                                 std::vector<std::string> &listFontFileNamesOut);
     void addCharacter(uint32_t character, uint8_t r, uint8_t g, uint8_t b);
     void generateFontTextInfoGlyphs(float fontSize);
 

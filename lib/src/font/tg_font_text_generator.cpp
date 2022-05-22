@@ -55,6 +55,47 @@ void TgFontTextGenerator::getCharacters(const std::vector<TgTextFieldText> &list
 }
 
 /*!
+ * \brief TgFontText::getCharacters
+ *
+ * gets text (listText) and converts it to list of characters (listCharacter)
+ *
+ * \param listText [in] text
+ * \param listCharacter [out] list of character from listText
+ */
+void TgFontTextGenerator::getCharacters(const std::vector<TgTextFieldText> &listText, std::vector<TgTextCharacter> &listCharacter)
+{
+    listCharacter.clear();
+    if (listText.empty()) {
+        return;
+    }
+    uint32_t characterIndex;
+    uint32_t *list_characters = nullptr, list_characters_size;
+
+    for (size_t i=0;i<listText.size();i++) {
+        if (listText.at(i).m_text.empty()) {
+            continue;
+        }
+        if (prj_ttf_reader_get_characters(listText.at(i).m_text.c_str(), &list_characters, &list_characters_size)) {
+            TG_ERROR_LOG("Invalid UTF-8 text: ", generateSingleLineText(listText).c_str());
+            return;
+        }
+        for (characterIndex=0;characterIndex<list_characters_size;characterIndex++) {
+            TgTextCharacter c;
+            c.m_character = list_characters[characterIndex];
+            c.m_r = listText.at(i).m_textColorR;
+            c.m_g = listText.at(i).m_textColorG;
+            c.m_b = listText.at(i).m_textColorB;
+            listCharacter.push_back(c);
+        }
+        if (list_characters) {
+            free(list_characters);
+            list_characters = nullptr;
+        }
+    }
+    return;
+}
+
+/*!
  * \brief TgFontText::generateFontTextInfo
  *
  * generate TgFontText for the text

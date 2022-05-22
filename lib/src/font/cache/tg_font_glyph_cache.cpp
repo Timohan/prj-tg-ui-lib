@@ -12,6 +12,7 @@
 #include "tg_font_glyph_cache.h"
 #include <cstring>
 #include <algorithm>
+#include <cmath>
 #include "../../global/tg_global_log.h"
 #include "../../shader/tg_shader_2d.h"
 #include "../tg_character_positions.h"
@@ -204,6 +205,81 @@ void TgFontGlyphCache::render(TgFontText *fontText, const int vertexTransformInd
 
         fontText->getFontInfo(i)->m_listRender[ fontText->getCharacter(i)->m_characterInFontInfoIndex ]->render( fontText->getFontInfo(i)->m_textureImage, 0, 4, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
+}
+
+/*!
+ * \brief TgFontGlyphCache::getTextPosition
+ *
+ * get cursor drawing relative position (x)
+ * \param fontText
+ * \param cursorPosition 0 == first character, 1 == second character
+ * \param positionX [out] cursorPosition's drawing relative position
+ */
+void TgFontGlyphCache::getTextPosition(TgFontText *fontText, size_t cursorPosition, float &positionX)
+{
+    if (!fontText) {
+        positionX = 0;
+        return;
+    }
+    if (cursorPosition < fontText->getCharacterCount()) {
+        positionX = fontText->getCharacter(cursorPosition)->positionLeftX;
+    } else if (cursorPosition == fontText->getCharacterCount()) {
+        positionX = fontText->getTextWidth();
+    }
+}
+
+size_t TgFontGlyphCache::getTextCharacterIndex(TgFontText *fontText, const float x)
+{
+    TG_FUNCTION_BEGIN();
+    if (x <= 0) {
+        TG_FUNCTION_END();
+        return 0;
+    }
+
+    if (x >= fontText->getTextWidth()) {
+        TG_FUNCTION_END();
+        return fontText->getCharacterCount();
+    }
+
+    const size_t characterCount = fontText->getCharacterCount();
+    size_t ret = static_cast<size_t>(x*static_cast<float>(characterCount)/fontText->getTextWidth());
+    float characterPositionX;
+    int previousAdd = 0;
+    while (1) {
+        getTextPosition(fontText, ret, characterPositionX);
+        if (characterPositionX < x) {
+            if (ret == characterCount) {
+                TG_FUNCTION_END();
+                return ret;
+            }
+            if (previousAdd == -1) {
+                TG_FUNCTION_END();
+                return ret;
+            }
+            ret++;
+            previousAdd = 1;
+        } else if (characterPositionX > x) {
+            if (ret == 0) {
+                TG_FUNCTION_END();
+                return ret;
+            }
+            if (previousAdd == 1) {
+                if (ret > 0) {
+                    TG_FUNCTION_END();
+                    return ret - 1;
+                }
+                TG_FUNCTION_END();
+                return ret;
+            }
+            ret--;
+            previousAdd = -1;
+        } else {
+            TG_FUNCTION_END();
+            return ret;
+        }
+    }
+
+    TG_FUNCTION_END();
 }
 
 /*!

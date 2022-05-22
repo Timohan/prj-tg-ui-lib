@@ -69,6 +69,12 @@ enum TgPressReleaseKey
 {
     PressReleaseKey_NormalKey = 0, /**< normal key */
     PressReleaseKey_KP_Enter,      /**< keypad enter */
+    PressReleaseKey_Key_Left,      /**< arrow key left */
+    PressReleaseKey_Key_Right,     /**< arrow key right */
+    PressReleaseKey_Key_Up,        /**< arrow key up */
+    PressReleaseKey_Key_Down,      /**< arrow key down */
+    PressReleaseKey_Key_Backspace, /**< key backspace */
+    PressReleaseKey_Key_Delete,    /**< key del */
 };
 
 /*!

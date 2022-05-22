@@ -73,11 +73,17 @@ protected:
     virtual void onHoverChanged(bool hover);
     virtual void onDownChanged(bool down);
     virtual void onEnabledChanged(bool enabled) override;
+    virtual void onMouseClicked(TgMouseType button, float x, float y);
+    virtual void onMousePressed(TgMouseType button, float x, float y);
+    virtual void onMouseReleased(TgMouseType button, bool inArea, float x, float y);
+    virtual void onMouseMove(bool inArea, float x, float y);
 
 private:
     TgMouseCapturePrivate *m_private;
 
     friend class TgButton;
+    friend class TgMouseCaptureClick;
+    friend class TgMouseCapturePrivate;
 };
 
 #endif // TG_MOUSE_CAPTURE_H

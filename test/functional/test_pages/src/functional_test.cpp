@@ -37,6 +37,13 @@ void FunctionalTest::start()
         int i;
         sleep(2);
 
+        if (!makeEditTextTest()) {
+            sleep(1);
+            m_returnIndex = 1;
+            m_mainWindow->exit();
+            return;
+        }
+
         if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image0.png", 800, 600)) {
             m_returnIndex = 1;
             m_mainWindow->exit();
@@ -74,9 +81,10 @@ void FunctionalTest::start()
             m_mainWindow->exit();
             return;
         }
-        for (i=0;i<8;i++) {
-            sendKeyPress('\t', 1);
-            if (!isCorrectButtonSelected(0, i % 3)) {
+        for (i=0;i<11;i++) {
+            sendKeyPress('\t', 1000);
+            if (!isCorrectButtonSelected(0, i % 4)) {
+                TG_ERROR_LOG("Incorrect button selected, tab index: ", i);
                 m_returnIndex = 1;
                 m_mainWindow->exit();
                 return;
@@ -169,7 +177,7 @@ void FunctionalTest::sendButtonClick(uint32_t timeBetweenPressRelease, int x, in
     sleep(waitAfterRelease);
 }
 
-void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int pressX, int pressY, int releaseX, int releaseY, uint32_t waitAfterRelease)
+void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int pressX, int pressY, int releaseX, int releaseY, uint32_t waitAfterRelease, bool sendPress, bool sendRelease)
 {
     int button = Button1;
     Display *display = m_mainWindow->getDisplay();
@@ -183,7 +191,9 @@ void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int p
     event.xbutton.same_screen = True;
     event.xbutton.x = pressX;
     event.xbutton.y = pressY;
-    XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+    if (sendPress) {
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+    }
     XFlush(display);
     sleep(timeBetweenPressRelease);
 
@@ -195,7 +205,7 @@ void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int p
         eventMove.xmotion.y = moveValueToDirection(eventMove.xmotion.y, releaseY);
         XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &eventMove);
         XFlush(display);
-        usleep(1000);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         if (eventMove.xmotion.x == releaseX
             && eventMove.xmotion.y == releaseY) {
             break;
@@ -206,7 +216,9 @@ void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int p
     event.xbutton.x = releaseX;
     event.xbutton.y = releaseY;
     event.xbutton.state = 0x100;
-    XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+    if (sendRelease) {
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+    }
     XFlush(display);
     sleep(waitAfterRelease);
 }
@@ -234,7 +246,7 @@ int FunctionalTest::moveValueToDirection(int currentValue, int directionValue)
     return directionValue;
 }
 
-void FunctionalTest::sendKeyPress(uint32_t key, uint32_t waitAfterRelease)
+void FunctionalTest::sendKeyPress(uint32_t key, uint32_t waitAfterRelease, bool keyPress, bool keyRelease)
 {
     XKeyEvent event;
     event.display     = m_mainWindow->getDisplay();
@@ -254,14 +266,18 @@ void FunctionalTest::sendKeyPress(uint32_t key, uint32_t waitAfterRelease)
         default:
             break;
     }
-    event.keycode     = XKeysymToKeycode(m_mainWindow->getDisplay(), XK_Tab);
+    event.keycode     = XKeysymToKeycode(m_mainWindow->getDisplay(), key);
     event.state       = 0;
     event.type = KeyPress;
-    XSendEvent(m_mainWindow->getDisplay(), *m_mainWindow->getWindow(), True, KeyPressMask, (XEvent *)&event);
-    sleep(waitAfterRelease);
-    event.type = KeyRelease;
-    XSendEvent(m_mainWindow->getDisplay(), *m_mainWindow->getWindow(), True, KeyPressMask, (XEvent *)&event);
-    sleep(waitAfterRelease);
+    if (keyPress) {
+        XSendEvent(m_mainWindow->getDisplay(), *m_mainWindow->getWindow(), True, KeyPressMask, (XEvent *)&event);
+        std::this_thread::sleep_for(std::chrono::milliseconds(waitAfterRelease));
+    }
+    if (keyRelease) {
+        event.type = KeyRelease;
+        XSendEvent(m_mainWindow->getDisplay(), *m_mainWindow->getWindow(), True, KeyPressMask, (XEvent *)&event);
+        std::this_thread::sleep_for(std::chrono::milliseconds(waitAfterRelease));
+    }
 }
 
 bool FunctionalTest::isCorrectButtonSelected(int page, int index)
@@ -356,5 +372,250 @@ bool FunctionalTest::makeCharacterCountTest()
         TG_ERROR_LOG("Character could is wrong for textifeld, it should be: 2, it is: ", m_mainWindow->getTextfield()->getCharacterCount());
         return false;
     }
+    return true;
+}
+
+bool FunctionalTest::makeEditTextTest()
+{
+    sendButtonClick(1, 320, 100, 1);
+    if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit0.png", 800, 600)) {
+        return false;
+    }
+    sendKeyPress('\t', 50);
+    if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit1.png", 800, 600)) {
+        return false;
+    }
+    sendKeyPress('\t', 50);
+    sendKeyPress('\t', 50);
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit2_0.png", "image_textedit2_1.png", 800, 600)) {
+        return false;
+    }
+
+    sendKeyPress('a', 50);
+    sendKeyPress('b', 50);
+    sendKeyPress('c', 50);
+    sendKeyPress('d', 50);
+    sendKeyPress(' ', 50);
+    sendKeyPress('e', 50);
+    sendKeyPress('f', 50);
+    sendKeyPress('g', 50);
+    sendKeyPress('h', 50);
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit3_0.png", "image_textedit3_1.png", 800, 600)) {
+        return false;
+    }
+
+    sendKeyPress(XK_Left, 50);
+    sendKeyPress(XK_Left, 50);
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit3_0.png", "image_textedit4_1.png", 800, 600)) {
+        return false;
+    }
+
+    sendKeyPress('x', 50);
+    sendKeyPress(XK_Shift_L, 50, true, false);
+    sendKeyPress(XK_Right, 50);
+    sendKeyPress(XK_Right, 50);
+    sendKeyPress(XK_Right, 50);
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit5_0.png", "image_textedit5_1.png", 800, 600)) {
+        return false;
+    }
+
+    sendKeyPress(XK_Shift_L, 50, false, true);
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit5_0.png", "image_textedit5_1.png", 800, 600)) {
+        TG_ERROR_LOG("Images testing failed after releasing XK_Shift_L");
+        return false;
+    }
+
+    sendKeyPress('0', 50);
+    sendKeyPress('1', 50);
+    sendKeyPress('2', 50);
+    sendKeyPress('3', 50);
+    sendKeyPress('4', 50);
+    sendKeyPress('5', 50);
+    sendKeyPress('6', 50);
+    sendKeyPress('7', 50);
+    sendKeyPress('8', 50);
+    sendKeyPress('9', 50);
+
+    sendKeyPress(XK_Shift_R, 50, true, false);
+    sendKeyPress('a', 50);
+    sendKeyPress('b', 50);
+    sendKeyPress('c', 50);
+    sendKeyPress('d', 50);
+    sendKeyPress('e', 50);
+    sendKeyPress('f', 50);
+    sendKeyPress('g', 50);
+    sendKeyPress('h', 50);
+    sendKeyPress(XK_Left, 50);
+    sendKeyPress(XK_Left, 50);
+    sendKeyPress(XK_Left, 50);
+    sendKeyPress(XK_Left, 50);
+
+    if (m_mainWindow->getTextEdit()->getCursorPosition() != 22) {
+        TG_ERROR_LOG("Cursor position is not 22, it is: ", m_mainWindow->getTextEdit()->getCursorPosition());
+        return false;
+    }
+
+    if (m_mainWindow->getTextEdit()->getSelectedTextSize() != 4) {
+        TG_ERROR_LOG("Cursor position is not 4, it is: ", m_mainWindow->getTextEdit()->getSelectedTextSize());
+        return false;
+    }
+
+    sendKeyPress(XK_Shift_R, 50, false, true);
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit6_0.png", "image_textedit6_1.png", 800, 600)) {
+        return false;
+    }
+
+    for (size_t i=0;i<50;i++) {
+        sendKeyPress(XK_Left, 50);
+    }
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit7_0.png", "image_textedit7_1.png", 800, 600)) {
+        return false;
+    }
+
+    sendButtonMoveClick(1, 35, 110, 85, 115, 1);
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit8_0.png", "image_textedit8_1.png", 800, 600)) {
+        return false;
+    }
+    sendButtonMoveClick(1, 35, 110, 330, 115, 1);
+    sendKeyPress('o', 50);
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit9_0.png", "image_textedit9_1.png", 800, 600)) {
+        return false;
+    }
+
+    sendKeyPress('0', 50);
+    sendKeyPress('1', 50);
+    sendKeyPress('2', 50);
+    sendKeyPress('3', 50);
+    sendKeyPress('4', 50);
+    sendKeyPress('5', 50);
+    sendKeyPress('6', 50);
+    sendKeyPress('7', 50);
+    sendKeyPress('8', 50);
+    sendKeyPress('9', 50);
+
+    sendKeyPress('a', 50);
+    sendKeyPress('b', 50);
+    sendKeyPress('c', 50);
+    sendKeyPress('d', 50);
+    sendKeyPress('e', 50);
+    sendKeyPress('f', 50);
+    sendKeyPress('g', 50);
+    sendKeyPress('h', 50);
+
+    sendKeyPress('0', 50);
+    sendKeyPress('1', 50);
+    sendKeyPress('2', 50);
+    sendKeyPress('3', 50);
+    sendKeyPress('4', 50);
+    sendKeyPress('5', 50);
+    sendKeyPress('6', 50);
+    sendKeyPress('7', 50);
+    sendKeyPress('8', 50);
+    sendKeyPress('9', 50);
+
+    sendKeyPress('a', 50);
+    sendKeyPress('b', 50);
+    sendKeyPress('c', 50);
+    sendKeyPress('d', 50);
+    sendKeyPress('e', 50);
+    sendKeyPress('f', 50);
+    sendKeyPress('g', 50);
+    sendKeyPress('h', 50);
+    sendButtonMoveClick(1, 240, 110, 0, 115, 1);
+    sendKeyPress('j', 50);
+
+    if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit10_0.png", "image_textedit10_1.png", 800, 600)) {
+        return false;
+    }
+
+    if (m_mainWindow->getTextEdit()->getCursorPosition() != 1) {
+        TG_ERROR_LOG("Cursor position is not 1, it is: ", m_mainWindow->getTextEdit()->getCursorPosition());
+        return false;
+    }
+
+    if (m_mainWindow->getTextEdit()->getCharacterCount() != 4) {
+        TG_ERROR_LOG("Character count is not 4, it is: ", m_mainWindow->getTextEdit()->getCharacterCount());
+        return false;
+    }
+
+    if (m_mainWindow->getTextEdit()->getCharacterByIndex(0) != 'j'
+        || m_mainWindow->getTextEdit()->getCharacterByIndex(1) != 'f'
+        || m_mainWindow->getTextEdit()->getCharacterByIndex(2) != 'g'
+        || m_mainWindow->getTextEdit()->getCharacterByIndex(3) != 'h'
+        || m_mainWindow->getTextEdit()->getCharacterByIndex(4) != 0) {
+        TG_ERROR_LOG("Text have invalid character",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(0), " ",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(1), " ",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(2), " ",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(3), " ",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(4));
+        return false;
+    }
+    if (m_mainWindow->getTextEdit()->getSelectedTextSize() != 0) {
+        TG_ERROR_LOG("Cursor selected text size is not 0, it is: ", m_mainWindow->getTextEdit()->getSelectedTextSize());
+        return false;
+    }
+
+    sendKeyPress(XK_Shift_R, 50, true, false);
+    sendKeyPress(XK_Right, 50);
+    sendKeyPress(XK_Shift_R, 50, false, true);
+
+    if (m_mainWindow->getTextEdit()->getCursorPosition() != 2) {
+        TG_ERROR_LOG("Cursor position is not 2, it is: ", m_mainWindow->getTextEdit()->getCursorPosition());
+        return false;
+    }
+
+    if (m_mainWindow->getTextEdit()->getSelectedTextSize() != -1) {
+        TG_ERROR_LOG("Cursor selected text size is not -1, it is: ", m_mainWindow->getTextEdit()->getSelectedTextSize());
+        return false;
+    }
+
+    sendKeyPress(XK_Right, 50);
+    sendKeyPress(XK_Shift_R, 50, true, false);
+    sendKeyPress(XK_Left, 50);
+    sendKeyPress(XK_Shift_R, 50, false, true);
+
+    if (m_mainWindow->getTextEdit()->getCursorPosition() != 1) {
+        TG_ERROR_LOG("Cursor position is not 1, it is: ", m_mainWindow->getTextEdit()->getCursorPosition());
+        return false;
+    }
+
+    if (m_mainWindow->getTextEdit()->getSelectedTextSize() != 1) {
+        TG_ERROR_LOG("Cursor selected text size is not 1, it is: ", m_mainWindow->getTextEdit()->getSelectedTextSize());
+        return false;
+    }
+    sendButtonClick(1, 320, 35, 1);
+    if (m_mainWindow->getTextEdit()->getCharacterByIndex(0) != 'a'
+        || m_mainWindow->getTextEdit()->getCharacterByIndex(1) != 'b'
+        || m_mainWindow->getTextEdit()->getCharacterByIndex(2) != 'c'
+        || m_mainWindow->getTextEdit()->getCharacterByIndex(3) != 0) {
+        TG_ERROR_LOG("Text have invalid character",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(0), " ",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(1), " ",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(2), " ",
+            m_mainWindow->getTextEdit()->getCharacterByIndex(3));
+        return false;
+    }
+    if (m_mainWindow->getTextEdit()->getSelectedTextSize() != 0) {
+        TG_ERROR_LOG("Cursor selected text size is not 0, it is: ", m_mainWindow->getTextEdit()->getSelectedTextSize());
+        return false;
+    }
+
+    if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit11.png", 800, 600)) {
+        return false;
+    }
+    sendButtonMoveClick(1, 35, 110, 36, 110, 1, false, false);
+    if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit12.png", 800, 600)) {
+        return false;
+    }
+    sendButtonClick(1, 40, 35, 1);
     return true;
 }

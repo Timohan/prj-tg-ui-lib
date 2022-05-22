@@ -45,6 +45,11 @@ public:
     void setMarginRight(float right);
     void setMarginBottom(float bottom);
 
+    float getMarginLeft();
+    float getMarginTop();
+    float getMarginRight();
+    float getMarginBottom();
+
     void connectOnResizeChanged(std::function<void(float x, float y, float width, float height)> resizeChanged);
     void disconnectOnResizeChanged();
 

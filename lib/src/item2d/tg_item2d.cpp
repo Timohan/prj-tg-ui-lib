@@ -863,3 +863,51 @@ void TgItem2d::setPrevTabItem(TgItem2d *prevTabItem)
     m_private->setPrevTabItem(prevTabItem);
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgItem2d::getMarginLeft
+ *
+ * \return left margin
+ */
+float TgItem2d::getMarginLeft()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getMarginLeft();
+}
+
+/*!
+ * \brief TgItem2d::getMarginTop
+ *
+ * \return top margin
+ */
+float TgItem2d::getMarginTop()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getMarginTop();
+}
+
+/*!
+ * \brief TgItem2d::getMarginRight
+ *
+ * \return right margin
+ */
+float TgItem2d::getMarginRight()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getMarginRight();
+}
+
+/*!
+ * \brief TgItem2d::getMarginBottom
+ *
+ * \return bottom margin
+ */
+float TgItem2d::getMarginBottom()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getMarginBottom();
+}

@@ -77,6 +77,9 @@ protected:
 
 private:
     TgTextfieldPrivate *m_private;
+
+    friend class TgTextEdit;
+    friend class TgTexteditPrivate;
 };
 
 #endif // TG_TEXTFIELD_H

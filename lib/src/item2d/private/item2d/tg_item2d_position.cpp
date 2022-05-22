@@ -327,6 +327,35 @@ void TgItem2dPosition::setMarginBottom(float bottom)
     TG_FUNCTION_END();
 }
 
+float TgItem2dPosition::getMarginLeft()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_marginValues.m_left;
+}
+
+float TgItem2dPosition::getMarginTop()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_marginValues.m_top;
+}
+
+float TgItem2dPosition::getMarginRight()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_marginValues.m_right;
+}
+
+float TgItem2dPosition::getMarginBottom()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_marginValues.m_bottom;
+}
+
+
 /*!
  * \brief TgItem2dPosition::getAnchorState
  *

@@ -22,7 +22,7 @@
  */
 TgMouseCapture::TgMouseCapture(TgItem2d *parent) :
     TgItem2d(parent),
-    m_private(new TgMouseCapturePrivate())
+    m_private(new TgMouseCapturePrivate(this))
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
@@ -41,7 +41,7 @@ TgMouseCapture::TgMouseCapture(TgItem2d *parent) :
  */
 TgMouseCapture::TgMouseCapture(TgItem2d *parent, float x, float y, float width, float height) :
     TgItem2d(parent, x, y, width, height),
-    m_private(new TgMouseCapturePrivate())
+    m_private(new TgMouseCapturePrivate(this))
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
@@ -120,7 +120,8 @@ TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindow
                     m_private->setMouseCursorOnHover(true);
                     onHoverChanged(true);
                 }
-                m_private->setMouseMove(static_cast<float>(eventData->m_event.m_mouseEvent.m_x),
+                m_private->setMouseMove(true,
+                                        static_cast<float>(eventData->m_event.m_mouseEvent.m_x),
                                         static_cast<float>(eventData->m_event.m_mouseEvent.m_y),
                                         eventData->m_event.m_mouseEvent.m_time);
             }
@@ -131,6 +132,13 @@ TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindow
                 if (m_private->getMouseCursorOnHover()) {
                     m_private->setMouseCursorOnHover(false);
                     onHoverChanged(false);
+                }
+                if (eventData->m_event.m_mouseEvent.m_currentMouseDownItem == this
+                    || (!eventData->m_event.m_mouseEvent.m_currentMouseDownItem && m_private->getMousePressedAnyButton()) ) {
+                    m_private->setMouseMove(false,
+                                            static_cast<float>(eventData->m_event.m_mouseEvent.m_x),
+                                            static_cast<float>(eventData->m_event.m_mouseEvent.m_y),
+                                            eventData->m_event.m_mouseEvent.m_time);
                 }
             }
         }
@@ -306,6 +314,84 @@ void TgMouseCapture::onDownChanged(bool down)
     (void)down;
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgMouseCapture::onMouseClicked
+ *
+ * virtual function when mouse is clicked
+ *
+ * \param button button
+ * \param x x position
+ * \param y y position
+ */
+void TgMouseCapture::onMouseClicked(TgMouseType button, float x, float y)
+{
+    TG_FUNCTION_BEGIN();
+    (void)button;
+    (void)x;
+    (void)y;
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgMouseCapture::onMousePressed
+ *
+ * virtual function when mouse is pressed down
+ *
+ * \param button button
+ * \param x x position
+ * \param y y position
+ */
+void TgMouseCapture::onMousePressed(TgMouseType button, float x, float y)
+{
+    TG_FUNCTION_BEGIN();
+    (void)button;
+    (void)x;
+    (void)y;
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgMouseCapture::onMouseReleased
+ *
+ * virtual function when mouse is released (up)
+ *
+ * \param button button
+ * \param inArea if true, mouse was released on this TgMouseCapture area,
+ * if false, then mouse was released outside the TgMouseCapture area
+ * \param x x position
+ * \param y y position
+ */
+void TgMouseCapture::onMouseReleased(TgMouseType button, bool inArea, float x, float y)
+{
+    TG_FUNCTION_BEGIN();
+    (void)button;
+    (void)inArea;
+    (void)x;
+    (void)y;
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgMouseCapture::onMouseMove
+ *
+ * virtual function when mouse is moving on the TgMouseCapture area
+ *
+ * \param inArea if true, mouse was moving in this area
+ * this can be false, only if it was pressed down in the this
+ * TgMouseCapture
+ * \param x x position
+ * \param y y position
+ */
+void TgMouseCapture::onMouseMove(bool inArea, float x, float y)
+{
+    TG_FUNCTION_BEGIN();
+    (void)inArea;
+    (void)x;
+    (void)y;
+    TG_FUNCTION_END();
+}
+
 
 /*!
  * \brief TgMouseCapture::getMouseCursorOnHover
