@@ -35,6 +35,7 @@ public:
     void setVerticalAlign(TgItem2d *currentItem, TgTextfieldVerticalAlign align);
     TgTextfieldHorizontalAlign getAlignHorizontal() const;
     TgTextfieldVerticalAlign getAlignVertical() const;
+    std::string getText() const;
     void setText(const char *text, TgItem2d *currentItem);
     void setText(const std::vector<TgTextFieldText> &listText, TgItem2d *currentItem);
     void editText(std::vector<uint32_t>&listAddCharacter, const size_t startCharacterIndex, const size_t characterCountToRemove);
@@ -60,7 +61,7 @@ private:
     std::vector<TgMatrix4x4>m_listTransform;
     TgTextfieldHorizontalAlign m_alignHorizontal;
     TgTextfieldVerticalAlign m_alignVertical;
-    std::recursive_mutex m_mutex;
+    mutable std::recursive_mutex m_mutex;
 
     void generateTransform(TgItem2d *currentItem);
 };

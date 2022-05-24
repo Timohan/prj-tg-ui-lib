@@ -188,6 +188,18 @@ void TgTextfield::setText(const std::vector<TgTextFieldText> &listText)
 }
 
 /*!
+ * \brief TgTextfield::getText
+ *
+ * \return text (utf8)
+ */
+std::string TgTextfield::getText() const
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getText();
+}
+
+/*!
  * \brief TgTextfield::setFontSize
  *
  * \param fontSize fon size for text

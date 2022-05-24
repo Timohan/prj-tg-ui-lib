@@ -317,6 +317,11 @@ bool FunctionalTest::isCorrectButtonSelected(int page, int index)
 bool FunctionalTest::makeCharacterCountTest()
 {
     m_mainWindow->getTextfield()->setText("meh");
+    if (m_mainWindow->getTextfield()->getText() != "meh") {
+        TG_ERROR_LOG("Getting text is not correct ", m_mainWindow->getTextfield()->getText());
+        return false;
+    }
+
     if (m_mainWindow->getTextfield()->getCharacterCount() != 3) {
         TG_ERROR_LOG("Character could is wrong for textifeld, it should be: 3, it is: ", m_mainWindow->getTextfield()->getCharacterCount());
         return false;
@@ -357,6 +362,11 @@ bool FunctionalTest::makeCharacterCountTest()
     listText.push_back(t2);
     m_mainWindow->getTextfield()->setText(listText);
 
+    if (m_mainWindow->getTextfield()->getText() != "x text to યુનિકોડ 未来") {
+        TG_ERROR_LOG("Getting text is not correct ", m_mainWindow->getTextfield()->getText());
+        return false;
+    }
+
     if (m_mainWindow->getTextfield()->getCharacterCount() != 20) {
         TG_ERROR_LOG("Character could is wrong for textifeld, it should be: 20, it is: ", m_mainWindow->getTextfield()->getCharacterCount());
         return false;
@@ -377,6 +387,37 @@ bool FunctionalTest::makeCharacterCountTest()
 
 bool FunctionalTest::makeEditTextTest()
 {
+    std::vector<TgTextFieldText>listText;
+    TgTextFieldText t0;
+    TgTextFieldText t1;
+    TgTextFieldText t2;
+
+    t0.m_text = "x text to";
+    t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
+    listText.push_back(t0);
+    t1.m_text = " યુનિકોડ";
+    t1.m_textColorG = 255;
+    t1.m_textColorR = t1.m_textColorB = 0;
+    listText.push_back(t1);
+    t2.m_text = " 未来";
+    t2.m_textColorR = 255;
+    t2.m_textColorG = t2.m_textColorB = 0;
+    listText.push_back(t2);
+    m_mainWindow->getTextEdit()->setText(listText);
+
+    if (m_mainWindow->getTextEdit()->getText() != "x text to યુનિકોડ 未来") {
+        TG_ERROR_LOG("Getting text is not correct ", m_mainWindow->getTextEdit()->getText());
+        return false;
+    }
+
+    m_mainWindow->getTextEdit()->setText("meh");
+    if (m_mainWindow->getTextEdit()->getText() != "meh") {
+        TG_ERROR_LOG("Getting text is not correct ", m_mainWindow->getTextEdit()->getText());
+        return false;
+    }
+
+    m_mainWindow->getTextEdit()->setText("");
+
     sendButtonClick(1, 320, 100, 1);
     if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit0.png", 800, 600)) {
         return false;
@@ -401,6 +442,11 @@ bool FunctionalTest::makeEditTextTest()
     sendKeyPress('f', 50);
     sendKeyPress('g', 50);
     sendKeyPress('h', 50);
+
+    if (m_mainWindow->getTextEdit()->getText() != "abcd efgh") {
+        TG_ERROR_LOG("Getting text is not correct ", m_mainWindow->getTextEdit()->getText());
+        return false;
+    }
 
     if (!FunctionalTestImage::isImagesToEqual(m_mainWindow, "image_textedit3_0.png", "image_textedit3_1.png", 800, 600)) {
         return false;

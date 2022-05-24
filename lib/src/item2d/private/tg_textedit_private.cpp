@@ -111,6 +111,22 @@ void TgTexteditPrivate::setText(const std::vector<TgTextFieldText> &listText)
 }
 
 /*!
+ * \brief TgTexteditPrivate::getText
+ *
+ * \return text (utf8)
+ */
+std::string TgTexteditPrivate::getText() const
+{
+    TG_FUNCTION_BEGIN();
+    std::string ret;
+    m_mutex.lock();
+    ret = m_textField.getText();
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
  * \brief TgTexteditPrivate::getTextLeftMargin
  *
  * the default margin between background area of textfield

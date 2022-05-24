@@ -34,8 +34,6 @@ public:
     static void getCharacters(const std::vector<TgTextFieldText> &listText, std::vector<TgTextCharacter> &listCharacter);
     static TgFontText *generateFontTextInfo(const std::vector<TgTextFieldText> &listText, const std::string &mainFontFile);
     static bool changeTextColor(const std::vector<TgTextFieldText> &listText, TgFontText *fontText);
-
-private:
     static std::string generateSingleLineText(const std::vector<TgTextFieldText> &listText);
 };
 

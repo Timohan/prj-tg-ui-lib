@@ -167,6 +167,20 @@ void TgTextfieldPrivate::setText(const std::vector<TgTextFieldText> &listText, T
 }
 
 /*!
+ * \brief TgTextfieldPrivate::getText
+ *
+ * \return text (utf8)
+ */
+std::string TgTextfieldPrivate::getText() const
+{
+    std::string ret;
+    m_mutex.lock();
+    ret = TgFontTextGenerator::generateSingleLineText(m_listText);
+    m_mutex.unlock();
+    return ret;
+}
+
+/*!
  * \brief TgTextfieldPrivate::isEqualText
  *
  * Checks if text is equal as before

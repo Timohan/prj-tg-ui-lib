@@ -67,6 +67,7 @@ public:
     TgTextfieldVerticalAlign getAlignVertical() const;
     void setText(const char *text);
     void setText(const std::vector<TgTextFieldText> &listText);
+    std::string getText() const;
     size_t getCharacterCount();
     uint32_t getCharacterByIndex(size_t index);
     void setFontSize(float fontSize);

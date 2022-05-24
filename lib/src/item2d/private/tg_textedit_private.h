@@ -37,6 +37,7 @@ public:
     void setVerticalAlign(TgTextfieldVerticalAlign align);
     TgTextfieldHorizontalAlign getAlignHorizontal() const;
     TgTextfieldVerticalAlign getAlignVertical() const;
+    std::string getText() const;
     void setText(const char *text);
     void setText(const std::vector<TgTextFieldText> &listText);
     void setFontSize(float fontSize);
@@ -68,7 +69,7 @@ private:
     uint8_t m_selectedAreaBackgroundColorNotSelected[3];
     TgItem2d *m_currentItem;
     std::string m_imageFileNames[ TgTexteditState::TexteditStateCount ];
-    std::recursive_mutex m_mutex;
+    mutable std::recursive_mutex m_mutex;
     TgImagePart m_backgroundImage;
     TgRectangle m_selectedAreaBackground;
     TgTextfield m_textField;

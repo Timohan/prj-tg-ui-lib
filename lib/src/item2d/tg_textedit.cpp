@@ -179,6 +179,18 @@ void TgTextedit::setText(const std::vector<TgTextFieldText> &listText)
 }
 
 /*!
+ * \brief TgTextedit::getText
+ *
+ * \return text (utf8)
+ */
+std::string TgTextedit::getText() const
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getText();
+}
+
+/*!
  * \brief TgTextedit::setFontSize
  *
  * \param fontSize fon size for text
