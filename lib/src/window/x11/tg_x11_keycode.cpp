@@ -69,7 +69,7 @@ KeySym TgX11KeyCode::keyCodeToKeySym(Display *display, unsigned int keyCode, uns
     }
 
     ret = XkbKeySymEntry(keyboardDesc, keyCode, level, group);
-    XkbFreeClientMap(keyboardDesc, XkbAllClientInfoMask, true);
+    XkbFreeKeyboard(keyboardDesc, XkbAllClientInfoMask, true);
     TG_FUNCTION_END();
     return ret;
 }
