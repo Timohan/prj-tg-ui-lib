@@ -21,6 +21,8 @@ public:
     TgButton *getButton(int page, int index);
     TgTextfield *getTextfield();
     TgTextedit *getTextEdit();
+    float getOpeningTextWidth();
+    float getOpeningTextHeight();
 private:
     TgPages m_pages;
     Page0 m_page0;

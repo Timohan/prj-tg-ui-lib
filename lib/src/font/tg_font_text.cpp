@@ -154,8 +154,9 @@ std::vector<uint32_t> TgFontText::getCharactersByFontFileNameIndex(int32_t fontF
  * which font textures contains these glyphs in the text
  *
  * \param fontSize
+ * \param onlyForCalculation if true, then this TgFontInfo is not set into cache
  */
-void TgFontText::generateFontTextInfoGlyphs(float fontSize)
+void TgFontText::generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculation)
 {
     TgFontInfo *fontInfo;
     size_t i, indexToUse;
@@ -181,7 +182,7 @@ void TgFontText::generateFontTextInfoGlyphs(float fontSize)
             std::vector<uint32_t> listCharacters = getCharactersByFontFileNameIndex(m_listCharacter[indexToUse].m_fontFileNameIndex);
 
             fontInfo = TgGlobalApplication::getInstance()->getFontGlyphCache()->generateCacheForText(listCharacters,
-                                        m_listFontFileNames.at( getCharacter(indexToUse)->m_fontFileNameIndex ).c_str(), fontSize);
+                                        m_listFontFileNames.at( getCharacter(indexToUse)->m_fontFileNameIndex ).c_str(), fontSize, onlyForCalculation);
         }
 
         for (i=0;i<m_characterUsed.size();i++) {
@@ -253,7 +254,7 @@ float TgFontText::getFontHeight()
         }
     }
 
-    return ret;
+    return static_cast<float>(ret);
 }
 
 void TgFontText::setTextWidth(float textWidth)

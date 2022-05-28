@@ -40,7 +40,7 @@ public:
     static void getFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames,
                                  std::vector<std::string> &listFontFileNamesOut);
     void addCharacter(uint32_t character, uint8_t r, uint8_t g, uint8_t b);
-    void generateFontTextInfoGlyphs(float fontSize);
+    void generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculation);
 
     size_t getCharacterCount();
     TgFontTextCharacterInfo *getCharacter(size_t i);

@@ -60,17 +60,21 @@ void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y)
         case 1:
             m_textFieldForTestCenter.setText("Changed text to \"1x\"");
             m_buttonChangeText.setText("\"1x\"");
+            std::cout << "Text size: " << m_textFieldForTestCenter.getTextWidth() << "\n";
             break;
         case 2:
+            std::cout << "Text size: " << m_textFieldForTestCenter.getTextWidth() << "\n";
             m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ");
             m_buttonChangeText.setText("ગુજરાતી યુનિકોડ ફોન્ટ");
             break;
         case 3:
             m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ");
             m_buttonChangeText.setText("and યુનિકોડ 未来");
+            m_textFieldForTestCenter.setFontSize(24);
             break;
         case 4:
             m_textFieldForTestCenter.setText("cc \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ and some more");
+            m_textFieldForTestCenter.setFontSize(21);
             break;
         case 5:
             m_textFieldForTestCenter.setText("ગુજરાતી યુનિકોડ ફોન્ટ");

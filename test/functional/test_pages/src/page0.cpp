@@ -13,6 +13,9 @@ Page0::Page0(TgPages *parent, MainWindow *mainWindow) :
     m_buttonClose(this, 20, 90, 200, 50, "Close button"),
     m_textField(this, "test", "", 21, 0, 0, 0)
 {
+    m_openingTextWidth = m_textField.getTextWidth();
+    m_openingTextHeight = m_textField.getTextHeight();
+
     m_buttonChangeToPage1.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage1, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeToPage2.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage2, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeToPage3.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage3, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
@@ -119,4 +122,14 @@ TgButton *Page0::getButton(int index)
 TgTextfield *Page0::getTextfield()
 {
     return &m_textField;
+}
+
+float Page0::getOpeningTextWidth()
+{
+    return m_openingTextWidth;
+}
+
+float Page0::getOpeningTextHeight()
+{
+    return m_openingTextHeight;
 }

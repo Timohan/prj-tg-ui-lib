@@ -71,6 +71,8 @@ public:
     size_t getCharacterCount();
     uint32_t getCharacterByIndex(size_t index);
     void setFontSize(float fontSize);
+    float getTextWidth();
+    float getTextHeight();
 
 protected:
     virtual void render(const TgWindowInfo *windowInfo) override;

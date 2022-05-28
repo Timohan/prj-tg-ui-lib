@@ -48,6 +48,7 @@ public:
     bool isEqualTextColor(const std::vector<TgTextFieldText> &listText);
     std::string getFontFile();
     float getTextWidth();
+    float getTextHeight();
 
 private:
     TgItem2d *m_currentItem;

@@ -39,7 +39,7 @@ class TgFontGlyphCache
 public:
     explicit TgFontGlyphCache();
     ~TgFontGlyphCache();
-    TgFontInfo *generateCacheForText(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize);
+    TgFontInfo *generateCacheForText(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize, bool onlyForCalculation);
     void render(TgFontText *fontText, const int vertexTransformIndex, const int shaderColorIndex, const std::vector<TgMatrix4x4>&listMatrix);
     void getTextPosition(TgFontText *fontText, size_t cursorPosition, float &positionX);
     size_t getTextCharacterIndex(TgFontText *fontText, const float x);
@@ -48,9 +48,9 @@ public:
 private:
     std::vector<TgFontInfo *>m_listCachedFont;
     TgFontInfo *isFontCached(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize);
-    TgFontInfo *generateCache(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize);
+    TgFontInfo *generateCache(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize, bool onlyForCalculation);
 
-    static bool generateTextVertices(TgFontInfo *newInfo, const std::vector<uint32_t> &listCharacters);
+    static bool generateTextVertices(TgFontInfo *newInfo, const std::vector<uint32_t> &listCharacters, bool onlyForCalculation);
     static bool addImage(TgFontInfo *newInfo);
 
 };

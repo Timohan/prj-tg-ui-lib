@@ -80,3 +80,13 @@ TgTextedit *MainWindow::getTextEdit()
 {
     return m_page3.getTextEdit();
 }
+
+float MainWindow::getOpeningTextWidth()
+{
+    return m_page0.getOpeningTextWidth();
+}
+
+float MainWindow::getOpeningTextHeight()
+{
+    return m_page0.getOpeningTextHeight();
+}

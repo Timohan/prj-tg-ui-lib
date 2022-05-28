@@ -236,3 +236,27 @@ uint32_t TgTextfield::getCharacterByIndex(size_t index)
     TG_FUNCTION_END();
     return m_private->getCharacterByIndex(index);
 }
+
+/*!
+ * \brief TgTextfield::getTextWidth
+ *
+ * \return text width (pixels)
+ */
+float TgTextfield::getTextWidth()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getTextWidth();
+}
+
+/*!
+ * \brief TgTextfield::getTextHeight
+ *
+ * \return text single line height (pixels)
+ */
+float TgTextfield::getTextHeight()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getTextHeight();
+}

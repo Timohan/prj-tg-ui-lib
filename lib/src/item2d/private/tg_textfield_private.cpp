@@ -16,6 +16,7 @@
 #include "../../font/cache/tg_font_glyph_cache.h"
 #include "../../font/tg_font_default.h"
 #include "../../font/tg_font_text.h"
+#include "../../font/tg_font_math.h"
 #include "../../global/tg_global_log.h"
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
@@ -242,7 +243,7 @@ void TgTextfieldPrivate::checkPositionValues()
             delete m_fontText;
         }
         m_fontText = TgFontTextGenerator::generateFontTextInfo(m_listText, m_fontFile.c_str());
-        m_fontText->generateFontTextInfoGlyphs(m_fontSize);
+        m_fontText->generateFontTextInfoGlyphs(m_fontSize, false);
         TgCharacterPositions::generateTextCharacterPositioning(m_fontText);
         m_initDone = true;
     }
@@ -444,8 +445,36 @@ float TgTextfieldPrivate::getTextWidth()
     TG_FUNCTION_BEGIN();
     float ret = 0;
     m_mutex.lock();
-    if (m_fontText) {
-        ret = m_fontText->getTextWidth();
+    if (m_initDone) {
+        if (m_fontText) {
+            ret = m_fontText->getTextWidth();
+        }
+    } else {
+        float textHeight;
+        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, ret, textHeight);
+    }
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgTextfieldPrivate::getTextHeight
+ *
+ * \return text width (pixels)
+ */
+float TgTextfieldPrivate::getTextHeight()
+{
+    TG_FUNCTION_BEGIN();
+    float ret = 0;
+    m_mutex.lock();
+    if (m_initDone) {
+        if (m_fontText) {
+            ret = m_fontText->getFontHeight();
+        }
+    } else {
+        float textWidth;
+        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, textWidth, ret);
     }
     m_mutex.unlock();
     TG_FUNCTION_END();

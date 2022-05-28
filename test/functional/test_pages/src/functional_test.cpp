@@ -36,6 +36,37 @@ void FunctionalTest::start()
     std::thread([this]() {
         int i;
         sleep(2);
+        if (m_mainWindow->getOpeningTextWidth() <= 0) {
+            TG_ERROR_LOG("Opening text width for page0 - test - is wrong ", m_mainWindow->getOpeningTextWidth());
+            m_returnIndex = 1;
+            m_mainWindow->exit();
+            return;
+        }
+
+        if (static_cast<int>(m_mainWindow->getOpeningTextWidth()) != static_cast<int>(m_mainWindow->getTextfield()->getTextWidth()) ) {
+            TG_ERROR_LOG("Opening text width for page0 - test - is no more same ",
+                m_mainWindow->getOpeningTextWidth(), " ",
+                static_cast<int>(m_mainWindow->getTextfield()->getTextWidth()));
+            m_returnIndex = 1;
+            m_mainWindow->exit();
+            return;
+        }
+
+        if (m_mainWindow->getOpeningTextHeight() <= 0) {
+            TG_ERROR_LOG("Opening text height for page0 - test - is wrong ", m_mainWindow->getOpeningTextHeight());
+            m_returnIndex = 1;
+            m_mainWindow->exit();
+            return;
+        }
+
+        if (static_cast<int>(m_mainWindow->getOpeningTextHeight()) != static_cast<int>(m_mainWindow->getTextfield()->getTextHeight()) ) {
+            TG_ERROR_LOG("Opening text height for page0 - test - is no more same ",
+                m_mainWindow->getOpeningTextHeight(), " ",
+                static_cast<int>(m_mainWindow->getTextfield()->getTextHeight()));
+            m_returnIndex = 1;
+            m_mainWindow->exit();
+            return;
+        }
 
         if (!makeEditTextTest()) {
             sleep(1);
@@ -49,6 +80,7 @@ void FunctionalTest::start()
             m_mainWindow->exit();
             return;
         }
+
         for (i=0;i<22;i++) {
             sendButtonClick(1, 320, 70, 1);
             std::string tmp;
@@ -58,7 +90,6 @@ void FunctionalTest::start()
                 tmp = "image_text" + std::to_string(i % 12) + ".png";
             }
             if (!FunctionalTestImage::isImageToEqual(m_mainWindow, tmp.c_str(), 800, 600)) {
-                sleep(10);
                 m_returnIndex = 1;
                 m_mainWindow->exit();
                 return;
@@ -387,11 +418,60 @@ bool FunctionalTest::makeCharacterCountTest()
 
 bool FunctionalTest::makeEditTextTest()
 {
+    float w, h;
     std::vector<TgTextFieldText>listText;
     TgTextFieldText t0;
     TgTextFieldText t1;
     TgTextFieldText t2;
 
+    sendButtonClick(1, 320, 100, 1);
+    t0.m_text = "x text to";
+    t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 124;
+    listText.push_back(t0);
+    t1.m_text = " યુનિકોડ";
+    t1.m_textColorG = 255;
+    t1.m_textColorR = t1.m_textColorB = 0;
+    listText.push_back(t1);
+    t2.m_text = " 未来";
+    t2.m_textColorR = 255;
+    t2.m_textColorG = t2.m_textColorB = 0;
+    listText.push_back(t2);
+    m_mainWindow->getTextEdit()->setText(listText);
+
+    sleep(1);
+    if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit13.png", 800, 600)) {
+        return false;
+    }
+    m_mainWindow->getTextEdit()->setFontSize(23);
+    w =  m_mainWindow->getTextEdit()->getTextWidth();
+    if (static_cast<int>(w) != 231) {
+        TG_ERROR_LOG("Getting text width is incorrect ", w);
+        return false;
+    }
+    h =  m_mainWindow->getTextEdit()->getTextHeight();
+    if (static_cast<int>(h) != 19) {
+        TG_ERROR_LOG("Getting text width is incorrect ", h);
+        return false;
+    }
+
+    sleep(1);
+    w =  m_mainWindow->getTextEdit()->getTextWidth();
+    if (static_cast<int>(w) != 231) {
+        TG_ERROR_LOG("Getting text width is incorrect ", w);
+        return false;
+    }
+    h =  m_mainWindow->getTextEdit()->getTextHeight();
+    if (static_cast<int>(h) != 19) {
+        TG_ERROR_LOG("Getting text width is incorrect ", h);
+        return false;
+    }
+
+    if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit14.png", 800, 600)) {
+        return false;
+    }
+
+    m_mainWindow->getTextEdit()->setFontSize(21);
+    listText.clear();
     t0.m_text = "x text to";
     t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
     listText.push_back(t0);
@@ -410,15 +490,51 @@ bool FunctionalTest::makeEditTextTest()
         return false;
     }
 
+    w =  m_mainWindow->getTextEdit()->getTextWidth();
+    if (static_cast<int>(w) != 210) {
+        TG_ERROR_LOG("Getting text width is incorrect ", w);
+        return false;
+    }
+
+    h =  m_mainWindow->getTextEdit()->getTextHeight();
+    if (static_cast<int>(h) != 17) {
+        TG_ERROR_LOG("Getting text height is incorrect ", h);
+        return false;
+    }
+
     m_mainWindow->getTextEdit()->setText("meh");
     if (m_mainWindow->getTextEdit()->getText() != "meh") {
         TG_ERROR_LOG("Getting text is not correct ", m_mainWindow->getTextEdit()->getText());
         return false;
     }
 
-    m_mainWindow->getTextEdit()->setText("");
+    w =  m_mainWindow->getTextEdit()->getTextWidth();
+    if (static_cast<int>(w) != 37) {
+        TG_ERROR_LOG("Getting text width is incorrect ", w);
+        return false;
+    }
 
-    sendButtonClick(1, 320, 100, 1);
+    sleep(1);
+    w =  m_mainWindow->getTextEdit()->getTextWidth();
+    if (static_cast<int>(w) != 37) {
+        TG_ERROR_LOG("Getting text width is incorrect ", w);
+        return false;
+    }
+
+    m_mainWindow->getTextEdit()->setText("abc");
+    w =  m_mainWindow->getTextEdit()->getTextWidth();
+    if (static_cast<int>(w) != 33) {
+        TG_ERROR_LOG("Getting text width is incorrect ", w);
+        return false;
+    }
+
+    m_mainWindow->getTextEdit()->setText("");
+    w = m_mainWindow->getTextEdit()->getTextWidth();
+    if (w > 0) {
+        TG_ERROR_LOG("Getting text width is incorrect ", w);
+        return false;
+    }
+
     if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit0.png", 800, 600)) {
         return false;
     }
@@ -650,6 +766,19 @@ bool FunctionalTest::makeEditTextTest()
             m_mainWindow->getTextEdit()->getCharacterByIndex(3));
         return false;
     }
+
+    w =  m_mainWindow->getTextEdit()->getTextWidth();
+    if (static_cast<int>(w) != 33) {
+        TG_ERROR_LOG("Getting text width is incorrect ", w);
+        return false;
+    }
+
+    h =  m_mainWindow->getTextEdit()->getTextHeight();
+    if (static_cast<int>(h) != 16) {
+        TG_ERROR_LOG("Getting text height is incorrect ", h);
+        return false;
+    }
+
     if (m_mainWindow->getTextEdit()->getSelectedTextSize() != 0) {
         TG_ERROR_LOG("Cursor selected text size is not 0, it is: ", m_mainWindow->getTextEdit()->getSelectedTextSize());
         return false;
@@ -662,6 +791,8 @@ bool FunctionalTest::makeEditTextTest()
     if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit12.png", 800, 600)) {
         return false;
     }
+
+
     sendButtonClick(1, 40, 35, 1);
     return true;
 }

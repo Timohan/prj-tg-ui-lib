@@ -423,3 +423,25 @@ int64_t TgTextedit::getSelectedTextSize()
     TG_FUNCTION_END();
     return m_private->getSelectedTextSize();
 }
+
+/*!
+ * \brief TgTextedit::getTextWidth
+ *
+ * \return get text width
+ */
+float TgTextedit::getTextWidth()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getTextWidth();
+}
+
+/*!
+ * \brief TgTextedit::getTextHeight
+ *
+ * \return text single line height (pixels)
+ */
+float TgTextedit::getTextHeight()
+{
+    return m_private->getTextHeight();
+}

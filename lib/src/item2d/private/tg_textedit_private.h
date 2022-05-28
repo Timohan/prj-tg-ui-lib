@@ -41,6 +41,8 @@ public:
     void setText(const char *text);
     void setText(const std::vector<TgTextFieldText> &listText);
     void setFontSize(float fontSize);
+    float getTextWidth();
+    float getTextHeight();
 
     void changeImageFile();
     void changeDownProperty(bool down);

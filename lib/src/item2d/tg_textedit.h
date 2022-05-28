@@ -58,6 +58,8 @@ public:
     size_t getCharacterCount();
     uint32_t getCharacterByIndex(size_t index);
     int64_t getSelectedTextSize();
+    float getTextWidth();
+    float getTextHeight();
 protected:
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo);
     virtual void render(const TgWindowInfo *windowInfo) override;

@@ -593,3 +593,35 @@ int64_t TgTexteditPrivate::getSelectedTextSize()
     m_mutex.unlock();
     return ret;
 }
+
+/*!
+ * \brief TgTexteditPrivate::getTextWidth
+ *
+ * \return get text width
+ */
+float TgTexteditPrivate::getTextWidth()
+{
+    TG_FUNCTION_BEGIN();
+    float ret;
+    m_mutex.lock();
+    ret = m_textField.m_private->getTextWidth();
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgTexteditPrivate::getTextHeight
+ *
+ * \return text single line height (pixels)
+ */
+float TgTexteditPrivate::getTextHeight()
+{
+    TG_FUNCTION_BEGIN();
+    float ret;
+    m_mutex.lock();
+    ret = m_textField.m_private->getTextHeight();
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}

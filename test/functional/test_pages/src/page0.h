@@ -15,6 +15,8 @@ public:
 
     TgButton *getButton(int index);
     TgTextfield *getTextfield();
+    float getOpeningTextWidth();
+    float getOpeningTextHeight();
 
 private:
     TgPages *m_pages;
@@ -26,6 +28,8 @@ private:
     TgButton m_buttonClose;
 
     TgTextfield m_textField;
+    float m_openingTextWidth;
+    float m_openingTextHeight;
 
     void onButtonClickPage1(TgMouseType type, float x, float y);
     void onButtonClickPage2(TgMouseType type, float x, float y);
