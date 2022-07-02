@@ -12,6 +12,7 @@
 
 #include "tg_font_text.h"
 #include <algorithm>
+#include <math.h>
 #include "cache/tg_font_characters_cache.h"
 #include "../global/tg_global_application.h"
 #include "../global/tg_global_log.h"
@@ -20,7 +21,8 @@
 TgFontText::TgFontText() :
     m_textWidth(0),
     m_visibleTopY(0),
-    m_visibleBottomY(0)
+    m_visibleBottomY(0),
+    m_allLineCount(0)
 {
 
 }
@@ -210,7 +212,7 @@ TgFontInfo *TgFontText::getFontInfo(size_t i)
 /*!
  * \brief TgFontText::getTextWidth
  *
- * \param get text width
+ * \return get text width
  */
 float TgFontText::getTextWidth()
 {
@@ -220,7 +222,7 @@ float TgFontText::getTextWidth()
 /*!
  * \brief TgFontText::getVisibleTopY
  *
- * \param get visible top y
+ * \return get visible top y
  */
 float TgFontText::getVisibleTopY()
 {
@@ -230,7 +232,7 @@ float TgFontText::getVisibleTopY()
 /*!
  * \brief TgFontText::getVisibleBottomY
  *
- * \param get visible bottom y
+ * \return get visible bottom y
  */
 float TgFontText::getVisibleBottomY()
 {
@@ -240,7 +242,7 @@ float TgFontText::getVisibleBottomY()
 /*!
  * \brief TgFontText::getFontHeight
  *
- * \param get font height
+ * \return font height
  */
 float TgFontText::getFontHeight()
 {
@@ -257,6 +259,34 @@ float TgFontText::getFontHeight()
     return static_cast<float>(ret);
 }
 
+/*!
+ * \brief TgFontText::getLineHeight
+ *
+ * \return line heght of single line
+ */
+float TgFontText::getLineHeight()
+{
+    return static_cast<float>(std::ceil(getFontHeight()*1.5f));
+}
+
+/*!
+ * \brief TgFontText::getAllDrawTextHeight
+ *
+ * \return height of the all drawed texts (including line breaks)
+ */
+float TgFontText::getAllDrawTextHeight()
+{
+    uint32_t allLineCount = getAllLineCount();
+    if (allLineCount == 0) {
+        return 0;
+    }
+    float fontHeight = getFontHeight();
+    if (allLineCount == 1) {
+        return fontHeight;
+    }
+    return static_cast<float>(std::ceil(fontHeight + static_cast<float>(allLineCount-1)*getLineHeight()));
+}
+
 void TgFontText::setTextWidth(float textWidth)
 {
     m_textWidth = textWidth;
@@ -270,4 +300,62 @@ void TgFontText::setVisibleTopY(float visibleTopY)
 void TgFontText::setVisibleBottomY(float visibleBottomY)
 {
     m_visibleBottomY = visibleBottomY;
+}
+
+void TgFontText::setAllLineCount(uint32_t lineCount)
+{
+    m_allLineCount = lineCount;
+}
+
+uint32_t TgFontText::getAllLineCount()
+{
+    return m_allLineCount;
+}
+
+/*!
+ * \brief TgFontText::clearListLinesWidth
+ *
+ * clears all widths of lines
+ */
+void TgFontText::clearListLinesWidth()
+{
+    m_listLineWidth.clear();
+}
+
+/*!
+ * \brief TgFontText::setListLinesWidth
+ *
+ * sets width (pixels) of the line
+ * \param lineNumber [in] line number, 0 == first line
+ * \param lineWidth [in] width of line
+ */
+void TgFontText::setListLinesWidth(size_t lineNumber, float lineWidth)
+{
+    if (m_listLineWidth.size() > lineNumber) {
+        m_listLineWidth[lineNumber] = lineWidth;
+    } else if (m_listLineWidth.size() == lineNumber) {
+        m_listLineWidth.push_back(lineWidth);
+    } else {
+        while (1) {
+            m_listLineWidth.push_back(0);
+            if (m_listLineWidth.size() == lineNumber) {
+                m_listLineWidth.push_back(lineWidth);
+                break;
+            }
+        }
+    }
+}
+
+/*!
+ * \brief TgFontText::getTextLineWidth
+ *
+ * \param lineNumber [0] first line == 0
+ * \return text width of lineNumber
+ */
+float TgFontText::getTextLineWidth(size_t lineNumber)
+{
+    if (m_listLineWidth.size() > lineNumber) {
+        return m_listLineWidth.at(lineNumber);
+    }
+    return 0;
 }

@@ -12,6 +12,7 @@
 #include "tg_textfield_private.h"
 #include <cmath>
 #include <string.h>
+#include <float.h>
 #include "../../global/tg_global_application.h"
 #include "../../font/cache/tg_font_glyph_cache.h"
 #include "../../font/tg_font_default.h"
@@ -32,6 +33,9 @@ TgTextfieldPrivate::TgTextfieldPrivate(TgItem2d *currentItem,
     m_fontFile(fontFile),
     m_fontSize(fontSize),
     m_initDone(false),
+    m_maxLineCount(1),
+    m_wordWrap(TgTextFieldWordWrap::WordWrapBounded),
+    m_allowBreakLineGoOverMaxLine(false),
     m_alignHorizontal(TgTextfieldHorizontalAlign::AlignLeft),
     m_alignVertical(TgTextfieldVerticalAlign::AlignTop)
 {
@@ -62,7 +66,7 @@ TgTextfieldPrivate::~TgTextfieldPrivate()
 }
 
 /*!
- * \brief TgRectangle::generateTransform
+ * \brief TgTextfieldPrivate::generateTransform
  *
  * generate transform position
  *
@@ -76,35 +80,39 @@ void TgTextfieldPrivate::generateTransform(TgItem2d *currentItem)
         return;
     }
 
-    switch (m_alignHorizontal) {
-        case TgTextfieldHorizontalAlign::AlignLeft:
-        default:
-            x = currentItem->getXonWindow();
-            break;
-        case TgTextfieldHorizontalAlign::AlignCenterH:
-            x = currentItem->getWidth()/2+currentItem->getXonWindow() - m_fontText->getTextWidth()/2;
-            break;
-        case TgTextfieldHorizontalAlign::AlignRight:
-            x = currentItem->getWidth()+currentItem->getXonWindow() - m_fontText->getTextWidth();
-            break;
-    }
     switch (m_alignVertical) {
         case TgTextfieldVerticalAlign::AlignTop:
         default:
             y = currentItem->getYonWindow();
             break;
         case TgTextfieldVerticalAlign::AlignCenterV:
-            y = currentItem->getHeight()/2+currentItem->getYonWindow() - m_fontText->getFontHeight()/2;
+            y = currentItem->getHeight()/2+currentItem->getYonWindow() - m_fontText->getAllDrawTextHeight()/2;
             break;
         case TgTextfieldVerticalAlign::AlignBottom:
-            y = currentItem->getHeight()+currentItem->getYonWindow() - m_fontText->getFontHeight();
+            y = currentItem->getHeight()+currentItem->getYonWindow() - m_fontText->getAllDrawTextHeight();
             break;
     }
 
-    x = std::roundf(x);
     y = std::roundf(y);
     for (i=0;i<m_fontText->getCharacterCount();i++) {
-        m_listTransform[i].setTransform(m_fontText->getCharacter(i)->positionLeftX+x, y);
+        if (m_fontText->getCharacter(i)->m_character == '\n') {
+            continue;
+        }
+
+        switch (m_alignHorizontal) {
+            case TgTextfieldHorizontalAlign::AlignLeft:
+            default:
+                x = currentItem->getXonWindow();
+                break;
+            case TgTextfieldHorizontalAlign::AlignCenterH:
+                x = currentItem->getWidth()/2+currentItem->getXonWindow() - m_fontText->getTextLineWidth(m_fontText->getCharacter(i)->m_lineNumber)/2;
+                break;
+            case TgTextfieldHorizontalAlign::AlignRight:
+                x = currentItem->getWidth()+currentItem->getXonWindow() - m_fontText->getTextLineWidth(m_fontText->getCharacter(i)->m_lineNumber);
+                break;
+        }
+        x = std::roundf(x);
+        m_listTransform[i].setTransform(m_fontText->getCharacter(i)->positionLeftX+x, y+static_cast<float>(m_fontText->getCharacter(i)->m_lineNumber)*m_fontText->getLineHeight());
     }
 }
 
@@ -244,16 +252,27 @@ void TgTextfieldPrivate::checkPositionValues()
         }
         m_fontText = TgFontTextGenerator::generateFontTextInfo(m_listText, m_fontFile.c_str());
         m_fontText->generateFontTextInfoGlyphs(m_fontSize, false);
-        TgCharacterPositions::generateTextCharacterPositioning(m_fontText);
-        m_initDone = true;
+        TgCharacterPositions::generateTextCharacterPositioning(m_fontText, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+        m_previousTextWidthCalc = m_currentItem->getWidth();
     }
     if (m_currentItem->getPositionChanged()) {
+        if (m_fontText
+            && std::fabs(m_previousTextWidthCalc - m_currentItem->getWidth()) > std::numeric_limits<double>::epsilon()) {
+            TgCharacterPositions::generateTextCharacterPositioning(m_fontText, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+            m_previousTextWidthCalc = m_currentItem->getWidth();
+        }
         generateTransform(m_currentItem);
         m_currentItem->setAddMinMaxHeightOnVisible(
             m_fontText->getVisibleTopY(),
             m_fontText->getVisibleBottomY());
         m_currentItem->setPositionChanged(false);
+    } else if (m_fontText
+               && std::fabs(m_previousTextWidthCalc - m_currentItem->getWidth()) > std::numeric_limits<double>::epsilon()) {
+        TgCharacterPositions::generateTextCharacterPositioning(m_fontText, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+        m_previousTextWidthCalc = m_currentItem->getWidth();
+        generateTransform(m_currentItem);
     }
+    m_initDone = true;
     m_mutex.unlock();
     TG_FUNCTION_END();
 }
@@ -451,7 +470,8 @@ float TgTextfieldPrivate::getTextWidth()
         }
     } else {
         float textHeight;
-        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, ret, textHeight);
+        float allDrawTextHeight;
+        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, ret, textHeight, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
     }
     m_mutex.unlock();
     TG_FUNCTION_END();
@@ -474,7 +494,33 @@ float TgTextfieldPrivate::getTextHeight()
         }
     } else {
         float textWidth;
-        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, textWidth, ret);
+        float allDrawTextHeight;
+        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, textWidth, ret, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+    }
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgTextfieldPrivate::getAllDrawTextHeight
+ *
+ * \return height of the all drawed texts (including line breaks)
+ */
+float TgTextfieldPrivate::getAllDrawTextHeight()
+{
+    TG_FUNCTION_BEGIN();
+    float ret = 0;
+    m_mutex.lock();
+    if (m_initDone && m_previousTextWidthCalc >= 0) {
+        if (m_fontText) {
+            ret = m_fontText->getAllDrawTextHeight();
+        }
+    } else {
+        float textWidth;
+        float textHeight;
+        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, textWidth, textHeight, ret, m_maxLineCount,
+                                       m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
     }
     m_mutex.unlock();
     TG_FUNCTION_END();
@@ -559,4 +605,82 @@ void TgTextfieldPrivate::editText(std::vector<uint32_t>&listAddCharacter, const 
     m_initDone = false;
     m_currentItem->setPositionChanged(true);
     m_mutex.unlock();
+}
+
+void TgTextfieldPrivate::setMaxLineCount(uint32_t maxLineCount)
+{
+    m_mutex.lock();
+    if (m_maxLineCount == maxLineCount) {
+        m_mutex.unlock();
+        return;
+    }
+    m_maxLineCount = maxLineCount;
+    m_previousTextWidthCalc = -1.0f;
+    m_mutex.unlock();
+}
+
+uint32_t TgTextfieldPrivate::getMaxLineCount() const
+{
+    return m_maxLineCount;
+}
+
+void TgTextfieldPrivate::setWordWrap(TgTextFieldWordWrap wordWrap)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    if (m_wordWrap != wordWrap) {
+        m_wordWrap = wordWrap;
+        m_previousTextWidthCalc = -1.0f;
+    }
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+}
+
+TgTextFieldWordWrap TgTextfieldPrivate::getWordWrap() const
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    TgTextFieldWordWrap ret = m_wordWrap;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgTextfieldPrivate::setAllowBreakLineGoOverMaxLine
+ *
+ * \param allowBreakLineGoOverMaxLine true, text can go over the
+ * max line count with line break '\n', but those lines are not
+ * drawed
+ * false - line break marks '\n' are ignored on the last line
+ * defined by max line count setMaxLineCount()
+ */
+void TgTextfieldPrivate::setAllowBreakLineGoOverMaxLine(bool allowBreakLineGoOverMaxLine)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    if (m_allowBreakLineGoOverMaxLine != allowBreakLineGoOverMaxLine) {
+        m_allowBreakLineGoOverMaxLine = allowBreakLineGoOverMaxLine;
+        m_previousTextWidthCalc = -1.0f;
+    }
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgTextfieldPrivate::getAllowBreakLineGoOverMaxLine
+ *
+ * \return true, text can go over the max line count with
+ * line break '\n', but those lines are not drawed
+ * false - line break marks '\n' are ignored on the last line
+ * defined by max line count setMaxLineCount()
+ */
+bool TgTextfieldPrivate::getAllowBreakLineGoOverMaxLine() const
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    bool ret = m_allowBreakLineGoOverMaxLine;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
 }

@@ -25,10 +25,13 @@ struct TgFontTextCharacterInfo
 
     float positionLeftX;            /*!< glyph X position, generated in TgCharacterPositions::generateTextCharacterPositioning */
     size_t m_characterInFontInfoIndex; /*!< glyph index in TgFontInfo, generated in TgCharacterPositions::generateTextCharacterPositioning */
+    uint32_t m_lineNumber;          /*!< line number, required to calculate glyph Y position, generated in TgCharacterPositions::generateTextCharacterPositioning */
 
     uint8_t m_textColorR;
     uint8_t m_textColorG;
     uint8_t m_textColorB;
+
+    bool m_draw { true };           /*!< false == not draw */
 };
 
 class TgFontText
@@ -51,16 +54,25 @@ public:
     float getTextWidth();
     float getVisibleTopY();
     float getVisibleBottomY();
+    uint32_t getAllLineCount();
 
     float getFontHeight();
+    float getLineHeight();
+    float getAllDrawTextHeight();
 
     void setTextWidth(float textWidth);
     void setVisibleTopY(float visibleTopY);
     void setVisibleBottomY(float visibleBottomY);
+    void setAllLineCount(uint32_t lineCount);
+    void clearListLinesWidth();
+    void setListLinesWidth(size_t lineNumber, float lineWidth);
+    float getTextLineWidth(size_t lineNumber);
 private:
     float m_textWidth;
     float m_visibleTopY;
     float m_visibleBottomY;
+    uint32_t m_allLineCount;
+    std::vector<float>m_listLineWidth;   // [0] line width of the first line
 
     std::vector<std::string>m_listFontFileNames;
     std::vector<TgFontTextCharacterInfo>m_listCharacter;

@@ -15,7 +15,6 @@
 #include "cache/tg_font_glyph_cache.h"
 #include "tg_font_text_generator.h"
 #include <cstring>
-#include <prj-ttf-reader.h>
 #include "tg_font_text.h"
 
 TgCharacterPositions::TgCharacterPositions()
@@ -55,12 +54,17 @@ size_t TgCharacterPositions::getCharacterIndex(const TgFontInfo *newInfo, uint32
  * generate text vertices for the text
  *
  * \param fontText [in] info
+ * \param maxLineCount [in] max line count, 0 unlimited number of lines
+ * \param maxLineWidth [in] max line width
+ * \param wordWrap
+ * \param allowBreakLineGoOverMaxLine
  * \return true on success
  */
-bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText)
+bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText, const uint32_t maxLineCount, const float maxLineWidth,
+                                                            const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine)
 {
     TG_FUNCTION_BEGIN();
-    size_t i, c = fontText->getCharacterCount();
+    size_t i, i2, c = fontText->getCharacterCount();
     TgFontTextCharacterInfo *characterInfo;
     TgFontTextCharacterInfo *leftCharacterInfo = nullptr;
     TgFontInfo *fontInfo;
@@ -71,11 +75,38 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
     size_t infoCharacterIndex = 0;
     float kerning = 0;
     int32_t left_advance_x, left_bearing, right_bearing;
-
+    uint32_t currentLine = 1;
+    bool firstCharacterAdded = false;
+    float textLinesWidth = 0;
+    size_t previousSpaceIndex = c;
     fontText->setTextWidth(0);
+    fontText->clearListLinesWidth();
 
     for (i=0;i<c;i++) {
         characterInfo = fontText->getCharacter(i);
+        characterInfo->m_draw = true;
+        if (characterInfo->m_character == '\n') {
+            characterInfo->m_draw = false;
+            if (allowBreakLineGoOverMaxLine
+                && maxLineCount != 0
+                && maxLineCount == currentLine) {
+                for (i2=i;i2<c;i2++) {
+                    fontText->getCharacter(i2)->m_draw = false;
+                    fontText->getCharacter(i2)->m_lineNumber = currentLine - 1;
+                }
+                break;
+            }
+            if (maxLineCount == 0 || maxLineCount > currentLine) {
+                previousSpaceIndex = c;
+                currentLine++;
+                positionLeftX = 0;
+                left_glyph = nullptr;
+            }
+            characterInfo->positionLeftX = 0;
+            characterInfo->m_lineNumber = currentLine - 1;
+            continue;
+        }
+
         if (characterInfo->m_fontFileNameIndex == -1) {
             continue;
         }
@@ -108,14 +139,46 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
             positionLeftX += static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
             positionLeftX += kerning;
         }
+        if (wordWrap == TgTextFieldWordWrap::WordWrapOn
+            && isOverTheLine(currentLine, positionLeftX, glyph, maxLineCount, maxLineWidth)) {
+            if (previousSpaceIndex != c && previousSpaceIndex > 0) {
+                leftCharacterInfo = fontText->getCharacter(previousSpaceIndex);
+                fontText->setListLinesWidth(leftCharacterInfo->m_lineNumber,
+                    leftCharacterInfo->positionLeftX);
+                i = previousSpaceIndex;
+                positionLeftX = 0;
+                currentLine++;
+                left_glyph = nullptr;
+                continue;
+            }
+            if (left_glyph) {
+                textLinesWidth += positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+            }
+            positionLeftX = 0;
+            currentLine++;
+        } else if (wordWrap == TgTextFieldWordWrap::WordWrapBounded
+                    && isOverTheLine(currentLine, positionLeftX, glyph, maxLineCount, maxLineWidth)) {
+            if (left_glyph) {
+                textLinesWidth += positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+            }
+            positionLeftX = 0;
+            currentLine++;
+        }
+
+        if (characterInfo->m_character == ' ') {
+            previousSpaceIndex = i;
+        }
 
         characterInfo->positionLeftX = positionLeftX;
+        characterInfo->m_lineNumber = currentLine - 1;
+        fontText->setListLinesWidth(characterInfo->m_lineNumber, positionLeftX + static_cast<float>(glyph->image_pixel_right_x - glyph->image_pixel_left_x));
 
         infoCharacterIndex = getCharacterIndex(fontInfo, characterInfo->m_character);
         characterInfo->m_characterInFontInfoIndex = infoCharacterIndex;
-        if (!left_glyph) {
+        if (!firstCharacterAdded) {
             fontText->setVisibleTopY(fontInfo->m_listTopPositionY.at(infoCharacterIndex));
             fontText->setVisibleBottomY(fontInfo->m_listBottomPositionY.at(infoCharacterIndex));
+            firstCharacterAdded = true;
         } else {
             if (fontText->getVisibleTopY() > fontInfo->m_listTopPositionY.at(infoCharacterIndex)) {
                 fontText->setVisibleTopY(fontInfo->m_listTopPositionY.at(infoCharacterIndex));
@@ -131,9 +194,36 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
     }
 
     if (left_glyph) {
-        fontText->setTextWidth(positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x));
+        fontText->setTextWidth(textLinesWidth + positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x));
     }
+    fontText->setAllLineCount(currentLine);
 
     TG_FUNCTION_END();
+    return true;
+}
+
+/*!
+ * \brief TgCharacterPositions::isOverTheLine
+ *
+ * checks if the current glyph position is over the line
+ *
+ * \param lineNumber [in] current line number, 1 == first line
+ * \param positionLeftX [in] current glyph's left x
+ * \param glyph [in] current glyph
+ * \param maxLineCount max line count
+ * \param maxLineWidth max line width
+ * \return true - if glyph position goes over the line
+ */
+bool TgCharacterPositions::isOverTheLine(const uint32_t lineNumber, const float positionLeftX, const prj_ttf_reader_glyph_data_t *glyph,
+                                         const uint32_t maxLineCount, const float maxLineWidth)
+{
+    if (positionLeftX + static_cast<float>(glyph->image_pixel_right_x - glyph->image_pixel_left_x) < maxLineWidth) {
+        return false;
+    }
+
+    if (maxLineCount == lineNumber || lineNumber == UINT32_MAX) {
+        return false;
+    }
+
     return true;
 }

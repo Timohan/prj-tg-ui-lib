@@ -260,3 +260,100 @@ float TgTextfield::getTextHeight()
     TG_FUNCTION_END();
     return m_private->getTextHeight();
 }
+
+/*!
+ * \brief TgTextfield::setMaxLineCount
+ *
+ * \param maxLineCount max line count
+ * default: 1
+ * if max line count is 0, then it's unlimited number of lines
+ */
+void TgTextfield::setMaxLineCount(uint32_t maxLineCount)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setMaxLineCount(maxLineCount);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgTextfield::getMaxLineCount
+ *
+ * \return max line count
+ */
+uint32_t TgTextfield::getMaxLineCount() const
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getMaxLineCount();
+}
+
+/*!
+ * \brief TgTextfield::getAllDrawTextHeight
+ *
+ * \return height of the all drawed texts (including line breaks)
+ */
+float TgTextfield::getAllDrawTextHeight()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getAllDrawTextHeight();
+}
+
+/*!
+ * \brief TgTextfield::setWordWrap
+ *
+ * \param wordWrap word wrap
+ */
+void TgTextfield::setWordWrap(TgTextFieldWordWrap wordWrap)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setWordWrap(wordWrap);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgTextfield::getWordWrap
+ *
+ * \return current word wrap
+ */
+TgTextFieldWordWrap TgTextfield::getWordWrap() const
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getWordWrap();
+}
+
+/*!
+ * \brief TgTextfield::setAllowBreakLineGoOverMaxLine
+ *
+ * \param allowBreakLineGoOverMaxLine true, text can go over the
+ * max line count with line break '\n', but those lines are not
+ * drawed
+ * false - line break marks '\n' are ignored on the last line
+ * defined by max line count setMaxLineCount()
+ *
+ * default value: false
+ */
+void TgTextfield::setAllowBreakLineGoOverMaxLine(bool allowBreakLineGoOverMaxLine)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setAllowBreakLineGoOverMaxLine(allowBreakLineGoOverMaxLine);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgTextfield::getAllowBreakLineGoOverMaxLine
+ *
+ * \return true, text can go over the max line count with
+ * line break '\n', but those lines are not drawed
+ * false - line break marks '\n' are ignored on the last line
+ * defined by max line count setMaxLineCount()
+ *
+ * default value: false
+ */
+bool TgTextfield::getAllowBreakLineGoOverMaxLine() const
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getAllowBreakLineGoOverMaxLine();
+}

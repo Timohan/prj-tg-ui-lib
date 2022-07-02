@@ -19,10 +19,11 @@ public:
 
     TgPages *getPages();
     TgButton *getButton(int page, int index);
-    TgTextfield *getTextfield();
+    TgTextfield *getTextfield(int page = 0);
     TgTextedit *getTextEdit();
     float getOpeningTextWidth();
     float getOpeningTextHeight();
+    float getAllDrawHeight(int page, int index);
 private:
     TgPages m_pages;
     Page0 m_page0;

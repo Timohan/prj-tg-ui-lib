@@ -20,7 +20,9 @@ class TgFontMath
 {
 public:
     TgFontMath();
-    static bool getFontWidthHeight(const std::vector<TgTextFieldText> &listText, float fontSize, const std::string &mainFontFile, float &textWidth, float &textHeight);
+    static bool getFontWidthHeight(const std::vector<TgTextFieldText> &listText, float fontSize, const std::string &mainFontFile,
+                                  float &textWidth, float &textHeight, float &allDrawTextHeight, const uint32_t maxLineCount, const float maxLineWidth,
+                                  const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine);
 private:
 };
 

@@ -49,6 +49,13 @@ public:
     std::string getFontFile();
     float getTextWidth();
     float getTextHeight();
+    void setMaxLineCount(uint32_t maxLineCount);
+    uint32_t getMaxLineCount() const;
+    float getAllDrawTextHeight();
+    void setWordWrap(TgTextFieldWordWrap wordWrap);
+    TgTextFieldWordWrap getWordWrap() const;
+    void setAllowBreakLineGoOverMaxLine(bool allowBreakLineGoOverMaxLine);
+    bool getAllowBreakLineGoOverMaxLine() const;
 
 private:
     TgItem2d *m_currentItem;
@@ -58,6 +65,10 @@ private:
     std::string m_fontFile;
     float m_fontSize;
     bool m_initDone;
+    uint32_t m_maxLineCount;
+    TgTextFieldWordWrap m_wordWrap;
+    bool m_allowBreakLineGoOverMaxLine;
+    float m_previousTextWidthCalc;
     std::vector<TgTextCharacter> m_listCharacter;
     std::vector<TgMatrix4x4>m_listTransform;
     TgTextfieldHorizontalAlign m_alignHorizontal;

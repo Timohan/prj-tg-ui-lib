@@ -13,7 +13,8 @@ public:
     ~Page2();
 
     TgButton *getButton(int index);
-
+    float getAllDrawHeight(int index);
+    TgTextfield *getTextfield();
 private:
     int m_centerTextIndex;
     TgPages *m_pages;
@@ -27,6 +28,7 @@ private:
     TgButton m_buttonChangeSwitchTypeFromRight;
     TgButton m_buttonChangeText;
     TgTextfield m_textFieldForTestCenter;
+    std::vector<float> m_allDrawHeight;
 
     void onButtonClickPage0(TgMouseType type, float x, float y);
     void onButtonClickFromDirect(TgMouseType type, float x, float y);
@@ -43,6 +45,8 @@ private:
     void onButtonChangeSwitchTypeFromBottomChanged(bool selected);
     void onButtonChangeSwitchTypeFromLeftChanged(bool selected);
     void onButtonChangeSwitchTypeFromRightChanged(bool selected);
+
+    void setDrawHeight(int centerTextIndex, float value);
 };
 
 #endif

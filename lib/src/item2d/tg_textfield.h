@@ -52,6 +52,17 @@ struct TgTextFieldText
 };
 
 /*!
+ * \brief TgTextFieldWordWrap
+ *
+ */
+enum TgTextFieldWordWrap
+{
+    WordWrapBounded = 0, /*!< default, words will be wrapped to minimum of area */
+    WordWrapOff,         /*!< only the line break '\n' will wrap the line */
+    WordWrapOn,          /*!< lines are wrapped to ' ' (empty space) or '\n' if it's possible, if there is no space or '\n' at the line, then it's same wrapping as WordWrapBounded */
+};
+
+/*!
  * \brief TgTextfield
  * handles text field label functionality (just drawing the text)
  */
@@ -73,6 +84,13 @@ public:
     void setFontSize(float fontSize);
     float getTextWidth();
     float getTextHeight();
+    void setMaxLineCount(uint32_t maxLineCount);
+    uint32_t getMaxLineCount() const;
+    float getAllDrawTextHeight();
+    void setWordWrap(TgTextFieldWordWrap wordWrap);
+    TgTextFieldWordWrap getWordWrap() const;
+    void setAllowBreakLineGoOverMaxLine(bool allowBreakLineGoOverMaxLine);
+    bool getAllowBreakLineGoOverMaxLine() const;
 
 protected:
     virtual void render(const TgWindowInfo *windowInfo) override;

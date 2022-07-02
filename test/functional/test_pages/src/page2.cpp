@@ -143,6 +143,16 @@ TgButton *Page2::getButton(int index)
     return nullptr;
 }
 
+TgTextfield *Page2::getTextfield()
+{
+    return &m_textFieldForTestCenter;
+}
+
+float Page2::getAllDrawHeight(int index)
+{
+    return m_allDrawHeight[index];
+}
+
 /*!
  * \brief Page2::onButtonChangeTextClick
  *
@@ -227,10 +237,156 @@ void Page2::onButtonChangeTextClick(TgMouseType type, float x, float y)
             m_textFieldForTestCenter.setText("");
             m_buttonChangeText.setText("");
             break;
+        case 12:
+            m_textFieldForTestCenter.setMaxLineCount(2);
+            t0.m_text = "multiline text";
+            t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
+            listText.push_back(t0);
+            t1.m_text = " wqdqw aswqdw";
+            t1.m_textColorG = t1.m_textColorB = 255;
+            t1.m_textColorR = 0;
+            listText.push_back(t1);
+            t2.m_text = " and here is very long text to make this multiline text for testing and\n perhaps more testing";
+            t2.m_textColorR = t2.m_textColorG = t2.m_textColorB = 255;
+            listText.push_back(t2);
+            m_textFieldForTestCenter.setText(listText);
+            break;
+        case 13:
+            m_textFieldForTestCenter.setMarginLeft(50);
+            m_textFieldForTestCenter.setMarginRight(10);
+            break;
+        case 14:
+            m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignRight);
+            m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
+            break;
+        case 15:
+            m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignLeft);
+            m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignTop);
+            break;
+        case 16:
+            m_textFieldForTestCenter.setMarginLeft(0);
+            m_textFieldForTestCenter.setMarginRight(0);
+            m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignCenterH);
+            m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignCenterV);
+            break;
+        case 17:
+            m_textFieldForTestCenter.setMaxLineCount(3);
+            break;
+        case 18:
+            t0.m_text = "xmultiline text";
+            t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
+            listText.push_back(t0);
+            t1.m_text = " wqdqw aswqdw";
+            t1.m_textColorG = t1.m_textColorB = 255;
+            t1.m_textColorR = 0;
+            listText.push_back(t1);
+            t2.m_text = " and here is very long text to make this\n multiline\n text for\n testing and\n perhaps more testing";
+            t2.m_textColorR = t2.m_textColorG = t2.m_textColorB = 255;
+            listText.push_back(t2);
+            m_textFieldForTestCenter.setText(listText);
+            m_buttonChangeText.setText(listText);
+            break;
+        case 19:
+            m_textFieldForTestCenter.setMaxLineCount(0);
+            break;
+        case 20:
+            m_textFieldForTestCenter.setMaxLineCount(2);
+            break;
+        case 21:
+            m_textFieldForTestCenter.setAllowBreakLineGoOverMaxLine(true);
+            m_buttonChangeText.setText("Change text");
+            break;
+        case 22:
+            t0.m_text = "xmultiline text";
+            t0.m_textColorR = t0.m_textColorG = t0.m_textColorB = 255;
+            listText.push_back(t0);
+            t1.m_text = " wqdqw aswqdw";
+            t1.m_textColorG = t1.m_textColorB = 255;
+            t1.m_textColorR = 0;
+            listText.push_back(t1);
+            t2.m_text = " and here is very long text to make this\nmultiline\ntext for\ntesting and\nperhaps more testing";
+            t2.m_textColorR = t2.m_textColorG = t2.m_textColorB = 255;
+            listText.push_back(t2);
+            m_textFieldForTestCenter.setText(listText);
+            m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignRight);
+            m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
+            break;
+        case 23:
+            m_textFieldForTestCenter.setMaxLineCount(3);
+            break;
+        case 24:
+            m_textFieldForTestCenter.setText("xmultiline text for testing and more testing wqdqw aswqdw and here is very long text to make this\nmultiline\ntext for\ntesting and\nperhaps more testing");
+            m_textFieldForTestCenter.setMaxLineCount(2);
+            break;
+        case 25:
+            m_textFieldForTestCenter.setMaxLineCount(3);
+            break;
+        case 26:
+            m_textFieldForTestCenter.setMaxLineCount(1);
+            m_textFieldForTestCenter.setAllowBreakLineGoOverMaxLine(false);
+            m_textFieldForTestCenter.setWordWrap(TgTextFieldWordWrap::WordWrapOff);
+            break;
+        case 27:
+            m_textFieldForTestCenter.setAllowBreakLineGoOverMaxLine(true);
+            break;
+        case 28:
+            m_textFieldForTestCenter.setMaxLineCount(0);
+            break;
+        case 29:
+            m_textFieldForTestCenter.setAllowBreakLineGoOverMaxLine(false);
+            break;
+        case 30:
+            m_textFieldForTestCenter.setMaxLineCount(2);
+            break;
+        case 31:
+            m_textFieldForTestCenter.setAllowBreakLineGoOverMaxLine(true);
+            break;
+        case 32:
+            m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignLeft);
+            m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignTop);
+            break;
+        case 33:
+            m_textFieldForTestCenter.setMaxLineCount(1);
+            m_textFieldForTestCenter.setAllowBreakLineGoOverMaxLine(true);
+            m_textFieldForTestCenter.setWordWrap(TgTextFieldWordWrap::WordWrapOn);
+            break;
+        case 34:
+            m_textFieldForTestCenter.setMaxLineCount(2);
+            m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignRight);
+            m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
+            break;
+        case 35:
+            m_textFieldForTestCenter.setMaxLineCount(0);
+            break;
+        case 36:
+            m_textFieldForTestCenter.setText("xmultilineatextaforatestingaandamoreatestingawqdqwaaswqdwaandahereaisaveryalongatextatoamake this\nmultiline\ntext for\ntesting and\nperhaps more testing");
+            break;
+        case 37:
+            m_textFieldForTestCenter.setMaxLineCount(2);
+            m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignLeft);
+            m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignTop);
+            m_textFieldForTestCenter.setText("dwqwqddqdwdwqdqwqwwqwdqwdwqwddqwdqwdwqwddqwdqwqwddqwdwqxmultilineatextaforatestingaandamoreatestingawqdqwaaswqdwaandahereaisaveryalongatextatoamake this\nmultiline\ntext for\ntesting and\nperhaps more testing");
+            break;
         default:
+            m_textFieldForTestCenter.setMaxLineCount(1);
+            m_textFieldForTestCenter.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignCenterH);
+            m_textFieldForTestCenter.setVerticalAlign(TgTextfieldVerticalAlign::AlignCenterV);
             m_textFieldForTestCenter.setText("Change text");
             m_buttonChangeText.setText("Change text");
             m_centerTextIndex = 0;
             break;
     }
+    setDrawHeight(m_centerTextIndex, m_textFieldForTestCenter.getAllDrawTextHeight());
+}
+
+void Page2::setDrawHeight(int centerTextIndex, float value)
+{
+    while (1) {
+        if (static_cast<size_t>(centerTextIndex)+1 > m_allDrawHeight.size()) {
+            m_allDrawHeight.push_back(0);
+        } else {
+            break;
+        }
+    }
+    m_allDrawHeight[centerTextIndex] = value;
 }

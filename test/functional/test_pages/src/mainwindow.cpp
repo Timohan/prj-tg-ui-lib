@@ -71,9 +71,15 @@ TgButton *MainWindow::getButton(int page, int index)
     return nullptr;
 }
 
-TgTextfield *MainWindow::getTextfield()
+TgTextfield *MainWindow::getTextfield(int page)
 {
-    return m_page0.getTextfield();
+    if (page == 0) {
+        return m_page0.getTextfield();
+    }
+    if (page == 2) {
+        return m_page2.getTextfield();
+    }
+    return nullptr;
 }
 
 TgTextedit *MainWindow::getTextEdit()
@@ -90,3 +96,12 @@ float MainWindow::getOpeningTextHeight()
 {
     return m_page0.getOpeningTextHeight();
 }
+
+float MainWindow::getAllDrawHeight(int page, int index)
+{
+    if (page == 2) {
+        return m_page2.getAllDrawHeight(index);
+    }
+    return 0;
+}
+

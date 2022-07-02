@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "../../../../lib/src/global/tg_global_log.h"
 #include <X11/Xlib.h>
+#include <math.h>
 #include <X11/Xutil.h>
 #include <string.h>
 #include "mainwindow.h"
@@ -81,19 +82,11 @@ void FunctionalTest::start()
             return;
         }
 
-        for (i=0;i<22;i++) {
-            sendButtonClick(1, 320, 70, 1);
-            std::string tmp;
-            if ((i % 12) == 0 && i != 0) {
-                tmp = "image_text" + std::to_string(i % 12) + "_second.png";
-            } else {
-                tmp = "image_text" + std::to_string(i % 12) + ".png";
-            }
-            if (!FunctionalTestImage::isImageToEqual(m_mainWindow, tmp.c_str(), 800, 600)) {
-                m_returnIndex = 1;
-                m_mainWindow->exit();
-                return;
-            }
+        if (!makeTextFieldTest()) {
+            sleep(1);
+            m_returnIndex = 1;
+            m_mainWindow->exit();
+            return;
         }
 
         sendButtonClick(1, 155, 70, 1);
@@ -534,7 +527,7 @@ bool FunctionalTest::makeEditTextTest()
         TG_ERROR_LOG("Getting text width is incorrect ", w);
         return false;
     }
-
+    sleep(1);
     if (!FunctionalTestImage::isImageToEqual(m_mainWindow, "image_textedit0.png", 800, 600)) {
         return false;
     }
@@ -794,5 +787,39 @@ bool FunctionalTest::makeEditTextTest()
 
 
     sendButtonClick(1, 40, 35, 1);
+    return true;
+}
+
+bool FunctionalTest::makeTextFieldTest()
+{
+    int i;
+    float value;
+    float value2;
+    const int numberOfClicks = 38;
+
+    for (i=0;i<45;i++) {
+        sendButtonClick(1, 320, 70, 1);
+        std::string tmp;
+        if ((i % numberOfClicks) == 0 && i != 0) {
+            tmp = "image_text" + std::to_string(i % numberOfClicks) + "_second.png";
+        } else {
+            tmp = "image_text" + std::to_string(i % numberOfClicks) + ".png";
+        }
+        if ((i % numberOfClicks) == i && i >= 1) {
+            value = m_mainWindow->getAllDrawHeight(2, i);
+        }
+        if (!FunctionalTestImage::isImageToEqual(m_mainWindow, tmp.c_str(), 800, 600)) {
+            TG_ERROR_LOG("Incorrect image ", tmp, " index: ", i);
+            sleep(100);
+            return false;
+        }
+        if ((i % numberOfClicks) == i && i >= 1) {
+            value2 = m_mainWindow->getTextfield(2)->getAllDrawTextHeight();
+            if (std::fabs(value - value2) > std::numeric_limits<double>::epsilon()) {
+                TG_ERROR_LOG("Incorrect All draw text height: ", value, " ", value2, " index:", i);
+                return false;
+            }
+        }
+    }
     return true;
 }

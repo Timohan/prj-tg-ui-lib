@@ -197,6 +197,8 @@ void TgFontGlyphCache::render(TgFontText *fontText, const int vertexTransformInd
     bool colorFirstTime = true;
     for (i=0;i<c;i++) {
         if (!fontText->getFontInfo(i)
+            || fontText->getCharacter(i)->m_character == '\n'
+            || !fontText->getCharacter(i)->m_draw
             || fontText->getCharacter(i)->m_fontFileNameIndex == -1) {
             continue;
         }
