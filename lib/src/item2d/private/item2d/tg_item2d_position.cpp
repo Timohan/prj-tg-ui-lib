@@ -50,6 +50,7 @@ TgItem2dPosition::TgItem2dPosition(float x, float y, float width, float height, 
     m_anchor(TgItem2dAnchor::AnchorRelativeToParent),
     m_marginValues({0,0,0,0}),
     m_previousPosition({0,0,0,0}),
+    m_positionChanged(true),
     m_useRoundedPositionValues(true),
     f_resizeChanged(nullptr)
 {    
