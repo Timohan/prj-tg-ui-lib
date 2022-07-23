@@ -1,0 +1,851 @@
+msg start basic moving row 0
+MMC 0 4 15 4 9 0 0 0
+isHover 0 1
+isMove 0 4 9 4 9 1
+MMC 0 4 8 4 11 0 0 0
+isMove 0 4 9 4 9 1
+isHover 0 0
+MMC 0 4 11 4 9 0 0 0
+isHover 0 1
+isMove 0 4 9 4 9 1
+MMC 0 3 9 6 9 0 0 0
+isMove 0 4 9 4 9 1
+isHover 0 0
+isHover 1 1
+isMove 1 5 9 6 9 1
+MMC 0 6 9 3 9 0 0 0
+isMove 1 5 9 5 9 1
+isHover 1 0
+isHover 0 1
+isMove 0 4 9 3 9 1
+MMC 0 3 8 3 13 0 0 0
+isMove 0 3 9 3 9 1
+isHover 0 0
+msg start basic moving row 1
+MMC 0 3 13 3 55 0 0 0
+isHover 2 1
+isMove 2 3 50 3 55 1
+MMC 0 3 55 12 55 0 0 0
+isMove 2 4 55 9 55 1
+isHover 2 0
+isHover 3 1
+isMove 3 10 55 12 55 1
+MMC 0 12 55 5 55 0 0 0
+isMove 3 11 55 10 55 1
+isHover 3 0
+isHover 2 1
+isMove 2 9 55 5 55 1
+MMC 0 5 55 5 75 0 0 0
+isMove 2 5 56 5 69 1
+isHover 2 0
+msg start basic moving row 2
+MMC 0 5 69 5 105 0 0 0
+isHover 4 1
+isMove 4 5 100 5 105 1
+MMC 0 5 105 25 105 0 0 0
+isMove 4 6 105 9 105 1
+isHover 4 0
+isHover 5 1
+isMove 5 10 105 19 105 1
+isHover 5 0
+isHover 6 1
+isMove 6 20 105 25 105 1
+MMC 0 25 105 5 105 0 0 0
+isMove 6 24 105 20 105 1
+isHover 6 0
+isHover 5 1
+isMove 5 19 105 10 105 1
+isHover 5 0
+isHover 4 1
+isMove 4 9 105 5 105 1
+MMC 0 5 105 5 135 0 0 0
+isMove 4 5 106 5 119 1
+isHover 4 0
+msg mouse down and move into row 0 and out
+isHoverCount 130
+MMC 1 4 15 4 8 0 1 0
+isButtonDownCount 0 0
+isHoverCount 130
+isButtonDownCount 0 0
+MMC 0 4 8 4 15 1 0 1
+isButtonDownCount 0 0
+isHoverCount 130
+isButtonDownCount 0 0
+msg mouse move into row 0, press down, out of area, release
+MMC 0 4 15 4 9 0 0 0
+isHover 0 1
+isMove 0 4 9 4 9 1
+isButtonDownCount 0 0
+MMC 1 4 9 4 12 0 1 0
+isMousePressed 0 4 9
+isButtonDownCount 0 1
+MMC 0 4 13 4 13 1 0 1
+isMove 0 4 10 4 13 0
+isMouseReleased 0 4 13 0
+isHover 0 0
+isButtonDownCount 0 0
+msg mouse move into row 2, press down, out of area, release
+MMC 0 24 135 24 115 0 0 0
+isHover 6 1
+isMove 6 24 119 24 115 1
+isButtonDownCount 6 0
+MMC 1 24 115 24 135 0 1 0
+isMousePressed 6 24 115
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 1
+isMove 6 24 116 24 119 1
+isMove 6 24 120 24 135 0
+MMC 0 24 136 24 136 1 0 1
+isMove 6 24 136 24 136 0
+isMouseReleased 6 24 136 0
+isHover 6 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+msg move into row 0 press & release
+MMC 0 4 15 4 9 0 0 0
+isHover 0 1
+isMove 0 4 9 4 9 1
+MMC 1 4 9 4 9 0 1 0
+isMousePressed 0 4 9
+MMC 0 4 9 3 9 1 0 1
+isMove 0 4 9 3 9 1
+isMouseReleased 0 3 9 1
+isMouseClicked 0 3 9
+MMC 0 3 9 4 15 0 0 0
+isHover 0 0
+msg move into row 0 press & move out of area, move in area & release
+MMC 0 4 15 4 9 0 0 0
+isHover 0 1
+isMove 0 4 9 4 9 1
+MMC 1 4 9 4 9 0 1 0
+isMousePressed 0 4 9
+MMC 0 4 9 4 15 0 0 0
+MMC 0 4 15 4 9 0 0 0
+isMove 0 4 9 4 9 1
+isMove 0 4 10 4 15 0
+isMove 0 4 14 4 10 0
+isMove 0 4 9 4 9 1
+MMC 0 4 9 3 9 1 0 1
+isMove 0 3 9 3 9 1
+isMouseReleased 0 3 9 1
+isMouseClicked 0 3 9
+MMC 0 3 9 4 15 0 0 0
+isHover 0 0
+msg mouse move into row 2, press down, out of area, into area, release
+MMC 0 24 135 24 115 0 0 0
+isHover 6 1
+isMove 6 24 119 24 115 1
+isButtonDownCount 6 0
+MMC 1 24 115 24 125 0 1 0
+isMousePressed 6 24 115
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 1
+isMove 6 24 116 24 119 1
+isMove 6 24 120 24 125 0
+MMC 0 24 125 24 115 1 0 1
+isMove 6 24 124 24 120 0
+isMove 6 24 119 24 115 1
+isMouseReleased 6 24 115 1
+isMouseClicked 6 24 115
+MMC 0 24 115 24 136 0 0 0
+isMove 6 24 116 24 119 1
+isHover 6 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+##########
+########## Visible
+##########
+msg visible item 0==false & mouse move into row 0, press down, out of area, release
+setVisible 0 0
+isVisible 0 0
+MMC 0 4 15 4 9 0 0 0
+MMC 1 4 9 4 12 0 1 0
+MMC 0 4 13 4 13 1 0 1
+setVisible 0 1
+isVisible 0 1
+msg visible item 6==false & mouse move into row 2, press down, out of area, into area, release
+setVisible 6 0
+isVisible 6 0
+MMC 0 24 135 24 115 0 0 0
+isHover 5 1
+isMove 5 24 119 24 115 1
+isButtonDownCount 5 0
+MMC 1 24 115 24 125 0 1 0
+isMousePressed 5 24 115
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 1
+isButtonDownCount 6 0
+isMove 5 24 116 24 119 1
+isMove 5 24 120 24 125 0
+MMC 0 24 125 24 115 1 0 1
+isMove 5 24 124 24 120 0
+isMove 5 24 119 24 115 1
+isMouseReleased 5 24 115 1
+isMouseClicked 5 24 115
+MMC 0 24 115 24 136 0 0 0
+isMove 5 24 116 24 119 1
+isHover 5 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+setVisible 6 1
+isVisible 6 1
+msg visible item 5==false & mouse move into row 2, press down, out of area, into area, release
+setVisible 5 0
+isVisible 5 0
+isVisible 6 0
+MMC 0 24 135 24 115 0 0 0
+isHover 4 1
+isMove 4 24 119 24 115 1
+isButtonDownCount 4 0
+MMC 1 24 115 24 125 0 1 0
+isMousePressed 4 24 115
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 1
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+isMove 4 24 116 24 119 1
+isMove 4 24 120 24 125 0
+MMC 0 24 125 24 115 1 0 1
+isMove 4 24 124 24 120 0
+isMove 4 24 119 24 115 1
+isMouseReleased 4 24 115 1
+isMouseClicked 4 24 115
+MMC 0 24 115 24 136 0 0 0
+isMove 4 24 116 24 119 1
+isHover 4 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+setVisible 5 1
+isVisible 5 1
+isVisible 6 1
+msg move into row 0 press & setVisible (0) == false & setVisible (0) == true & release
+MMC 0 4 15 4 8 0 0 0
+isHover 0 1
+isMove 0 4 9 4 8 1
+MMC 1 4 9 4 9 0 1 0
+isMousePressed 0 4 9
+isMove 0 4 9 4 9 1
+isButtonDownCount 0 1
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+setVisible 0 0
+isVisible 0 0
+isHover 0 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+setVisible 0 1
+isVisible 0 1
+MMC 0 4 9 3 9 1 0 1
+isHover 0 1
+MMC 0 3 9 4 15 0 0 0
+isHover 0 0
+msg move into row 0 press & move out of area, & setVisible (0) == false & release
+MMC 0 4 15 4 9 0 0 0
+isHover 0 1
+isMove 0 4 9 4 9 1
+MMC 1 4 9 4 9 0 1 0
+isMousePressed 0 4 9
+isButtonDownCount 0 1
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+MMC 0 4 9 4 15 0 0 0
+isButtonDownCount 0 1
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+isMove 0 4 9 4 9 1
+isMove 0 4 10 4 15 0
+setVisible 0 0
+isVisible 0 0
+isHover 0 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+MMC 0 4 15 4 9 0 0 0
+MMC 0 4 9 4 15 1 0 1
+setVisible 0 1
+isVisible 0 1
+msg move into row 2 & press & setVisible (6) == false & setVisible (6) == true & release
+MMC 0 24 135 24 117 0 0 0
+isHover 6 1
+isMove 6 24 119 24 117 1
+MMC 1 24 117 24 117 0 1 0
+isMousePressed 6 24 117
+isMove 6 24 117 24 117 1
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 1
+setVisible 6 0
+isVisible 6 0
+isHover 6 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+setVisible 6 1
+isVisible 6 1
+MMC 0 24 117 24 125 1 0 1
+msg move into row 2 & press & setVisible (5) == false & setVisible (5) == true & release
+MMC 0 24 135 24 117 0 0 0
+isHover 6 1
+isMove 6 24 119 24 117 1
+MMC 1 24 117 24 117 0 1 0
+isMousePressed 6 24 117
+isMove 6 24 117 24 117 1
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 1
+setVisible 5 0
+isVisible 5 0
+isVisible 6 0
+isHover 6 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+setVisible 5 1
+isVisible 5 1
+isVisible 6 1
+MMC 0 24 117 24 125 1 0 1
+msg move into row 2 & setVisible (6) == false & setVisible (6) == true
+MMC 0 24 135 24 117 0 0 0
+isHover 6 1
+isMove 6 24 119 24 117 1
+setVisible 6 0
+isVisible 6 0
+isHover 6 0
+isHover 5 1
+setVisible 6 1
+isVisible 6 1
+isHover 5 0
+isHover 6 1
+MMC 0 24 117 24 125 0 0 0
+isMove 6 24 118 24 119 1
+isHover 6 0
+msg move into row 2 & setVisible (5) == false & setVisible (5) == true
+MMC 0 24 135 24 117 0 0 0
+isHover 6 1
+isMove 6 24 119 24 117 1
+setVisible 5 0
+isVisible 5 0
+isVisible 6 0
+isHover 6 0
+isHover 4 1
+setVisible 5 1
+isVisible 5 1
+isVisible 6 1
+isHover 4 0
+isHover 6 1
+MMC 0 24 117 24 125 0 0 0
+isMove 6 24 118 24 119 1
+isHover 6 0
+##########
+########## Enabled
+##########
+msg enabled item 0==false & mouse move into row 0, press down, out of area, release
+setEnabled 0 0
+isEnabled 0 0
+MMC 0 4 15 4 8 0 0 0
+MMC 1 4 8 4 12 0 1 0
+MMC 0 4 13 4 13 1 0 1
+setEnabled 0 1
+isEnabled 0 1
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+getMouseCursorOnHover 0 0
+msg mouse move into row 0, enabled item 0==false & press down, out of area, release
+MMC 0 4 15 4 8 0 0 0
+isHover 0 1
+isMove 0 4 9 4 8 1
+getMouseCursorOnHover 0 1
+setEnabled 0 0
+isEnabled 0 0
+getMouseCursorOnHover 0 0
+MMC 1 4 8 4 12 0 1 0
+MMC 0 4 13 4 13 1 0 1
+setEnabled 0 1
+isEnabled 0 1
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+getMouseCursorOnHover 0 0
+msg mouse move into row 0, press down, enabled item 0==false, out of area, release
+MMC 0 4 15 4 8 0 0 0
+isHover 0 1
+isMove 0 4 9 4 8 1
+getMouseCursorOnHover 0 1
+MMC 1 4 8 4 8 0 1 0
+isButtonDownCount 0 1
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+isMousePressed 0 4 8
+isMove 0 4 8 4 8 1
+setEnabled 0 0
+isEnabled 0 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+getMouseCursorOnHover 0 0
+MMC 0 4 8 4 13 1 0 1
+setEnabled 0 1
+isEnabled 0 1
+getMouseCursorOnHover 0 0
+msg enabled item 6==false, mouse move into row 2, move around row 2
+setEnabled 6 0
+isEnabled 6 0
+MMC 0 4 135 4 115 0 0 0
+isHover 4 1
+isMove 4 4 119 4 115 1
+MMC 0 4 115 23 115 0 0 0
+isMove 4 5 115 9 115 1
+isHover 4 0
+isHover 5 1
+isMove 5 10 115 19 115 1
+isHover 5 0
+MMC 0 23 115 4 115 0 0 0
+isHover 5 1
+isMove 5 19 115 10 115 1
+isHover 5 0
+isHover 4 1
+isMove 4 9 115 4 115 1
+MMC 0 4 115 4 125 0 0 0
+isMove 4 4 116 4 119 1
+isHover 4 0
+setEnabled 6 1
+isEnabled 6 1
+msg enabled item 5==false, mouse move into row 2, move around row 2
+setEnabled 5 0
+isEnabled 5 0
+isEnabled 6 0
+MMC 0 4 135 4 115 0 0 0
+isHover 4 1
+isMove 4 4 119 4 115 1
+MMC 0 4 115 23 115 0 0 0
+isMove 4 5 115 9 115 1
+isHover 4 0
+MMC 0 23 115 4 115 0 0 0
+isHover 4 1
+isMove 4 9 115 4 115 1
+MMC 0 4 115 4 125 0 0 0
+isMove 4 4 116 4 119 1
+isHover 4 0
+setEnabled 5 1
+isEnabled 5 1
+isEnabled 6 1
+msg enabled item 6==false, mouse move into row 2 (item 6), enabled item 6==true
+setEnabled 6 0
+isEnabled 6 0
+MMC 0 24 135 24 115 0 0 0
+setEnabled 6 1
+isEnabled 6 1
+isHover 6 1
+MMC 0 24 115 24 135 0 0 0
+isMove 6 24 116 24 119 1
+isHover 6 0
+msg enabled item 5==false, mouse move into row 2 (item 6), enabled item 5==true
+setEnabled 5 0
+isEnabled 5 0
+isEnabled 6 0
+MMC 0 24 135 24 115 0 0 0
+setEnabled 5 1
+isEnabled 5 1
+isEnabled 6 1
+isHover 6 1
+MMC 0 24 115 24 135 0 0 0
+isMove 6 24 116 24 119 1
+isHover 6 0
+msg enabled item 4==false, mouse move into row 2 (item 6), enabled item 4==true
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+MMC 0 24 135 24 115 0 0 0
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+isHover 6 1
+MMC 0 24 115 24 135 0 0 0
+isMove 6 24 116 24 119 1
+isHover 6 0
+msg enabled item 4==false, mouse move into row 2 (item 5), enabled item 5==true
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+MMC 0 14 135 14 115 0 0 0
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+isHover 5 1
+MMC 0 14 115 14 135 0 0 0
+isMove 5 14 116 14 119 1
+isHover 5 0
+msg enabled item 4==false, mouse move into row 2 (item 5), enabled item 5==true, press down, out, release
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+MMC 1 14 135 14 115 0 1 0
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+MMC 0 14 115 14 135 1 0 1
+msg enabled item 4==false, mouse move into row 2 (item 5), enabled item 5==true, press down, move to item (5), out, release
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+MMC 1 14 135 14 115 0 1 0
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+MMC 0 14 135 24 115 0 0 0
+MMC 0 24 115 24 135 1 0 1
+msg enabled item 5==false, set visible 4 = false, mouse move into row 2 (item 5), set visible 4 == true, out
+setEnabled 5 0
+isEnabled 5 0
+isEnabled 6 0
+setVisible 4 0
+isVisible 4 0
+isVisible 5 0
+isVisible 6 0
+MMC 0 14 135 14 115 0 0 0
+setVisible 4 1
+isVisible 4 1
+isVisible 5 1
+isVisible 6 1
+MMC 0 14 115 14 135 0 0 0
+setEnabled 5 1
+isEnabled 5 1
+isEnabled 6 1
+msg set visible 4 = false, enabled item 5==false, mouse move into row 2 (item 5), set visible 4 == true, out
+setVisible 4 0
+isVisible 4 0
+isVisible 5 0
+isVisible 6 0
+setEnabled 5 0
+isEnabled 5 0
+isEnabled 6 0
+MMC 0 14 135 14 115 0 0 0
+setVisible 4 1
+isVisible 4 1
+isVisible 5 1
+isVisible 6 1
+MMC 0 14 115 14 135 0 0 0
+setEnabled 5 1
+isEnabled 5 1
+isEnabled 6 1
+msg enabled item 5==false, set visible 4 = false, mouse move into row 2 (item 6), set visible 4 == true, out
+setEnabled 5 0
+isEnabled 5 0
+isEnabled 6 0
+setVisible 4 0
+isVisible 4 0
+isVisible 5 0
+isVisible 6 0
+MMC 0 24 135 24 115 0 0 0
+setVisible 4 1
+isVisible 4 1
+isVisible 5 1
+isVisible 6 1
+MMC 0 24 115 24 135 0 0 0
+setEnabled 5 1
+isEnabled 5 1
+isEnabled 6 1
+msg set visible 4 = false, enabled item 5==false, mouse move into row 2 (item 6), set visible 4 == true, out
+setVisible 4 0
+isVisible 4 0
+isVisible 5 0
+isVisible 6 0
+setEnabled 5 0
+isEnabled 5 0
+isEnabled 6 0
+MMC 0 24 135 24 115 0 0 0
+setVisible 4 1
+isVisible 4 1
+isVisible 5 1
+isVisible 6 1
+MMC 0 24 115 24 135 0 0 0
+setEnabled 5 1
+isEnabled 5 1
+isEnabled 6 1
+msg enabled item 4==false, set visible 5 = false, mouse move into row 2 (item 5), set visible 5 == true, out
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+setVisible 5 0
+isVisible 5 0
+isVisible 6 0
+MMC 0 14 135 14 115 0 0 0
+setVisible 5 1
+isVisible 5 1
+isVisible 6 1
+MMC 0 14 115 14 135 0 0 0
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+msg enabled item 4==false, set visible 5 = false, mouse move into row 2 (item 6), set visible 5 == true, out
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+setVisible 5 0
+isVisible 5 0
+isVisible 6 0
+MMC 0 24 135 24 115 0 0 0
+setVisible 5 1
+isVisible 5 1
+isVisible 6 1
+MMC 0 24 115 24 135 0 0 0
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+msg enabled item 4==false, set visible 5 = false, mouse move into row 2 (item 4), set visible 5 == true, out
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+setVisible 5 0
+isVisible 5 0
+isVisible 6 0
+MMC 0 4 135 4 115 0 0 0
+setVisible 5 1
+isVisible 5 1
+isVisible 6 1
+MMC 0 4 115 4 135 0 0 0
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+#####################################
+#####################################
+####### Button tests start here #####
+#####################################
+#####################################
+msg Button tests starts, mouse move into row 2 (item 4), press down, enabled (4) false, enabled (4) true
+MMC 0 4 135 4 115 0 0 0
+isHover 4 1
+isMove 4 4 119 4 115 1
+MMC 1 4 115 4 115 0 1 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 1
+isButtonDownCount 5 0
+isButtonDownCount 6 0
+isMousePressed 4 4 115
+isMove 4 4 115 4 115 1
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 1
+isItemSelected 5 0
+isItemSelected 6 0
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 0
+isItemSelected 5 0
+isItemSelected 6 0
+MMC 0 4 115 4 135 1 0 1
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 0
+isItemSelected 5 0
+isItemSelected 6 0
+msg Button tests starts, mouse move into row 2 (item 6), press down, enabled (4) false, enabled (4) true
+MMC 0 24 135 24 115 0 0 0
+isHover 6 1
+isMove 6 24 119 24 115 1
+MMC 1 24 115 24 115 0 1 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 0
+isButtonDownCount 6 1
+isMousePressed 6 24 115
+isMove 6 24 115 24 115 1
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 0
+isItemSelected 5 0
+isItemSelected 6 1
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 0
+isItemSelected 5 0
+isItemSelected 6 0
+MMC 0 24 115 24 135 1 0 1
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 0
+isItemSelected 5 0
+isItemSelected 6 0
+msg Button tests starts, mouse move into row 2 (item 5), press down, enabled (4) false, enabled (4) true
+MMC 0 14 135 14 115 0 0 0
+isHover 5 1
+isMove 5 14 119 14 115 1
+MMC 1 14 115 14 115 0 1 0
+isButtonDownCount 0 0
+isButtonDownCount 1 0
+isButtonDownCount 2 0
+isButtonDownCount 3 0
+isButtonDownCount 4 0
+isButtonDownCount 5 1
+isButtonDownCount 6 0
+isMousePressed 5 14 115
+isMove 5 14 115 14 115 1
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 0
+isItemSelected 5 1
+isItemSelected 6 0
+setEnabled 4 0
+isEnabled 4 0
+isEnabled 5 0
+isEnabled 6 0
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 0
+isItemSelected 5 0
+isItemSelected 6 0
+MMC 0 14 115 14 135 1 0 1
+setEnabled 4 1
+isEnabled 4 1
+isEnabled 5 1
+isEnabled 6 1
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isItemSelected 4 0
+isItemSelected 5 0
+isItemSelected 6 0
