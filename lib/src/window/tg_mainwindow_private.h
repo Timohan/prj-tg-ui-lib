@@ -23,6 +23,7 @@
 #endif
 
 class TgItem2d;
+struct TgItem2dPrivateMessage;
 
 struct TgWindowInfo
 {
@@ -91,6 +92,7 @@ public:
     void setAllowedNumberMouseButtonCount(size_t allowedNumberMouseButtonDownCount);
     size_t getAllowedNumberMouseButtonCount();
 
+    void handlePrivateMessage(const TgItem2dPrivateMessage *message);
 private:
     TgItem2d *m_currentItem;
     TgWindowInfo m_windowInfo;
@@ -100,6 +102,9 @@ private:
     TgMatrix4x4 m_model;
     TgMatrix4x4 m_view;
     TgMatrix4x4 m_projection;
+
+    double m_currentMousePositionX;
+    double m_currentMousePositionY;
 
     void reShapeWindow(int width, int height);
     static void errorCallback(int error, const char* description);

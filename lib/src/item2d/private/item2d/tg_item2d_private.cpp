@@ -17,12 +17,12 @@
 
 TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
     TgItem2dVisible(parent, this),
+    TgItem2dEnabled(parent, this),
     TgItem2dPosition(parent, this),
     TgItem2dSelected(parent, current, this),
     m_internalCallback(nullptr),
     m_parent(parent),
-    m_currentItem(current),
-    m_enabled(true)
+    m_currentItem(current)
 {
     TG_FUNCTION_BEGIN();
     if (parent) {
@@ -33,12 +33,12 @@ TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
 
 TgItem2dPrivate::TgItem2dPrivate(float x, float y, float width, float height, TgItem2d *parent, TgItem2d *current) :
     TgItem2dVisible(parent, this),
+    TgItem2dEnabled(parent, this),
     TgItem2dPosition(x, y, width, height, parent, this),
     TgItem2dSelected(parent, current, this),
     m_internalCallback(nullptr),
     m_parent(parent),
-    m_currentItem(current),
-    m_enabled(true)
+    m_currentItem(current)
 {
     TG_FUNCTION_BEGIN();
     if (parent) {
@@ -176,20 +176,38 @@ void TgItem2dPrivate::sendMessageToChildren(const TgItem2dPrivateMessage *messag
         switch (message->m_type) {
             case TgItem2dPrivateMessageType::PositionChanged:
             case TgItem2dPrivateMessageType::SetUnselected:
+            case TgItem2dPrivateMessageType::CurrentItemToInvisible:
+            case TgItem2dPrivateMessageType::CurrentItemToDisabled:
+            case TgItem2dPrivateMessageType::EventClearButtonPressForThisItem:
+            case TgItem2dPrivateMessageType::ItemToVisibleChanged:
+            case TgItem2dPrivateMessageType::ItemToEnabledChanged:
             case RemovingItem2d:
             default:
                 break;
             case TgItem2dPrivateMessageType::ParentItemToVisible:
-                parentVisibleChanged(true);
+                if (!parentVisibleChanged(true)) {
+                    return;
+                }
+                break;
+            case TgItem2dPrivateMessageType::ParentItemToEnabled:
+                if (!parentEnabledChanged(true)) {
+                    return;
+                }
                 break;
             case TgItem2dPrivateMessageType::ParentItemToInvisible:
                 parentVisibleChanged(false);
+                break;
+            case TgItem2dPrivateMessageType::ParentItemToDisabled:
+                parentEnabledChanged(false);
                 break;
             case TgItem2dPrivateMessageType::ParentItemToUseRoundedPositionValues:
                 setUseRoundedPositionValues(true);
                 break;
             case TgItem2dPrivateMessageType::ParentItemToUseNotRoundedPositionValues:
                 setUseRoundedPositionValues(false);
+                break;
+            case TgItem2dPrivateMessageType::HoverEnabledOnItem:
+                m_currentItem->handlePrivateMessage(message);
                 break;
         }
         handleMessageToChildren(message);
@@ -212,10 +230,20 @@ void TgItem2dPrivate::sendMessageToChildren(const TgItem2dPrivateMessage *messag
                     return;
                 }
                 break;
+            case TgItem2dPrivateMessageType::HoverEnabledOnItem:
+                m_currentItem->handlePrivateMessage(message);
+                break;
             case TgItem2dPrivateMessageType::ParentItemToVisible:
+            case TgItem2dPrivateMessageType::ParentItemToEnabled:
             case TgItem2dPrivateMessageType::ParentItemToInvisible:
+            case TgItem2dPrivateMessageType::EventClearButtonPressForThisItem:
+            case TgItem2dPrivateMessageType::ParentItemToDisabled:
             case TgItem2dPrivateMessageType::ParentItemToUseRoundedPositionValues:
             case TgItem2dPrivateMessageType::ParentItemToUseNotRoundedPositionValues:
+            case TgItem2dPrivateMessageType::CurrentItemToInvisible:
+            case TgItem2dPrivateMessageType::CurrentItemToDisabled:
+            case TgItem2dPrivateMessageType::ItemToVisibleChanged:
+            case TgItem2dPrivateMessageType::ItemToEnabledChanged:
             default:
                 break;
         }
@@ -240,30 +268,6 @@ void TgItem2dPrivate::checkOnResizeChangedOnChildren()
 }
 
 /*!
- * \brief TgItem2dPrivate::getEnabled
- *
- * \return is enabled
- */
-bool TgItem2dPrivate::getEnabled()
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return m_enabled;
-}
-
-/*!
- * \brief TgItem2dPrivate::setEnabled
- *
- * \param enabled sets enabled true/false
- */
-void TgItem2dPrivate::setEnabled(bool enabled)
-{
-    TG_FUNCTION_BEGIN();
-    m_enabled = enabled;
-    TG_FUNCTION_END();
-}
-
-/*!
  * \brief TgItem2dPrivate::sendMessageToChildrenFromBegin
  *
  * sends message to all items
@@ -277,7 +281,13 @@ void TgItem2dPrivate::sendMessageToChildrenFromBegin(const TgItem2dPrivateMessag
         m_parent->sendMessageToChildrenFromBegin(message);
         TG_FUNCTION_END();
         return;
+    } else if (message->m_type == TgItem2dPrivateMessageType::ItemToVisibleChanged
+                || message->m_type == TgItem2dPrivateMessageType::EventClearButtonPressForThisItem
+                || message->m_type == TgItem2dPrivateMessageType::ItemToEnabledChanged) {
+        TG_FUNCTION_END();
+        return;
     }
+
     sendMessageToChildren(message);
     TG_FUNCTION_END();
 }
@@ -302,3 +312,20 @@ void TgItem2dPrivate::setToTop(TgItem2d *child)
     TG_FUNCTION_END();
 }
 
+/*!
+ * \brief TgItem2dPrivate::isCursorOnItem
+ *
+ * changes this child to top (last on the list of children)
+ *
+ * \param x
+ * \param y
+ * \param windowInfo
+ * \return true if cursor on item
+ */
+bool TgItem2dPrivate::isCursorOnItem(double x, double y, const TgWindowInfo *windowInfo)
+{
+    return getXminOnVisible() <= x
+        && getXmaxOnVisible(windowInfo) > x
+        && getYminOnVisible() <= y
+        && getYmaxOnVisible(windowInfo) > y;
+}

@@ -47,6 +47,10 @@ public:
     void setMouseCursorOnHover(bool mouseCursorOnHover);
 
     void clearMousePressed();
+
+#ifdef FUNCIONAL_TEST
+    size_t getMouseDownCount();
+#endif
 private:
     bool m_mouseCursorOnHover;
     std::vector<TgMouseType>m_listButtonDown;

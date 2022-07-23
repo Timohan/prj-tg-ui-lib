@@ -16,6 +16,7 @@
 #include "../global/tg_global_log.h"
 #include "../global/tg_global_application.h"
 #include "../item2d/tg_item2d.h"
+#include "../item2d/private/item2d/tg_item2d_private.h"
 #include "glfw/tg_mainwindow_glfw.h"
 
 /*!
@@ -49,7 +50,9 @@ TgMainWindowPrivate::TgMainWindowPrivate(int width, int height, TgItem2d *item, 
     TgMainWindowX11(this),
 #endif
     m_currentItem(item),
-    m_windowInfo(width, height, minWidth, minHeight, maxWidth, maxHeight)
+    m_windowInfo(width, height, minWidth, minHeight, maxWidth, maxHeight),
+    m_currentMousePositionX(-1),
+    m_currentMousePositionY(-1)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
@@ -132,6 +135,11 @@ void TgMainWindowPrivate::handleEvents()
         if (!eventData) {
             break;
         }
+         if (eventData->m_type == TgEventType::EventTypeMouseMove) {
+            m_currentMousePositionX = eventData->m_event.m_mouseEvent.m_x;
+            m_currentMousePositionY = eventData->m_event.m_mouseEvent.m_y;
+         }
+
         if (eventData->m_type == TgEventType::EventTypeWindowResize) {
              m_windowInfo.m_windowWidth = eventData->m_event.m_windowResize.m_width;
              m_windowInfo.m_windowHeight = eventData->m_event.m_windowResize.m_height;
@@ -141,10 +149,16 @@ void TgMainWindowPrivate::handleEvents()
             if (eventData->m_type == TgEventType::EventTypeMousePress) {
                 eventData->m_event.m_mouseEvent.m_newItem = nullptr;
                 eventData->m_event.m_mouseEvent.m_currentMouseDownItem = nullptr;
-            } else if (eventData->m_type == TgEventType::EventTypeMouseRelease
-                      || eventData->m_type == TgEventType::EventTypeMouseMove) {
+            } else if (eventData->m_type == TgEventType::EventTypeMouseRelease) {
                 eventData->m_event.m_mouseEvent.m_newItem = nullptr;
                 eventData->m_event.m_mouseEvent.m_currentMouseDownItem = m_events.getMouseDownItem(eventData->m_event.m_mouseEvent.m_mouseType, eventData->m_event.m_mouseEvent.m_releaseWoCallback);
+            } else if (eventData->m_type == TgEventType::EventTypeMouseMove) {
+                eventData->m_event.m_mouseEvent.m_newItem = nullptr;
+                eventData->m_event.m_mouseEvent.m_currentMouseDownItem = m_events.getMouseDownItem(eventData->m_event.m_mouseEvent.m_releaseWoCallback);
+                if (!eventData->m_event.m_mouseEvent.m_currentMouseDownItem
+                    && m_events.getMouseDownItemCount()) {
+                    eventData->m_event.m_mouseEvent.m_currentMouseDownItem = m_currentItem;
+                }
             }
             ret = m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
             if (eventData->m_type == TgEventType::EventTypeSelectNextItem
@@ -187,6 +201,15 @@ void TgMainWindowPrivate::handleEvents()
         }
         if (eventData->m_type == TgEventType::EventTypeMouseRelease) {
             m_events.removingItem(eventData->m_event.m_mouseEvent.m_mouseType);
+            if (!m_events.getMouseDownItem(eventData->m_event.m_mouseEvent.m_releaseWoCallback)) {
+                TgEventData eventDataMouseRelease;
+                eventDataMouseRelease.m_type = TgEventType::EventTypeMouseMoveResend;
+                eventDataMouseRelease.m_event.m_mouseEvent.m_x = m_currentMousePositionX;
+                eventDataMouseRelease.m_event.m_mouseEvent.m_y = m_currentMousePositionY;
+                eventDataMouseRelease.m_event.m_mouseEvent.m_time = 0;
+                eventDataMouseRelease.m_event.m_mouseEvent.m_mouseType = TgMouseType::NoButton;
+                m_currentItem->handleEventsChildren(&eventDataMouseRelease, &m_windowInfo);
+            }
         }
 
         m_events.clearFirstEventData();
@@ -298,3 +321,25 @@ size_t TgMainWindowPrivate::getAllowedNumberMouseButtonCount()
 {
     return m_events.getAllowedNumberMouseButtonCount();
 }
+
+void TgMainWindowPrivate::handlePrivateMessage(const TgItem2dPrivateMessage *message)
+{
+    if (message->m_type == TgItem2dPrivateMessageType::ItemToVisibleChanged
+        || message->m_type == TgItem2dPrivateMessageType::ItemToEnabledChanged) {
+        if (m_events.getMouseDownItemCount()) {
+            return;
+        }
+        TgEventData eventData;
+        eventData.m_type = TgEventType::EventTypeMouseMoveResend;
+        eventData.m_event.m_mouseEvent.m_x = m_currentMousePositionX;
+        eventData.m_event.m_mouseEvent.m_y = m_currentMousePositionY;
+        eventData.m_event.m_mouseEvent.m_time = 0;
+        eventData.m_event.m_mouseEvent.m_mouseType = TgMouseType::NoButton;
+        m_events.lock();
+        m_currentItem->handleEventsChildren(&eventData, &m_windowInfo);
+        m_events.unlock();
+    } else if (message->m_type == TgItem2dPrivateMessageType::EventClearButtonPressForThisItem) {
+        m_events.setMouseDownItemToNull(message->m_fromItem);
+    }
+}
+

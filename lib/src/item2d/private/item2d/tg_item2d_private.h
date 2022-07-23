@@ -20,6 +20,7 @@ struct TgWindowInfo;
 #include "tg_item2d_position.h"
 #include "tg_item2d_visible.h"
 #include "tg_item2d_selected.h"
+#include "tg_item2d_enabled.h"
 
 enum TgItem2dPrivateMessageType
 {
@@ -30,6 +31,15 @@ enum TgItem2dPrivateMessageType
     ParentItemToInvisible,
     ParentItemToUseRoundedPositionValues,
     ParentItemToUseNotRoundedPositionValues,
+    HoverEnabledOnItem,
+    ItemToVisibleChanged,
+    ParentItemToEnabled,
+    ItemToEnabledChanged,
+    ParentItemToDisabled,
+    EventClearButtonPressForThisItem,
+
+    CurrentItemToInvisible,  /*!< This is only used on virtual void handlePrivateMessage(const TgItem2dPrivateMessage *message); */
+    CurrentItemToDisabled,
 };
 
 struct TgItem2dPrivateMessage
@@ -44,7 +54,7 @@ public:
     virtual void onSelectedCallback() = 0;
 };
 
-class TgItem2dPrivate : public TgItem2dVisible, public TgItem2dPosition, public TgItem2dSelected
+class TgItem2dPrivate : public TgItem2dVisible, public TgItem2dEnabled, public TgItem2dPosition, public TgItem2dSelected
 {
 public:
     explicit TgItem2dPrivate(TgItem2d *parent, TgItem2d *current);
@@ -58,11 +68,11 @@ public:
 
     void checkOnResizeChangedOnChildren();
 
-    bool getEnabled();
-    void setEnabled(bool enabled);
-
     void setInternalCallbacks(TgItem2dInternalCallback *callback);
     void setToTop(TgItem2d *child);
+
+    bool isCursorOnItem(double x, double y, const TgWindowInfo *windowInfo);
+
 protected:
     std::vector<TgItem2d *>m_listChildren;
 
@@ -70,7 +80,6 @@ private:
     TgItem2dInternalCallback *m_internalCallback;
     TgItem2d *m_parent;
     TgItem2d *m_currentItem;
-    bool m_enabled;
 
     void addChild(TgItem2d *child);
     void sendMessageToChildren(const TgItem2dPrivateMessage *message, bool allowFunctionalityToThisItem = true);
@@ -79,6 +88,7 @@ private:
     friend class TgItem2d;
     friend class TgItem2dPosition;
     friend class TgItem2dVisible;
+    friend class TgItem2dEnabled;
     friend class TgItem2dSelected;
 };
 

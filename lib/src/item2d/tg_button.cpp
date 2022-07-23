@@ -199,21 +199,6 @@ bool TgButton::getButtonDown() const
 }
 
 /*!
- * \brief TgButton::onEnabledChanged
- *
- * virtual function when enabled changed
- *
- * \param enabled enabled true/false
- */
-void TgButton::onEnabledChanged(bool enabled)
-{
-    TG_FUNCTION_BEGIN();
-    TgMouseCapture::onEnabledChanged(enabled);
-    m_private->changeButtonImageFile();
-    TG_FUNCTION_END();
-}
-
-/*!
  * \brief TgButton::setFontSize
  *
  * set font size for button text
@@ -283,5 +268,22 @@ void TgButton::setText(const std::vector<TgTextFieldText> &listText)
 {
     TG_FUNCTION_BEGIN();
     m_private->m_textfield.setText(listText);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgMouseCapture::handlePrivateMessage
+ *
+ * virtual function to handle private function
+ *
+ * \param message
+ */
+void TgButton::handlePrivateMessage(const TgItem2dPrivateMessage *message)
+{
+    TG_FUNCTION_BEGIN();
+    TgMouseCapture::handlePrivateMessage(message);
+    if (message->m_type == TgItem2dPrivateMessageType::CurrentItemToDisabled) {
+        m_private->changeButtonImageFile();
+    }
     TG_FUNCTION_END();
 }

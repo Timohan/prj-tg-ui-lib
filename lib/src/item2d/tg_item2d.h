@@ -85,6 +85,9 @@ public:
     void connectOnSelectedChanged(std::function<void(bool selected)> selectedChanged);
     void disconnectOnSelectedChanged();
 
+    void connectOnEnabledChanged(std::function<void(bool)> enabledChanged);
+    void disconnectOnEnabledChanged();
+
     bool getSelected();
     bool getCanSelect();
     bool getEnabled();
@@ -107,6 +110,7 @@ protected:
     void checkPositionValuesChildren(const TgWindowInfo *windowInfo);
 
     virtual void onEnabledChanged(bool enabled);
+    virtual void onVisibleChanged(bool visible);
 
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo);
     TgEventResult handleEventsChildren(TgEventData *eventData, const TgWindowInfo *windowInfo);
@@ -126,10 +130,14 @@ private:
     void setAddMinMaxHeightOnVisible(float addMinHeightOnVisible, float addMaxHeightOnVisible);
 
     friend class TgItem2dPrivate;
+    friend class TgItem2dVisible;
+    friend class TgItem2dEnabled;
     friend class TgMainWindowPrivate;
     friend class TgTextfieldPrivate;
     friend class TgButtonPrivate;
     friend class TgTexteditPrivate;
+    friend class TgMouseCapturePrivate;
+    friend class TgMouseCapture;
 };
 
 #endif // TG_ITEM_2D_H

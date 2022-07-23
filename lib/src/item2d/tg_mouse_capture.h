@@ -19,6 +19,7 @@
 
 struct TgWindowInfo;
 class TgMouseCapturePrivate;
+struct TgItem2dPrivateMessage;
 
 /*!
  * \brief SwipeType
@@ -68,15 +69,19 @@ public:
 
     void connectOnMouseSwipe(std::function<void(TgMouseType mouseType, SwipeType swipeType, double speed)> mouseSwipeCallback);
     void disconnectOnMouseSwipe();
+
+#ifdef FUNCIONAL_TEST
+    size_t getMouseDownCount();
+#endif
 protected:
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo) override;
     virtual void onHoverChanged(bool hover);
     virtual void onDownChanged(bool down);
-    virtual void onEnabledChanged(bool enabled) override;
     virtual void onMouseClicked(TgMouseType button, float x, float y);
     virtual void onMousePressed(TgMouseType button, float x, float y);
     virtual void onMouseReleased(TgMouseType button, bool inArea, float x, float y);
     virtual void onMouseMove(bool inArea, float x, float y);
+    virtual void handlePrivateMessage(const TgItem2dPrivateMessage *message) override;
 
 private:
     TgMouseCapturePrivate *m_private;

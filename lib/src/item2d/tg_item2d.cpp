@@ -599,6 +599,31 @@ void TgItem2d::disconnectOnVisibleChanged()
 }
 
 /*!
+ * \brief TgItem2d::connectOnEnabledChanged
+ *
+ * set connect enabled changed callback
+ * \param enabledChanged callback of enabled changed
+ */
+void TgItem2d::connectOnEnabledChanged(std::function<void(bool)> enabledChanged)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->connectOnEnabledChanged(enabledChanged);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2d::disconnectOnEnabledChanged
+ *
+ * disconnect enabled changed callback
+ */
+void TgItem2d::disconnectOnEnabledChanged()
+{
+    TG_FUNCTION_BEGIN();
+    m_private->disconnectOnEnabledChanged();
+    TG_FUNCTION_END();
+}
+
+/*!
  * \brief TgItem2d::connectOnSelectedChanged
  *
  * set connect selected changed callback
@@ -716,14 +741,7 @@ void TgItem2d::setCanSelect(bool canSelect)
 void TgItem2d::setEnabled(bool enabled)
 {
     TG_FUNCTION_BEGIN();
-    if (enabled == m_private->getEnabled()) {
-        return;
-    }
-    if (!enabled) {
-        setSelected(false);
-    }
     m_private->setEnabled(enabled);
-    onEnabledChanged(enabled);
     TG_FUNCTION_END();
 }
 
@@ -738,6 +756,20 @@ void TgItem2d::onEnabledChanged(bool enabled)
 {
     TG_FUNCTION_BEGIN();
     (void)enabled;
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2d::onVisibleChanged
+ *
+ * virtual function when visible changed
+ *
+ * \param visible visible true/false
+ */
+void TgItem2d::onVisibleChanged(bool visible)
+{
+    TG_FUNCTION_BEGIN();
+    (void)visible;
     TG_FUNCTION_END();
 }
 

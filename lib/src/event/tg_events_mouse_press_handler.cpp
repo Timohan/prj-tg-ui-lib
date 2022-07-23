@@ -89,6 +89,65 @@ TgItem2d *TgEventsMousePressHandler::getMouseDownItem(TgMouseType type, bool &re
 }
 
 /*!
+ * \brief TgEvents::getMouseDownItem
+ *
+ * \param releaseWoCallback [out] if true, the item must be released without click callback
+ * \return item that was mouse down item first time
+ * returns nullptr if no button down
+ */
+TgItem2d *TgEventsMousePressHandler::getMouseDownItem(bool &releaseWoCallback)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    if (m_listMouseType.empty()) {
+        releaseWoCallback = false;
+        m_mutex.unlock();
+        return nullptr;
+    }
+    releaseWoCallback = m_listMouseType.at(0).m_releaseWoCallback;
+    TgItem2d *ret = m_listMouseType.at(0).m_mouseDownItem;
+    m_mutex.unlock();
+    return ret;
+}
+
+/*!
+ * \brief TgEvents::setMouseDownItemToNull
+ *
+ * clears mouse button down item values for this item, but
+ * leaves mouse button down value as "down"
+ *
+ * for example, if mouse button down was set for item, and then
+ * this item setVisible(false), the item doesn't have mouse button
+ * down
+ *
+ * \param mouseDownItem
+ */
+void TgEventsMousePressHandler::setMouseDownItemToNull(TgItem2d *mouseDownItem)
+{
+    m_mutex.lock();
+    std::vector<TgEventsMousePressType>::iterator it;
+    for (it=m_listMouseType.begin();it!=m_listMouseType.end();it++) {
+        if (it->m_mouseDownItem == mouseDownItem) {
+            it->m_mouseDownItem = nullptr;
+        }
+    }
+    m_mutex.unlock();
+}
+
+/*!
+ * \brief TgEvents::getMouseDownItemCount
+ *
+ * \return number of mouse down button types
+ */
+size_t TgEventsMousePressHandler::getMouseDownItemCount()
+{
+    m_mutex.lock();
+    size_t ret = m_listMouseType.size();
+    m_mutex.unlock();
+    return ret;
+}
+
+/*!
  * \brief TgEventsMousePressHandler::removingItem
  *
  * when item is to remove, then this is called so it can possible

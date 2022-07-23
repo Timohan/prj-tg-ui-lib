@@ -18,17 +18,13 @@
 TgItem2dVisible::TgItem2dVisible(TgItem2d *parent, TgItem2dPrivate *currentItem2dPrivate) :
     m_parent(parent),
     m_currentItem2dPrivate(currentItem2dPrivate),
-    m_visibleState(TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible),
+    m_visibleState(
+        parent
+            ? parent->getVisible() ? TgItem2dVisibilityState::TgItem2dVisible : TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible
+            : TgItem2dVisibilityState::TgItem2dVisible),
     m_requireRecheckVisibleChangeToChildren(false),
     f_visibleChanged(nullptr)
 {
-    if (m_parent) {
-        if (m_parent->getVisible()) {
-            m_visibleState = TgItem2dVisibilityState::TgItem2dVisible;
-        }
-    } else {
-        m_visibleState = TgItem2dVisibilityState::TgItem2dInvisible;
-    }
 }
 
 /*!
@@ -67,12 +63,20 @@ void TgItem2dVisible::setVisible(bool visible)
                 m_visibleState = TgItem2dVisibilityState::TgItem2dVisible;
                 break;
         }
-        msg.m_type = TgItem2dPrivateMessageType::ParentItemToVisible;
-        m_currentItem2dPrivate->sendMessageToChildren(&msg, false);
 
         if (f_visibleChanged) {
             f_visibleChanged(true);
         }
+
+        m_currentItem2dPrivate->m_currentItem->onVisibleChanged(true);
+
+        msg.m_type = TgItem2dPrivateMessageType::ParentItemToVisible;
+        m_currentItem2dPrivate->sendMessageToChildren(&msg, false);
+
+        TgItem2dPrivateMessage msgVisible;
+        msgVisible.m_type = TgItem2dPrivateMessageType::ItemToVisibleChanged;
+        msgVisible.m_fromItem = nullptr;
+        m_currentItem2dPrivate->sendMessageToChildrenFromBegin(&msgVisible);
     } else {
         switch (m_visibleState) {
             case TgItem2dVisibilityState::TgItem2dInvisible:
@@ -87,13 +91,24 @@ void TgItem2dVisible::setVisible(bool visible)
                 m_visibleState = TgItem2dVisibilityState::TgItem2dInvisible;
                 break;
         }
-        msg.m_type = TgItem2dPrivateMessageType::ParentItemToInvisible;
-        m_currentItem2dPrivate->sendMessageToChildren(&msg, false);
-
         if (f_visibleChanged) {
             f_visibleChanged(false);
         }
+        m_currentItem2dPrivate->m_currentItem->onVisibleChanged(false);
         m_currentItem2dPrivate->setSelected(false);
+
+        msg.m_type = TgItem2dPrivateMessageType::ParentItemToInvisible;
+        m_currentItem2dPrivate->sendMessageToChildren(&msg, false);
+
+        TgItem2dPrivateMessage msgInvisible;
+        msgInvisible.m_fromItem = nullptr;
+        msgInvisible.m_type = TgItem2dPrivateMessageType::CurrentItemToInvisible;
+        m_currentItem2dPrivate->m_currentItem->handlePrivateMessage(&msgInvisible);
+
+        TgItem2dPrivateMessage msgVisible;
+        msgVisible.m_type = TgItem2dPrivateMessageType::ItemToVisibleChanged;
+        msgVisible.m_fromItem = nullptr;
+        m_currentItem2dPrivate->sendMessageToChildrenFromBegin(&msgVisible);
     }
     TG_FUNCTION_END();
 }
@@ -105,17 +120,21 @@ void TgItem2dVisible::setVisible(bool visible)
  * This function is called from sendMessageToChildren
  *
  * \param visible
+ * \return true if can continue sending same message to parentVisibleChanged()
+ * to this item's children
  */
-void TgItem2dVisible::parentVisibleChanged(bool visible)
+bool TgItem2dVisible::parentVisibleChanged(bool visible)
 {
     TG_FUNCTION_BEGIN();
     if (visible) {
         switch (m_visibleState) {
             case TgItem2dVisibilityState::TgItem2dInvisible:
+                TG_FUNCTION_END();
+                return false;
             case TgItem2dVisibilityState::TgItem2dVisible:
             default:
                 TG_FUNCTION_END();
-                return;
+                return true;
             case TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible:
                 m_visibleState = TgItem2dVisibilityState::TgItem2dVisible;
                 break;
@@ -123,13 +142,14 @@ void TgItem2dVisible::parentVisibleChanged(bool visible)
         if (f_visibleChanged) {
             f_visibleChanged(true);
         }
+        m_currentItem2dPrivate->m_currentItem->onVisibleChanged(true);
     } else {
         switch (m_visibleState) {
             case TgItem2dVisibilityState::TgItem2dInvisible:
             case TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible:
             default:
                 TG_FUNCTION_END();
-                return;
+                return true;
             case TgItem2dVisibilityState::TgItem2dVisible:
                 m_visibleState = TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible;
                 break;
@@ -137,10 +157,17 @@ void TgItem2dVisible::parentVisibleChanged(bool visible)
         if (f_visibleChanged) {
             f_visibleChanged(false);
         }
+        m_currentItem2dPrivate->m_currentItem->onVisibleChanged(false);
         m_currentItem2dPrivate->setSelected(false);
+
+        TgItem2dPrivateMessage msg;
+        msg.m_fromItem = nullptr;
+        msg.m_type = TgItem2dPrivateMessageType::CurrentItemToInvisible;
+        m_currentItem2dPrivate->m_currentItem->handlePrivateMessage(&msg);
     }
 
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

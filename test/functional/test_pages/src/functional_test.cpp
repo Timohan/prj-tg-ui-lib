@@ -83,22 +83,21 @@ void FunctionalTest::start()
         }
 
         if (!makeTextFieldTest()) {
-            sleep(1);
             m_returnIndex = 1;
             m_mainWindow->exit();
             return;
         }
 
-        sendButtonClick(1, 155, 70, 1);
+        sendButtonClick(1, 155, 69, 1);
 
-        sendButtonClick(1, 155, 70, 1);
+        sendButtonClick(1, 155, 69, 1);
         if (m_mainWindow->getPages()->getCurrentPageIndex() != 1) {
             TG_ERROR_LOG("Page index is not 1 it is: ", m_mainWindow->getPages()->getCurrentPageIndex());
             m_returnIndex = 1;
             m_mainWindow->exit();
             return;
         }
-        sendButtonClick(1, 155, 70, 1);
+        sendButtonClick(1, 155, 69, 1);
         if (m_mainWindow->getPages()->getCurrentPageIndex() != 0) {
             TG_ERROR_LOG("Page index is not 0 it is: ", m_mainWindow->getPages()->getCurrentPageIndex());
             m_returnIndex = 1;
@@ -114,13 +113,13 @@ void FunctionalTest::start()
                 return;
             }
         }
-        sendButtonMoveClick(1, 155, 70, 155, 200, 1);
+        sendButtonMoveClick(1, 155, 69, 155, 200, 1);
         if (!isCorrectButtonSelected(0, 0)) {
             m_returnIndex = 1;
             m_mainWindow->exit();
             return;
         }
-        sendButtonMoveClick(1, 355, 70, 155, 200, 1);
+        sendButtonMoveClick(1, 355, 69, 155, 200, 1);
         if (!isCorrectButtonSelected(0, 1)) {
             m_returnIndex = 1;
             m_mainWindow->exit();
@@ -787,6 +786,8 @@ bool FunctionalTest::makeEditTextTest()
 
 
     sendButtonClick(1, 40, 35, 1);
+    sendButtonMoveClick(0, 400, 400, 401, 401, 0, false, false);
+    sleep(1);
     return true;
 }
 
@@ -798,7 +799,11 @@ bool FunctionalTest::makeTextFieldTest()
     const int numberOfClicks = 38;
 
     for (i=0;i<45;i++) {
-        sendButtonClick(1, 320, 70, 1);
+        sendButtonClick(1, 320, 40, 1);
+        if (i == 0) {
+            sendButtonMoveClick(0, 320, 40, 320, 90, 0, false, false);
+        }
+
         std::string tmp;
         if ((i % numberOfClicks) == 0 && i != 0) {
             tmp = "image_text" + std::to_string(i % numberOfClicks) + "_second.png";
@@ -810,7 +815,6 @@ bool FunctionalTest::makeTextFieldTest()
         }
         if (!FunctionalTestImage::isImageToEqual(m_mainWindow, tmp.c_str(), 800, 600)) {
             TG_ERROR_LOG("Incorrect image ", tmp, " index: ", i);
-            sleep(100);
             return false;
         }
         if ((i % numberOfClicks) == i && i >= 1) {

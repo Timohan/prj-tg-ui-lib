@@ -34,6 +34,7 @@ enum TgEventType {
     EventTypeMousePress = 0,        /**< mouse button is pressed */
     EventTypeMouseRelease,          /**< mouse button is released */
     EventTypeMouseMove,             /**< mouse button is moved */
+    EventTypeMouseMoveResend,       /**< sending previous mouse button move coordinates */
     EventTypeMouseScrollMove,       /**< mouse button scroll move */
     EventTypeKeyPress,              /**< keyboard press */
     EventTypeKeyRepeat,             /**< keyboard repeat (key is pressed down long time and during this time, number of repeat callbacks happens) */

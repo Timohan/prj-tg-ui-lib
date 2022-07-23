@@ -13,6 +13,7 @@
 #include <algorithm>
 #include "../../../global/tg_global_log.h"
 #include "../../tg_mouse_capture.h"
+#include "../item2d/tg_item2d_private.h"
 
 TgMouseCapturePrivate::TgMouseCapturePrivate(TgMouseCapture *currentMouseCapture) :
     TgMouseCaptureClick(currentMouseCapture),
@@ -46,7 +47,25 @@ bool TgMouseCapturePrivate::getMouseCursorOnHover()
 void TgMouseCapturePrivate::setMouseCursorOnHover(bool mouseCursorOnHover)
 {
     TG_FUNCTION_BEGIN();
+    if (m_mouseCursorOnHover == mouseCursorOnHover) {
+        TG_FUNCTION_END();
+        return;
+    }
+    if (mouseCursorOnHover) {
+        TgItem2dPrivateMessage msg;
+        msg.m_fromItem = m_currentMouseCapture;
+        msg.m_type = TgItem2dPrivateMessageType::HoverEnabledOnItem;
+        m_currentMouseCapture->sendMessageToChildrenFromBegin(&msg);
+    }
+    if (!m_currentMouseCapture->getEnabled()) {
+        if (!mouseCursorOnHover) {
+            m_mouseCursorOnHover = mouseCursorOnHover;
+        }
+        TG_FUNCTION_END();
+        return;
+    }
     m_mouseCursorOnHover = mouseCursorOnHover;
+    m_currentMouseCapture->onHoverChanged(mouseCursorOnHover);
     TG_FUNCTION_END();
 }
 
@@ -138,6 +157,9 @@ void TgMouseCapturePrivate::setMousePressed(TgMouseType type, bool mousePressed,
                 }
                 break;
             }
+        }
+        if (!inArea && m_listButtonDown.empty() && getMouseCursorOnHover()) {
+            setMouseCursorOnHover(false);
         }
     }
 
@@ -304,3 +326,9 @@ void TgMouseCapturePrivate::disconnectOnMouseScrollMove()
     TG_FUNCTION_END();
 }
 
+#ifdef FUNCIONAL_TEST
+size_t TgMouseCapturePrivate::getMouseDownCount()
+{
+    return m_listButtonDown.size();
+}
+#endif

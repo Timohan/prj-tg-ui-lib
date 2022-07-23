@@ -30,6 +30,9 @@ public:
     TgEventsMousePressHandler();
     void setMouseDownItem(TgMouseType type, TgItem2d *mouseDownItem);
     TgItem2d *getMouseDownItem(TgMouseType type, bool &releaseWoCallback);
+    TgItem2d *getMouseDownItem(bool &releaseWoCallback);
+    void setMouseDownItemToNull(TgItem2d *mouseDownItem);
+    size_t getMouseDownItemCount();
     void removingItem(TgMouseType type);
     void removingItem(TgItem2d *itemToRemove);
 

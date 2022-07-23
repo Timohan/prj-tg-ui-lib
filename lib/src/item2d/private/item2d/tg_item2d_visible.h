@@ -32,7 +32,7 @@ public:
 
     bool getVisible();
     void setVisible(bool visible);
-    void parentVisibleChanged(bool visible);
+    bool parentVisibleChanged(bool visible);
 
     void connectOnVisibleChanged(std::function<void(bool)> visibleChanged);
     void disconnectOnVisibleChanged();

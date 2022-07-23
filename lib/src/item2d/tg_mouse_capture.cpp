@@ -12,6 +12,7 @@
 #include "tg_mouse_capture.h"
 #include "../global/tg_global_log.h"
 #include "private/mouse_capture/tg_mouse_capture_private.h"
+#include "private/item2d/tg_item2d_private.h"
 
 /*!
  * \brief TgMouseCapture::TgMouseCapture
@@ -69,10 +70,8 @@ TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindow
 {
     TG_FUNCTION_BEGIN();
     if (eventData->m_type == TgEventType::EventTypeMousePress
-        && getXminOnVisible() <= eventData->m_event.m_mouseEvent.m_x
-        && getXmaxOnVisible(windowInfo) >= eventData->m_event.m_mouseEvent.m_x
-        && getYminOnVisible() <= eventData->m_event.m_mouseEvent.m_y
-        && getYmaxOnVisible(windowInfo) >= eventData->m_event.m_mouseEvent.m_y) {
+        && getVisible()
+        && TgItem2d::m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)) {
         if (getEnabled()) {
             onDownChanged(true);
             m_private->setMousePressed(eventData->m_event.m_mouseEvent.m_mouseType, true, true,
@@ -93,13 +92,10 @@ TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindow
     if (eventData->m_type == TgEventType::EventTypeMouseRelease
         && eventData->m_event.m_mouseEvent.m_currentMouseDownItem == this
         && m_private->getMousePressed(eventData->m_event.m_mouseEvent.m_mouseType) ) {
-        if (getEnabled()) {
+        if (getVisible() && getEnabled()) {
             onDownChanged(false);
             m_private->setMousePressed(eventData->m_event.m_mouseEvent.m_mouseType, false,
-                                       getXminOnVisible() <= eventData->m_event.m_mouseEvent.m_x
-                                       && getXmaxOnVisible(windowInfo) >= eventData->m_event.m_mouseEvent.m_x
-                                       && getYminOnVisible() <= eventData->m_event.m_mouseEvent.m_y
-                                       && getYmaxOnVisible(windowInfo) >= eventData->m_event.m_mouseEvent.m_y,
+                                       TgItem2d::m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo),
                                        static_cast<float>(eventData->m_event.m_mouseEvent.m_x),
                                        static_cast<float>(eventData->m_event.m_mouseEvent.m_y),
                                        eventData->m_event.m_mouseEvent.m_time,
@@ -108,30 +104,37 @@ TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindow
         TG_FUNCTION_END();
         return TgEventResult::EventResultCompleted;
     }
+    if (eventData->m_type == TgEventType::EventTypeMouseMoveResend
+        && TgItem2d::m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)
+        && getVisible()) {
+        if (getEnabled() && !m_private->getMouseCursorOnHover()) {
+            m_private->setMouseCursorOnHover(true);
+        }
+        TG_FUNCTION_END();
+        return TgEventResult::EventResultCompleted;
+    }
+
     if (eventData->m_type == TgEventType::EventTypeMouseMove
+        && getVisible()
         && (!eventData->m_event.m_mouseEvent.m_currentMouseDownItem
             || eventData->m_event.m_mouseEvent.m_currentMouseDownItem == this)) {
-        if (getXminOnVisible() <= eventData->m_event.m_mouseEvent.m_x
-            && getXmaxOnVisible(windowInfo) >= eventData->m_event.m_mouseEvent.m_x
-            && getYminOnVisible() <= eventData->m_event.m_mouseEvent.m_y
-            && getYmaxOnVisible(windowInfo) >= eventData->m_event.m_mouseEvent.m_y) {
+        if (TgItem2d::m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)) {
+            if (!m_private->getMouseCursorOnHover()) {
+                m_private->setMouseCursorOnHover(true);
+            }
             if (getEnabled()) {
-                if (!m_private->getMouseCursorOnHover()) {
-                    m_private->setMouseCursorOnHover(true);
-                    onHoverChanged(true);
-                }
                 m_private->setMouseMove(true,
-                                        static_cast<float>(eventData->m_event.m_mouseEvent.m_x),
-                                        static_cast<float>(eventData->m_event.m_mouseEvent.m_y),
-                                        eventData->m_event.m_mouseEvent.m_time);
+                                    static_cast<float>(eventData->m_event.m_mouseEvent.m_x),
+                                    static_cast<float>(eventData->m_event.m_mouseEvent.m_y),
+                                    eventData->m_event.m_mouseEvent.m_time);
             }
             TG_FUNCTION_END();
             return TgEventResult::EventResultCompleted;
         } else {
             if (getEnabled()) {
-                if (m_private->getMouseCursorOnHover()) {
+                if (!m_private->getMousePressedAnyButton()
+                    && m_private->getMouseCursorOnHover()) {
                     m_private->setMouseCursorOnHover(false);
-                    onHoverChanged(false);
                 }
                 if (eventData->m_event.m_mouseEvent.m_currentMouseDownItem == this
                     || (!eventData->m_event.m_mouseEvent.m_currentMouseDownItem && m_private->getMousePressedAnyButton()) ) {
@@ -145,10 +148,8 @@ TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindow
     }
 
     if (eventData->m_type == TgEventType::EventTypeMouseScrollMove
-        && getXminOnVisible() <= eventData->m_event.m_mouseEvent.m_x
-        && getXmaxOnVisible(windowInfo) >= eventData->m_event.m_mouseEvent.m_x
-        && getYminOnVisible() <= eventData->m_event.m_mouseEvent.m_y
-        && getYmaxOnVisible(windowInfo) >= eventData->m_event.m_mouseEvent.m_y) {
+        && getVisible()
+        && TgItem2d::m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)) {
         if (getEnabled()) {
             m_private->setMouseScrollMove(eventData->m_event.m_mouseEvent.m_scroll_move_x,
                                           eventData->m_event.m_mouseEvent.m_scroll_move_y);
@@ -406,24 +407,6 @@ bool TgMouseCapture::getMouseCursorOnHover()
 }
 
 /*!
- * \brief TgMouseCapture::onEnabledChanged
- *
- * virtual function when enabled changed
- *
- * \param enabled enabled true/false
- */
-void TgMouseCapture::onEnabledChanged(bool enabled)
-{
-    TG_FUNCTION_BEGIN();
-    if (!enabled) {
-        m_private->setMouseCursorOnHover(false);
-        m_private->clearMousePressed();
-    }
-    TG_FUNCTION_END();
-}
-
-
-/*!
  * \brief TgMouseCapture::getSwipeType
  *
  * \return current allowed switch types (SwipeType) for
@@ -478,3 +461,38 @@ void TgMouseCapture::disconnectOnMouseSwipe()
     return m_private->disconnectOnMouseSwipe();
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgMouseCapture::handlePrivateMessage
+ *
+ * virtual function to handle private function
+ *
+ */
+void TgMouseCapture::handlePrivateMessage(const TgItem2dPrivateMessage *message)
+{
+    TG_FUNCTION_BEGIN();
+    if (message->m_type == TgItem2dPrivateMessageType::HoverEnabledOnItem
+        && m_private->getMouseCursorOnHover()
+        && message->m_fromItem != this) {
+        m_private->setMouseCursorOnHover(false);
+    }
+    if (message->m_type == TgItem2dPrivateMessageType::CurrentItemToInvisible
+        || message->m_type == TgItem2dPrivateMessageType::CurrentItemToDisabled) {
+        m_private->clearMousePressed();
+        if (m_private->getMouseCursorOnHover()) {
+            m_private->setMouseCursorOnHover(false);
+        }
+        TgItem2dPrivateMessage msgItemToClearButtonPress;
+        msgItemToClearButtonPress.m_type = TgItem2dPrivateMessageType::EventClearButtonPressForThisItem;
+        msgItemToClearButtonPress.m_fromItem = this;
+        sendMessageToChildrenFromBegin(&msgItemToClearButtonPress);
+    }
+    TG_FUNCTION_END();
+}
+
+#ifdef FUNCIONAL_TEST
+size_t TgMouseCapture::getMouseDownCount()
+{
+    return m_private->getMouseDownCount();
+}
+#endif

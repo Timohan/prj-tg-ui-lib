@@ -62,7 +62,7 @@ protected:
     virtual void checkPositionValues() override;
     virtual void onHoverChanged(bool hover) override;
     virtual void onDownChanged(bool down) override;
-    virtual void onEnabledChanged(bool enabled) override;
+    virtual void handlePrivateMessage(const TgItem2dPrivateMessage *message) override;
 
 private:
     TgButtonPrivate *m_private;

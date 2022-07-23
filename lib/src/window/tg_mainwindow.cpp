@@ -151,6 +151,10 @@ void TgMainWindow::handlePrivateMessage(const TgItem2dPrivateMessage *message)
     TG_FUNCTION_BEGIN();
     if (message->m_type == TgItem2dPrivateMessageType::RemovingItem2d) {
         m_mainwindowPrivate->m_events.removingItem(message->m_fromItem);
+    } else if (message->m_type == TgItem2dPrivateMessageType::ItemToVisibleChanged
+                || message->m_type == TgItem2dPrivateMessageType::EventClearButtonPressForThisItem
+                || message->m_type == TgItem2dPrivateMessageType::ItemToEnabledChanged) {
+        m_mainwindowPrivate->handlePrivateMessage(message);
     }
     TG_FUNCTION_END();
 }
