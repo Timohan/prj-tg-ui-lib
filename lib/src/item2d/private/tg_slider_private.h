@@ -18,6 +18,8 @@ class TgItem2d;
 #include "../tg_image_part.h"
 #include "../tg_mouse_capture.h"
 
+#define DEFAULT_KNOB_WIDE 25.0f
+
 enum TgSliderPressPosition
 {
     PressPositionNA = 0,
@@ -64,6 +66,8 @@ private:
 
     std::function<void(uint64_t)> f_sliderPositionChanged;
     std::function<void(uint64_t)> f_sliderMaxPositionChanged;
+
+    float calculateSliderKnobWidth(float backgroundWidth);
 };
 
 #endif // TG_SLIDER_PRIVATE_H

@@ -20,8 +20,8 @@
 
 TgButtonPrivate::TgButtonPrivate(TgItem2d *currentItem, const char *buttonText) :
     m_currentItem(currentItem),
-    m_imageFileNames({std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-normal-not-selected.png"),
-                      std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-normal-not-selected-hover.png"),
+    m_imageFileNames{std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-normal-not-selected.png"),
+                     std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-normal-not-selected-hover.png"),
                      std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-normal-selected.png"),
                      std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-normal-selected-hover.png"),
                      std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-down-not-selected.png"),
@@ -29,7 +29,7 @@ TgButtonPrivate::TgButtonPrivate(TgItem2d *currentItem, const char *buttonText) 
                      std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-down-selected.png"),
                      std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-down-selected-hover.png"),
                      std::string(IMAGES_PATH) + std::string("/button/prj-tg-ui-lib-button-disabled.png")
-    }),
+    },
     m_buttonDown(false),
     m_backgroundImage(currentItem, getImageFileName().c_str()),
     m_textfield(currentItem, buttonText, "", 21, 0, 0, 0)

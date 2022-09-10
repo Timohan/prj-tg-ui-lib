@@ -14,6 +14,7 @@
 
 #include "../global/tg_global_macros.h"
 #include "../item2d/tg_item2d.h"
+#include <string>
 #ifdef FUNCIONAL_TEST
 #include <X11/Xlib.h>
 #endif

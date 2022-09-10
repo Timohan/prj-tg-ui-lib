@@ -13,6 +13,7 @@
 #define TG_TEXTFIELD_H
 
 #include "tg_item2d.h"
+#include <string>
 #include "../global/tg_global_macros.h"
 
 class TgTextfieldPrivate;

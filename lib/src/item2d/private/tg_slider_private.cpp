@@ -21,7 +21,7 @@ TgSliderPrivate::TgSliderPrivate(TgItem2d *parent, TgItem2d *currentItem, TgSlid
                  type == TgSliderType::SliderType_Horizontal
                     ? std::string(std::string(IMAGES_PATH) + std::string("/slider/prj-tg-ui-lib-slider-left-right.png")).c_str()
                     : std::string(std::string(IMAGES_PATH) + std::string("/slider/prj-tg-ui-lib-slider-up_down.png")).c_str()),
-    m_sliderButton(currentItem, 0, 0, 25, 25,
+    m_sliderButton(currentItem, 0, 0, DEFAULT_KNOB_WIDE, DEFAULT_KNOB_WIDE,
                    type == TgSliderType::SliderType_Horizontal
                       ? std::string(std::string(IMAGES_PATH) + std::string("/slider/prj-tg-ui-lib-slider-left-right-button.png")).c_str()
                       : std::string(std::string(IMAGES_PATH) + std::string("/slider/prj-tg-ui-lib-slider-up_down-button.png")).c_str()),
@@ -246,6 +246,26 @@ void TgSliderPrivate::setSliderMaxPosition(uint64_t sliderMaxPosition)
 }
 
 /*!
+ * \brief TgSliderPrivate::calculateSliderKnobWidth
+ *
+ * calculates knob's width horizontal (or height on vertical)
+ * \param backgroundWidth background width on horizontal, height on vertical
+ * \return knob's width or height
+ */
+float TgSliderPrivate::calculateSliderKnobWidth(float backgroundWidth)
+{
+    if (m_sliderMaxPosition == 0) {
+        return backgroundWidth;
+    }
+
+    float ret = backgroundWidth/static_cast<float>(m_sliderMaxPosition+1);
+    if (ret <= DEFAULT_KNOB_WIDE) {
+        return DEFAULT_KNOB_WIDE;
+    }
+    return ret;
+}
+
+/*!
  * \brief TgSliderPrivate::setSliderButtonPositioning
  *
  * set slider's new button positioning
@@ -266,8 +286,10 @@ void TgSliderPrivate::setSliderButtonPositioning()
             TG_FUNCTION_END();
             return;
         }
-        float w = m_sliderButton.getWidth();
-        float x = (m_background.getWidth()-m_sliderButton.getWidth())*(static_cast<float>(m_sliderCurrentPosition)/static_cast<float>(m_sliderMaxPosition));
+
+
+        float w = calculateSliderKnobWidth(m_background.getWidth());
+        float x = (m_background.getWidth()-w)*(static_cast<float>(m_sliderCurrentPosition)/static_cast<float>(m_sliderMaxPosition));
         m_sliderButton.setImageCropPosition3LeftToRight(0.25f, 0.25f);
         m_sliderButton.setImageAreaSize3LeftToRight(10, 10);
         m_sliderButton.setX(x);
@@ -285,8 +307,8 @@ void TgSliderPrivate::setSliderButtonPositioning()
             TG_FUNCTION_END();
             return;
         }
-        float h = m_sliderButton.getHeight();
-        float y = (m_background.getHeight()-m_sliderButton.getHeight())*(static_cast<float>(m_sliderCurrentPosition)/static_cast<float>(m_sliderMaxPosition));
+        float h = calculateSliderKnobWidth(m_background.getHeight());
+        float y = (m_background.getHeight()-h)*(static_cast<float>(m_sliderCurrentPosition)/static_cast<float>(m_sliderMaxPosition));
         m_sliderButton.setType(TgImagePartType::TgImagePartType_Part3_UpToDown);
         m_sliderButton.setImageCropPosition3TopToBottom(0.25f, 0.25f);
         m_sliderButton.setImageAreaSize3TopToBottom(10, 10);
