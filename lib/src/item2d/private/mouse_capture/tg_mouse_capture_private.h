@@ -48,6 +48,8 @@ public:
 
     void clearMousePressed();
 
+    std::vector<TgMouseType> getListMouseDown() const;
+    void addListMouseDown(const std::vector<TgMouseType> &types);
 #ifdef FUNCIONAL_TEST
     size_t getMouseDownCount();
 #endif

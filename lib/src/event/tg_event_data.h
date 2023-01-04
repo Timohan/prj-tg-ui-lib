@@ -34,12 +34,15 @@ enum TgEventType {
     EventTypeMousePress = 0,        /**< mouse button is pressed */
     EventTypeMouseRelease,          /**< mouse button is released */
     EventTypeMouseMove,             /**< mouse button is moved */
+    EventTypeMouseMoveForMenuParent,/**< mouse button is moved - but for parent menu only */
+    EventTypeMouseMoveForSubMenu,   /**< mouse button is moved - checks if any sub menu needs to be opened or closed */
     EventTypeMouseMoveResend,       /**< sending previous mouse button move coordinates */
     EventTypeMouseScrollMove,       /**< mouse button scroll move */
     EventTypeKeyPress,              /**< keyboard press */
     EventTypeKeyRepeat,             /**< keyboard repeat (key is pressed down long time and during this time, number of repeat callbacks happens) */
     EventTypeKeyRelease,            /**< keyboard released */
     EventTypeCharacterCallback,     /**< keyboard character, defines the difference between capital and lower case characters */
+    EventTypeCharacterCallbackShortCut,     /**< keyboard character, defines the difference between capital and lower case characters, this is only used for shortcuts, such as menu items */
     EventTypeSelectFirstItem,       /**< changes (select) to next item (tab key press) */
     EventTypeSelectNextItem,        /**< changes (select) to next item (tab key press) */
     EventTypeSelectLastItem,        /**< changes (select) to last item (shift-tab key press) */
@@ -85,10 +88,10 @@ enum TgPressReleaseKey
 enum TgPressModsKeyDown
 {
     PressModsKeyDown_NoKey    = 0,             /**< No mods key down */
-    PressModsKeyDown_Shift    = (1 << 1),      /**< shift mods key down */
-    PressModsKeyDown_Alt      = (2 << 1),      /**< alt mods key down */
-    PressModsKeyDown_Ctrl     = (3 << 1),      /**< ctrl mods key down */
-    PressModsKeyDown_AltGr    = (4 << 1),      /**< alt gr mods key down */
+    PressModsKeyDown_Shift    = (0x1 << 1),    /**< shift mods key down */
+    PressModsKeyDown_Alt      = (0x1 << 2),    /**< alt mods key down */
+    PressModsKeyDown_Ctrl     = (0x1 << 3),    /**< ctrl mods key down */
+    PressModsKeyDown_AltGr    = (0x1 << 4),    /**< alt gr mods key down */
 };
 
 /*!

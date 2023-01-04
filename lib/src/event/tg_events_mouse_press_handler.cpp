@@ -135,6 +135,26 @@ void TgEventsMousePressHandler::setMouseDownItemToNull(TgItem2d *mouseDownItem)
 }
 
 /*!
+ * \brief TgEvents::changeMouseDownItem
+ *
+ * change mouse button down item values to this item
+ *
+ * \param fromMouseDownItem
+ * \param toMouseDownItem
+ */
+void TgEventsMousePressHandler::changeMouseDownItem(TgItem2d *fromMouseDownItem, TgItem2d *toMouseDownItem)
+{
+    m_mutex.lock();
+    std::vector<TgEventsMousePressType>::iterator it;
+    for (it=m_listMouseType.begin();it!=m_listMouseType.end();it++) {
+        if (it->m_mouseDownItem == fromMouseDownItem) {
+            it->m_mouseDownItem = toMouseDownItem;
+        }
+    }
+    m_mutex.unlock();
+}
+
+/*!
  * \brief TgEvents::getMouseDownItemCount
  *
  * \return number of mouse down button types

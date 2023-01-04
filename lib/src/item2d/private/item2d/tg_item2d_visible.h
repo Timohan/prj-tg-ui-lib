@@ -37,6 +37,8 @@ public:
     void connectOnVisibleChanged(std::function<void(bool)> visibleChanged);
     void disconnectOnVisibleChanged();
     void setRequireRecheckVisibleChangeToChildren(bool require);
+    TgItem2dVisibilityState getVisibleState();
+
 protected:
     void reCheckChildrenVisibility();
 
@@ -46,6 +48,7 @@ private:
     TgItem2dVisibilityState m_visibleState;
     bool m_requireRecheckVisibleChangeToChildren;
     std::mutex m_mutex;
+    bool m_isMenuItem = false;
 
     std::function<void(bool visible)> f_visibleChanged;
 };

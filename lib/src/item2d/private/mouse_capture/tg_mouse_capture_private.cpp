@@ -180,6 +180,19 @@ void TgMouseCapturePrivate::clearMousePressed()
     m_mutex.unlock();
 }
 
+std::vector<TgMouseType> TgMouseCapturePrivate::getListMouseDown() const
+{
+    return m_listButtonDown;
+}
+
+void TgMouseCapturePrivate::addListMouseDown(const std::vector<TgMouseType> &types)
+{
+    std::vector<TgMouseType>::const_iterator it;
+    for (it=types.begin();it!=types.end();it++) {
+        m_listButtonDown.push_back(*it);
+    }
+}
+
 /*!
  * \brief TgMouseCapturePrivate::setMouseMove
  *

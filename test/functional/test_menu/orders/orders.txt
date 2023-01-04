@@ -1,0 +1,447 @@
+msg start basic top menu move
+MMC 0 10 35 10 15 0 0 0
+isHover 0 1
+isMove 0 10 34 10 24 1
+isHover 0 0
+isImage basic_menufilehover.png
+MMC 0 10 15 10 34 0 0 0
+isHover 0 1
+isMove 0 10 24 10 34 1
+isImage basic_empty.png
+MMC 0 10 35 10 15 0 0 0
+isMove 0 10 34 10 24 1
+isHover 0 0
+isImage basic_menufilehover.png
+MMC 0 10 15 64 15 0 0 0
+isImage basic_menuedithover.png
+MMC 0 64 15 10 15 0 0 0
+isImage basic_menufilehover.png
+MMC 0 10 15 10 34 0 0 0
+isHover 0 1
+isMove 0 10 24 10 34 1
+isImage basic_empty.png
+MMC 0 10 35 10 15 0 0 0
+isMove 0 10 34 10 24 1
+isHover 0 0
+isImage basic_menufilehover.png
+MMC 1 10 15 10 15 0 1 1
+isImage menufileopen.png
+MMC 0 15 15 64 15 0 0 0
+isImage menueditopen.png
+MMC 0 64 15 15 15 0 0 0
+isImage menufileopen.png
+MMC 0 15 15 15 35 0 0 0
+isImage menufileopen_hover0.png
+MMC 0 15 35 15 50 0 0 0
+isImage menufileopen_hover1.png
+MMC 0 15 50 375 50 0 0 0
+isImage menufileopen.png
+MMC 1 375 50 375 50 0 1 1
+isImage basic_empty.png
+MMC 0 205 50 205 15 0 0 0
+isImage basic_menuhelphover.png
+MMC 0 205 50 205 50 0 0 0
+isImage basic_empty.png
+msg start menu hover not hover others
+MMC 0 10 15 10 34 0 0 0
+isHover 0 1
+isMove 0 10 24 10 34 1
+isImage basic_empty.png
+MMC 0 10 35 10 15 0 0 0
+isMove 0 10 34 10 24 1
+isHover 0 0
+isImage basic_menufilehover.png
+MMC 1 10 15 10 15 0 1 1
+isImage menufileopen.png
+MMC 0 15 15 15 35 0 0 0
+isImage menufileopen_hover0.png
+MMC 0 15 35 785 25 0 0 0
+isImage menufileopen.png
+MMR 1 785 25 785 25 0 1 1
+isHover 1 1
+MMR 1 785 25 785 25 0 1 1
+isHover 1 0
+isImage toprightmenu_open.png
+MMC 0 785 25 685 35 0 0 0
+isImage toprightmenu_open_hover0.png
+MMC 0 685 35 685 70 0 0 0
+isImage toprightmenu_open_hover1.png
+MMC 0 685 70 10 15 0 0 0
+isImage toprightmenu_open.png
+MMC 1 10 15 10 15 0 1 1
+isImage basic_menufilehover.png
+msg start basic top menu clicks
+MMC 0 9 15 10 15 0 0 0
+MMC 1 10 15 10 15 0 1 1
+isImage menufileopen.png
+MMC 0 15 15 15 35 0 0 0
+isImage menufileopen_hover0.png
+MMC 1 10 35 10 35 1 1 1
+isMouseMenuClicked 0 10 35
+msg start top menu shortcuts
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 99 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 3 -1 -1
+KEYPRESS XK_Alt_L 100 1 0
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Alt_L 100 0 1
+isMouseMenuClicked 1 -1 -1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Shift_L 100 0 1
+isMouseMenuClicked 2 -1 -1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS XK_Alt_L 100 1 0
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 66 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Alt_L 100 0 1
+isMouseMenuClicked 4 -1 -1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Shift_L 100 0 1
+isMouseMenuClicked 2 -1 -1
+KEYPRESS XK_Alt_L 100 1 0
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 66 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Alt_L 100 0 1
+KEYPRESS XK_Shift_L 100 0 1
+isMouseMenuClicked 4 -1 -1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Shift_L 100 0 1
+isMouseMenuClicked 2 -1 -1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS XK_Alt_L 100 1 0
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 66 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Alt_L 100 0 1
+isMouseMenuClicked 4 -1 -1
+msg top right right menu
+MMC 0 751 581 791 581 0 0 0
+isHover 3 1
+isMove 3 775 581 791 581 1
+MMR 1 791 581 791 581 0 1 1
+isHover 3 0
+isImage bottomright_open.png
+MMC 0 791 581 751 545 0 0 0
+isImage bottomright_open_hover1.png
+MMC 1 751 545 751 545 1 1 1
+isMouseMenuClicked 5 751 545
+MMC 0 751 581 791 581 0 0 0
+isHover 3 1
+isMove 3 775 581 791 581 1
+MMR 1 791 581 791 581 0 1 1
+isHover 3 0
+isImage bottomright_open_2nd_close.png
+MMC 0 791 581 751 520 0 0 0
+isImage bottomright_open_2nd_open.png
+MMC 0 791 520 451 520 0 0 0
+isImage bottomright_open_2nd_open_hover0.png
+MMC 0 451 520 451 535 0 0 0
+isImage bottomright_open_2nd_open_hover1.png
+MMC 1 451 535 451 535 1 1 1
+isMouseMenuClicked 6 451 535
+MMC 0 751 581 791 581 0 0 0
+isHover 3 1
+isMove 3 775 581 791 581 1
+MMR 1 791 581 791 581 0 1 1
+isHover 3 0
+isImage bottomright_open_2nd_close.png
+MMC 0 791 581 751 520 0 0 0
+isImage bottomright_open_2nd_open_new_line.png
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS XK_Alt_L 100 1 0
+KEYPRESS 67 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Alt_L 100 0 1
+isImage bottomright_open_2nd_open_new_line.png
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS XK_Alt_L 100 1 0
+KEYPRESS 66 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+KEYPRESS XK_Alt_L 100 0 1
+isMouseMenuClicked 5 -1 -1
+isImage basic_empty.png
+msg top menu secondary tests (enable/disable)
+MMC 0 180 35 180 15 0 0 0
+MMC 1 180 15 180 15 1 1 1
+isImage menuselectionopen.png
+MMC 0 180 15 180 60 0 0 0
+isImage menuselectionopen_hover1.png
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 69 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+isMouseMenuClicked 7 -1 -1
+setEnabled 7 0
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 69 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+setEnabled 7 1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 69 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 7 -1 -1
+isMouseMenuClicked 0 -1 -1
+setEnabled 8 0
+MMC 0 180 35 180 15 0 0 0
+MMC 1 180 15 180 15 1 1 1
+isImage menuselectionopen_disabled2.png
+MMC 0 180 15 180 60 0 0 0
+isImage menuselectionopen_disabled2.png
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 69 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+setEnabled 8 1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 69 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 7 -1 -1
+isMouseMenuClicked 0 -1 -1
+msg top menu secondary tests (visible/invisible)
+setVisible 7 0
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 69 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+MMC 0 180 35 180 15 0 0 0
+MMC 1 180 15 180 15 1 1 1
+MMC 0 180 15 180 60 0 0 0
+isImage menuselectionopen_hover1_invisible0.png
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+isImage basic_empty.png
+setVisible 9 0
+setVisible 10 0
+MMC 0 180 35 180 15 0 0 0
+MMC 1 180 15 180 15 1 1 1
+MMC 0 180 15 180 60 0 0 0
+isImage menuselectionopen_hover1_invisible_all_subs.png
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+isImage basic_empty.png
+setVisible 7 1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 69 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 7 -1 -1
+isMouseMenuClicked 0 -1 -1
+setVisible 9 1
+setVisible 10 1
+MMC 0 180 35 180 15 0 0 0
+MMC 1 180 15 180 15 1 1 1
+MMC 0 180 15 180 60 0 0 0
+isImage menuselectionopen_hover1.png
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 69 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 7 -1 -1
+isMouseMenuClicked 0 -1 -1
+msg top left secondary tests (visible/invisible)
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 102 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 8 -1 -1
+isMouseMenuClicked 0 -1 -1
+MMC 0 35 27 15 27 0 0 0
+MMR 1 15 27 15 27 1 1 1
+isHover 0 1
+isMove 0 24 27 15 27 1
+isHover 0 0
+MMC 0 15 27 55 87 0 0 0
+isImage topleftmenu_hover2.png
+MMC 0 55 87 255 87 0 0 0
+MMC 0 255 87 255 137 0 0 0
+isImage topleftmenu_2hover2.png
+MMC 1 255 137 255 137 1 1 1
+isMouseMenuClicked 8 255 137
+isImage basic_empty.png
+setVisible 16 0
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 102 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+MMC 0 35 27 15 27 0 0 0
+MMR 1 15 27 15 27 1 1 1
+isHover 0 1
+isMove 0 24 27 15 27 1
+isHover 0 0
+MMC 0 15 27 55 87 0 0 0
+isImage topleftmenu_hover2_invisible2.png
+MMC 0 55 87 255 87 0 0 0
+MMC 0 255 87 255 137 0 0 0
+isImage topleftmenu_hover2_invisible2.png
+MMC 1 255 137 255 137 1 1 1
+isImage basic_empty.png
+setVisible 15 0
+setVisible 14 0
+MMC 0 35 27 15 27 0 0 0
+MMR 1 15 27 15 27 1 1 1
+isHover 0 1
+isMove 0 24 27 15 27 1
+isHover 0 0
+MMC 0 15 27 55 87 0 0 0
+isImage topleftmenu_hover2_invisibleall.png
+MMC 1 55 87 55 87 1 1 1
+isMouseMenuClicked 9 55 87
+setVisible 11 0
+setVisible 12 0
+setVisible 13 0
+MMC 0 35 27 15 27 0 0 0
+isHover 0 1
+isMove 0 24 27 15 27 1
+MMR 1 15 27 15 27 1 1 1
+MMC 0 15 27 35 27 0 0 0
+isHover 0 0
+isHover 0 1
+isMove 0 16 27 24 27 1
+isHover 0 0
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 102 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+setVisible 16 1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 102 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 0 -1 -1
+MMC 0 35 27 15 27 0 0 0
+isHover 0 1
+isMove 0 24 27 15 27 1
+MMR 1 15 27 15 27 1 1 1
+MMC 0 15 27 35 27 0 0 0
+isHover 0 0
+isHover 0 1
+isMove 0 16 27 24 27 1
+isHover 0 0
+setVisible 13 1
+setVisible 12 1
+setVisible 11 1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 102 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+isMouseMenuClicked 8 -1 -1
+MMC 0 35 27 15 27 0 0 0
+isHover 0 1
+isMove 0 24 27 15 27 1
+MMR 1 15 27 15 27 1 1 1
+isHover 0 0
+MMC 0 15 27 55 87 0 0 0
+isImage topleftmenu_hover2_invisible01.png
+MMC 0 55 87 255 87 0 0 0
+MMC 1 255 87 255 87 1 1 1
+isMouseMenuClicked 8 255 87
+setVisible 15 1
+setVisible 14 1
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 102 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 110 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMouseMenuClicked 8 -1 -1
+isMouseMenuClicked 0 -1 -1
+MMC 0 35 27 15 27 0 0 0
+MMR 1 15 27 15 27 1 1 1
+isHover 0 1
+isMove 0 24 27 15 27 1
+isHover 0 0
+MMC 0 15 27 55 87 0 0 0
+isImage topleftmenu_hover2.png
+MMC 0 55 87 255 87 0 0 0
+MMC 0 255 87 255 137 0 0 0
+isImage topleftmenu_2hover2.png
+MMC 1 255 137 255 137 1 1 1
+isMouseMenuClicked 8 255 137
+isImage basic_empty.png
+msg top menu invisible/visible
+setVisible 18 0
+isImage basic_empty_invisible1.png
+setVisible 18 1
+isImage basic_empty.png
+msg top remove menu
+removeMenu 2 1 100
+MMC 0 180 35 180 15 0 0 0
+MMC 1 180 15 180 15 1 1 1
+MMC 0 180 15 180 60 0 0 0
+isImage menuselectionopen_hover1_deleted1.png
+MMC 0 180 60 270 60 0 0 0
+MMC 1 270 60 270 60 1 1 1
+isMouseMenuClicked 7 270 60
+removeMenu 2 1 1
+removeMenu 2 0 100
+MMC 0 180 35 180 15 0 0 0
+MMC 1 180 15 180 15 1 1 1
+isImage menuselectionopen_hover1_deletedall.png
+KEYPRESS XK_Shift_L 100 1 0
+KEYPRESS 112 100 1 1
+KEYPRESS XK_Shift_L 100 0 1
+removeMenu 3 6 1
+removeMenu 3 0 0
+removeMenu 3 0 0
+removeMenu 3 0 10
+MMC 0 705 25 785 25 0 0 0
+MMR 1 785 25 785 25 0 1 1
+isHover 1 1
+isMove 1 775 25 785 25 1
+isMousePressed 1 785 25
+isMove 1 785 25 785 25 1
+isMouseReleased 1 785 25
+isMouseClicked 1 785 25

@@ -18,10 +18,11 @@
 TgItem2dVisible::TgItem2dVisible(TgItem2d *parent, TgItem2dPrivate *currentItem2dPrivate) :
     m_parent(parent),
     m_currentItem2dPrivate(currentItem2dPrivate),
-    m_visibleState(
-        parent
-            ? parent->getVisible() ? TgItem2dVisibilityState::TgItem2dVisible : TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible
-            : TgItem2dVisibilityState::TgItem2dVisible),
+    m_visibleState(parent
+                   ? parent->getVisible()
+                    ? TgItem2dVisibilityState::TgItem2dVisible
+                    : TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible
+                   : TgItem2dVisibilityState::TgItem2dVisible),
     m_requireRecheckVisibleChangeToChildren(false),
     f_visibleChanged(nullptr)
 {
@@ -39,6 +40,11 @@ bool TgItem2dVisible::getVisible()
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
     return m_visibleState == TgItem2dVisibilityState::TgItem2dVisible;
+}
+
+TgItem2dVisibilityState TgItem2dVisible::getVisibleState()
+{
+    return m_visibleState;
 }
 
 /*!

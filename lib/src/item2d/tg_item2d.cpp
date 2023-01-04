@@ -40,7 +40,27 @@ TgItem2d::TgItem2d(TgItem2d *parent) :
  * \param height item's height
  */
 TgItem2d::TgItem2d(TgItem2d *parent, float x, float y, float width, float height) :
-    m_private(new TgItem2dPrivate(x, y,  width, height, parent, this))
+    m_private(new TgItem2dPrivate(x, y, width, height, parent, this, false))
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2d::TgItem2d
+ *
+ * constructor to use AnchorRelativeToParent
+ * this is only called from top menu item creation
+ *
+ * \param parent item's parent
+ * \param x item's relative position x (of parent)
+ * \param y item's relative position x (of parent)
+ * \param width item's width
+ * \param height item's height
+ * \param topMenu
+ */
+TgItem2d::TgItem2d(TgItem2d *parent, float x, float y, float width, float height, bool topMenu) :
+    m_private(new TgItem2dPrivate(x, y, width, height, parent, this, topMenu))
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
@@ -53,6 +73,11 @@ TgItem2d::~TgItem2d()
         delete m_private;
     }
     TG_FUNCTION_END();
+}
+
+TgMenuItem *TgItem2d::addMenu(const char *text, const TgShortCut *shortCut)
+{
+    return m_private->addMenu(nullptr, text, shortCut);
 }
 
 /*!
@@ -127,8 +152,8 @@ void TgItem2d::render(const TgWindowInfo *)
  *
  * check position values to children (this is empty)
  * because this is virtual function
-  * \param windowInfo
-*/
+ * \param windowInfo
+ */
 void TgItem2d::checkPositionValues()
 {
     TG_FUNCTION_BEGIN();
@@ -206,11 +231,12 @@ TgEventResult TgItem2d::handleEventsChildren(TgEventData *eventData, const TgWin
  *
  * add child
  * \param child
+ * \param topMenu if true, then this is top menu
  */
-void TgItem2d::addChild(TgItem2d *child)
+void TgItem2d::addChild(TgItem2d *child, bool topMenu)
 {
     TG_FUNCTION_BEGIN();
-    m_private->addChild(child);
+    m_private->addChild(child, topMenu);
     TG_FUNCTION_END();
 }
 
@@ -942,4 +968,37 @@ float TgItem2d::getMarginBottom()
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
     return m_private->getMarginBottom();
+}
+
+/*!
+ * \brief TgItem2d::getMenuCount
+ *
+ * \return count of menu items
+*/
+size_t TgItem2d::getMenuCount()
+{
+    return m_private->getMenuCount();
+}
+
+/*!
+ * \brief TgItem2d::getMenu
+ *
+ * \param index
+ * \return pointer of menu item
+ * if index >= list of menu items, then return nullptr
+ */
+TgMenuItem *TgItem2d::getMenu(size_t index)
+{
+    return m_private->getMenu(index);
+}
+
+/*!
+ * \brief TgItem2d::removeMenu
+ *
+ * \param i index of sub menu
+ * \return true if sub menu was removed
+ */
+bool TgItem2d::removeMenu(size_t i)
+{
+    return m_private->removeSubMenu(i);
 }

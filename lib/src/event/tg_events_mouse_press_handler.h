@@ -32,6 +32,7 @@ public:
     TgItem2d *getMouseDownItem(TgMouseType type, bool &releaseWoCallback);
     TgItem2d *getMouseDownItem(bool &releaseWoCallback);
     void setMouseDownItemToNull(TgItem2d *mouseDownItem);
+    void changeMouseDownItem(TgItem2d *fromMouseDownItem, TgItem2d *toMouseDownItem);
     size_t getMouseDownItemCount();
     void removingItem(TgMouseType type);
     void removingItem(TgItem2d *itemToRemove);

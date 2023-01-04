@@ -14,6 +14,7 @@
 #include "tg_mainwindow_private.h"
 #include "../event/tg_events.h"
 #include "../item2d/private/item2d/tg_item2d_private.h"
+#include "../global/private/tg_global_deleter.h"
 
 /*!
  * \brief TgMainWindow::TgMainWindow
@@ -84,12 +85,17 @@ void TgMainWindow::render(const TgWindowInfo *)
     }
 
     m_mainwindowPrivate->handleEvents();
+    if (TgGlobalDeleter::getInstance()->removeItems()) {
+        m_mainwindowPrivate->hideList();
+    }
     customBeforeRender();
+    m_mainwindowPrivate->checkPositionValuesChildrenWindowMenu();
     checkPositionValuesChildren(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->setupViewForRender();
     customRender();
     m_mainwindowPrivate->setup2DShaderToUniforms();
     renderChildren(m_mainwindowPrivate->getWindowInfo());
+    m_mainwindowPrivate->renderChildrenMenu(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderEnd();
     checkOnResizeChangedOnChildren();
     TG_FUNCTION_END();
@@ -151,9 +157,11 @@ void TgMainWindow::handlePrivateMessage(const TgItem2dPrivateMessage *message)
     TG_FUNCTION_BEGIN();
     if (message->m_type == TgItem2dPrivateMessageType::RemovingItem2d) {
         m_mainwindowPrivate->m_events.removingItem(message->m_fromItem);
-    } else if (message->m_type == TgItem2dPrivateMessageType::ItemToVisibleChanged
-                || message->m_type == TgItem2dPrivateMessageType::EventClearButtonPressForThisItem
-                || message->m_type == TgItem2dPrivateMessageType::ItemToEnabledChanged) {
+    }
+    else if (message->m_type == TgItem2dPrivateMessageType::ItemToVisibleChanged
+        || message->m_type == TgItem2dPrivateMessageType::EventSetMainMenuItems
+        || message->m_type == TgItem2dPrivateMessageType::EventClearButtonPressForThisItem
+        || message->m_type == TgItem2dPrivateMessageType::ItemToEnabledChanged) {
         m_mainwindowPrivate->handlePrivateMessage(message);
     }
     TG_FUNCTION_END();

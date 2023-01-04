@@ -12,6 +12,7 @@
 #include "tg_textfield.h"
 #include "../global/tg_global_log.h"
 #include "private/tg_textfield_private.h"
+#include "private/item2d/tg_item2d_private.h"
 
 /*!
  * \brief TgTextfield::TgTextfield

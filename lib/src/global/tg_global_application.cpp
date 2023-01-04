@@ -11,6 +11,7 @@
 #include "tg_global_application.h"
 #include "tg_global_log.h"
 #include "../window/tg_mainwindow.h"
+#include "private/tg_global_menu_holder.h"
 
 TgGlobalApplication *TgGlobalApplication::m_globalApplication = nullptr;
 
@@ -27,6 +28,7 @@ TgGlobalApplication *TgGlobalApplication::getInstance()
 TgGlobalApplication::TgGlobalApplication() :
     m_exit(false)
 {
+    TgGlobalMenuHolder::getInstance();
 }
 
 /*!

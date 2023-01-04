@@ -16,6 +16,7 @@
 #include "../shader/tg_shader_2d.h"
 #include "../math/tg_matrix4x4.h"
 #include "../event/tg_events.h"
+#include "private/tg_mainwindow_menu.h"
 #ifdef USE_GLFW
 #include "glfw/tg_mainwindow_glfw.h"
 #else
@@ -23,6 +24,7 @@
 #endif
 
 class TgItem2d;
+class TgMenuItem;
 struct TgItem2dPrivateMessage;
 
 struct TgWindowInfo
@@ -77,6 +79,7 @@ class TgMainWindowPrivate
 #else
 : public TgMainWindowX11
 #endif
+, public TgMainWindowMenu
 {
 public:
     explicit TgMainWindowPrivate(int width, int height, TgItem2d *item, int minWidth, int minHeight, int maxWidth, int maxHeight);
@@ -106,6 +109,7 @@ private:
     double m_currentMousePositionX;
     double m_currentMousePositionY;
 
+    TgEventResult startHandleEventsChildren(TgEventData *eventData);
     void reShapeWindow(int width, int height);
     static void errorCallback(int error, const char* description);
 

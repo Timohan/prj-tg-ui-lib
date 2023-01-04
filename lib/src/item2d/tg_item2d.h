@@ -13,11 +13,14 @@
 #define TG_ITEM_2D_H
 
 #include <vector>
+#include <cstddef>
 #include <functional>
 #include "../event/tg_event_data.h"
 class TgItem2dPrivate;
 struct TgWindowInfo;
 struct TgItem2dPrivateMessage;
+class TgMenuItem;
+struct TgShortCut;
 
 /*!
  * \brief TgItem2dAnchor
@@ -41,8 +44,10 @@ public:
     explicit TgItem2d(TgItem2d *parent, float x, float y, float width, float height);
     virtual ~TgItem2d();
 
+    virtual TgMenuItem *addMenu(const char *text, const TgShortCut *shortCut);
+
     bool getVisible();
-    void setVisible(bool visible);
+    virtual void setVisible(bool visible);
 
     float getX();
     float getY();
@@ -102,12 +107,17 @@ public:
 
     void setNextTabItem(TgItem2d *nextTabItem);
     void setPrevTabItem(TgItem2d *prevTabItem);
+
+    virtual size_t getMenuCount();
+    TgMenuItem *getMenu(size_t index);
+    virtual bool removeMenu(size_t i);
+
 protected:
     virtual void render(const TgWindowInfo *windowInfo);
     virtual void checkPositionValues();
 
     void renderChildren(const TgWindowInfo *windowInfo);
-    void checkPositionValuesChildren(const TgWindowInfo *windowInfo);
+    virtual void checkPositionValuesChildren(const TgWindowInfo *windowInfo);
 
     virtual void onEnabledChanged(bool enabled);
     virtual void onVisibleChanged(bool visible);
@@ -122,7 +132,9 @@ protected:
 private:
     TgItem2dPrivate *m_private;
 
-    void addChild(TgItem2d *child);
+    explicit TgItem2d(TgItem2d *parent, float x, float y, float width, float height, bool topMenu);
+
+    void addChild(TgItem2d *child, bool topMenu);
     void sendMessageToChildren(const TgItem2dPrivateMessage *message);
     void sendMessageToChildrenFromBegin(const TgItem2dPrivateMessage *message);
     virtual void addNewEvent(TgEventData *event);
@@ -138,6 +150,12 @@ private:
     friend class TgTexteditPrivate;
     friend class TgMouseCapturePrivate;
     friend class TgMouseCapture;
+    friend class TgItem2dMenu;
+    friend class TgMenuTopPrivate;
+    friend class TgMainWindowMenu;
+    friend class TgMenuItemPrivate;
+    friend class TgMenuItem;
+    friend class TgMenuTop;
 };
 
 #endif // TG_ITEM_2D_H

@@ -89,6 +89,8 @@ private:
     friend class TgButton;
     friend class TgMouseCaptureClick;
     friend class TgMouseCapturePrivate;
+    friend class TgMainWindowMenu;
+    friend class TgMenuItemPrivate;
 };
 
 #endif // TG_MOUSE_CAPTURE_H

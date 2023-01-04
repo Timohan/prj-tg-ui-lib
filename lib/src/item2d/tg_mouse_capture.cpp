@@ -69,6 +69,11 @@ TgMouseCapture::~TgMouseCapture()
 TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
+    if (TgItem2d::m_private->handleEventItem2dMenu(eventData, windowInfo) == TgEventResult::EventResultCompleted) {
+        TG_FUNCTION_END();
+        return TgEventResult::EventResultCompleted;
+    }
+
     if (eventData->m_type == TgEventType::EventTypeMousePress
         && getVisible()
         && TgItem2d::m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)) {
@@ -107,14 +112,14 @@ TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindow
     if (eventData->m_type == TgEventType::EventTypeMouseMoveResend
         && TgItem2d::m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)
         && getVisible()) {
-        if (getEnabled() && !m_private->getMouseCursorOnHover()) {
+        if (getEnabled() && !m_private->getMouseCursorOnHover() && !TgItem2d::m_private->getMenuVisible()) {
             m_private->setMouseCursorOnHover(true);
         }
         TG_FUNCTION_END();
         return TgEventResult::EventResultCompleted;
     }
 
-    if (eventData->m_type == TgEventType::EventTypeMouseMove
+    if ((eventData->m_type == TgEventType::EventTypeMouseMove || eventData->m_type == TgEventType::EventTypeMouseMoveForMenuParent)
         && getVisible()
         && (!eventData->m_event.m_mouseEvent.m_currentMouseDownItem
             || eventData->m_event.m_mouseEvent.m_currentMouseDownItem == this)) {

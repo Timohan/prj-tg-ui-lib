@@ -18,6 +18,7 @@
 #include "../item2d/tg_item2d.h"
 #include "../item2d/private/item2d/tg_item2d_private.h"
 #include "glfw/tg_mainwindow_glfw.h"
+#include "../global/private/tg_global_menu_holder.h"
 
 /*!
  * \brief TgWindowInfo::TgWindowInfo
@@ -49,6 +50,7 @@ TgMainWindowPrivate::TgMainWindowPrivate(int width, int height, TgItem2d *item, 
 #ifndef USE_GLFW
     TgMainWindowX11(this),
 #endif
+    TgMainWindowMenu(),
     m_currentItem(item),
     m_windowInfo(width, height, minWidth, minHeight, maxWidth, maxHeight),
     m_currentMousePositionX(-1),
@@ -160,11 +162,16 @@ void TgMainWindowPrivate::handleEvents()
                     eventData->m_event.m_mouseEvent.m_currentMouseDownItem = m_currentItem;
                 }
             }
-            ret = m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
+            ret = handleEventsMenu(eventData, &m_windowInfo);
+            if (ret == TgEventResult::EventResultNotCompleted) {
+                if (!isMenuEnabled() || eventData->m_type != TgEventType::EventTypeMouseMove) {
+                    ret = startHandleEventsChildren(eventData);
+                }
+            }
             if (eventData->m_type == TgEventType::EventTypeSelectNextItem
                 && ret == TgEventResult::EventResultNotCompleted) {
                 eventData->m_type = TgEventType::EventTypeSelectFirstItem;
-                m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
+                startHandleEventsChildren(eventData);
             } else if (eventData->m_type == TgEventType::EventTypeCharacterCallback
                        && ret == TgEventResult::EventResultNotCompleted
                        && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
@@ -176,7 +183,7 @@ void TgMainWindowPrivate::handleEvents()
                     eventData->m_event.m_selectLastItem.m_nextItem2d = nullptr;
                 }
                 eventData->m_event.m_selectLastItem.m_previousItem2d = nullptr;
-                m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
+                startHandleEventsChildren(eventData);
                 if (eventData->m_type == TgEventType::EventTypeSelectLastItem
                     && eventData->m_event.m_selectLastItem.m_nextItem2d) {
                     if (eventData->m_event.m_selectLastItem.m_previousItem2d) {
@@ -186,7 +193,7 @@ void TgMainWindowPrivate::handleEvents()
                 }
             } else if (eventData->m_type == TgEventType::EventTypeSelectLastItem) {
                 if (!eventData->m_event.m_selectLastItem.m_nextItem2d) {
-                    m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
+                    startHandleEventsChildren(eventData);
                 }
                 if (eventData->m_event.m_selectLastItem.m_nextItem2d) {
                     eventData->m_event.m_selectLastItem.m_previousItem2d->setSelected(false);
@@ -216,6 +223,26 @@ void TgMainWindowPrivate::handleEvents()
     }
     m_events.unlock();
     TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgMainWindowPrivate::startHandleEventsChildren
+ *
+ * starts sending event data to children
+ * \return
+ */
+TgEventResult TgMainWindowPrivate::startHandleEventsChildren(TgEventData *eventData)
+{
+    if (eventData->m_type == TgEventType::EventTypeCharacterCallback) {
+        eventData->m_type = TgEventType::EventTypeCharacterCallbackShortCut;
+        TgEventResult ret = TgGlobalMenuHolder::getInstance()->handleEvent(eventData, &m_windowInfo);
+        eventData->m_type = TgEventType::EventTypeCharacterCallback;
+        if (ret == TgEventResult::EventResultCompleted) {
+            hideList();
+            return ret;
+        }
+    }
+    return m_currentItem->handleEventsChildren(eventData, &m_windowInfo);
 }
 
 /*!
@@ -324,6 +351,9 @@ size_t TgMainWindowPrivate::getAllowedNumberMouseButtonCount()
 
 void TgMainWindowPrivate::handlePrivateMessage(const TgItem2dPrivateMessage *message)
 {
+    if (message->m_type == TgItem2dPrivateMessageType::EventSetMainMenuItems) {
+        handlePrivateMessageWindowMenu(message);
+    }
     if (message->m_type == TgItem2dPrivateMessageType::ItemToVisibleChanged
         || message->m_type == TgItem2dPrivateMessageType::ItemToEnabledChanged) {
         if (m_events.getMouseDownItemCount()) {
@@ -340,6 +370,7 @@ void TgMainWindowPrivate::handlePrivateMessage(const TgItem2dPrivateMessage *mes
         m_events.unlock();
     } else if (message->m_type == TgItem2dPrivateMessageType::EventClearButtonPressForThisItem) {
         m_events.setMouseDownItemToNull(message->m_fromItem);
+    } else if (message->m_type == TgItem2dPrivateMessageType::EventChangeButtonPressToThisItem) {
+        m_events.changeMouseDownItem(message->m_fromItem, message->m_toItem);
     }
 }
-

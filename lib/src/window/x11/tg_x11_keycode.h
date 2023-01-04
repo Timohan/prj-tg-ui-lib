@@ -22,7 +22,8 @@ struct TgX11InputModsKeyDown
     bool m_shiftRight : 1;  /**< right shift down or up - ShiftMask */
     bool m_ctrlLeft   : 1;  /**< left ctrl down or up - ControlMask */
     bool m_ctrlRight  : 1;  /**< right ctrl down or up - ControlMask */
-    bool m_alt        : 1;  /**< alt down or up */
+    bool m_altLeft    : 1;  /**< left alt down or up*/
+    bool m_altRight   : 1;  /**< right alt down or up */
     bool m_altGr      : 1;  /**< alt gr down or up - Mod5Mask */
 };
 

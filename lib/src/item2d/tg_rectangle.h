@@ -37,6 +37,8 @@ protected:
 
 private:
     TgRectanglePrivate *m_private;
+
+    friend class TgMainWindowMenu;
 };
 
 #endif // TG_RECTANGLE_H

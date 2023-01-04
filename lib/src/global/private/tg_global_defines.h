@@ -14,5 +14,8 @@ struct Vertice
     float s, t;
 };
 
+#define TG_MENU_DEFAULT_HEIGHT                  24
+#define TG_MENU_DEFAULT_SUB_MENU_ARROW_HEIGHT   12
+#define TG_MENU_DEFAULT_SUB_MENU_ARROW_MARGIN   5
 
 #endif // TG_GLOBAL_DEFINES

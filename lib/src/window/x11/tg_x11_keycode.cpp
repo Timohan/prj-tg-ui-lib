@@ -13,8 +13,7 @@
 #include <X11/XKBlib.h>
 #include "../../global/tg_global_log.h"
 
-TgX11KeyCode::TgX11KeyCode() :
-    m_modsKeyDown({false, false, false, false, false, false})
+TgX11KeyCode::TgX11KeyCode() : m_modsKeyDown({false, false, false, false, false, false, false})
 {
 }
 
@@ -55,14 +54,14 @@ KeySym TgX11KeyCode::keyCodeToKeySym(Display *display, unsigned int keyCode, uns
             if (numGroups != 0) {
                 group %= numGroups;
             }
-        break;
+            break;
     }
 
     XkbKeyTypePtr keyType = XkbKeyKeyType(keyboardDesc, keyCode, group);
     unsigned int activeMods = eventMask & keyType->mods.mask;
 
     int i, level = 0;
-    for (i = 0; i < keyType->map_count; i++) {
+    for (i=0;i<keyType->map_count;i++) {
         if (keyType->map[i].active && keyType->map[i].mods.mask == activeMods) {
             level = keyType->map[i].level;
         }
@@ -85,8 +84,10 @@ KeySym TgX11KeyCode::keyCodeToKeySym(Display *display, unsigned int keyCode, uns
 bool TgX11KeyCode::keyCodeToEventDataPress(Display *display, unsigned int keyCode, TgEventData &data)
 {
     TG_FUNCTION_BEGIN();
-    unsigned int eventMask = generateEventMask();
-    KeySym keySym = keyCodeToKeySym(display, keyCode, eventMask);
+    KeySym keySym = keyCodeToKeySym(display, keyCode, 0);
+    if (keySym != XK_Alt_L && keySym != XK_Alt_R) {
+        keySym = keyCodeToKeySym(display, keyCode, generateEventMask());
+    }
 
     data.m_event.m_keyEvent.m_key = 0;
     data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_NormalKey;
@@ -138,6 +139,18 @@ bool TgX11KeyCode::keyCodeToEventDataPress(Display *display, unsigned int keyCod
         case XK_ISO_Level3_Shift:
             m_modsKeyDown.m_altGr = true;
             break;
+        case XK_Control_R:
+            m_modsKeyDown.m_ctrlRight = true;
+            break;
+        case XK_Control_L:
+            m_modsKeyDown.m_ctrlLeft = true;
+            break;
+        case XK_Alt_L:
+            m_modsKeyDown.m_altLeft = true;
+            break;
+        case XK_Alt_R:
+            m_modsKeyDown.m_altRight = true;
+            break;
         default:
             data.m_type = TgEventType::EventTypeCharacterCallback;
             data.m_event.m_keyEvent.m_key = static_cast<uint32_t>(keySym);
@@ -159,14 +172,17 @@ bool TgX11KeyCode::keyCodeToEventDataPress(Display *display, unsigned int keyCod
 bool TgX11KeyCode::keyCodeToEventDataRelease(Display *display, unsigned int keyCode, TgEventData &data)
 {
     TG_FUNCTION_BEGIN();
-    unsigned int eventMask = generateEventMask();
-    KeySym keySym = keyCodeToKeySym(display, keyCode, eventMask);
+    KeySym keySym = keyCodeToKeySym(display, keyCode, 0);
+    if (keySym != XK_Alt_L && keySym != XK_Alt_R) {
+        keySym = keyCodeToKeySym(display, keyCode, generateEventMask());
+    }
 
     data.m_event.m_keyEvent.m_key = 0;
     data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_NormalKey;
     data.m_event.m_keyEvent.m_previousItem2d = nullptr;
     data.m_type = TgEventType::EventTypeKeyRelease;
-    switch (keySym) {
+    switch (keySym)
+    {
         case XK_Left:
             data.m_event.m_keyEvent.m_key = 0;
             data.m_event.m_keyEvent.m_pressReleaseKey = TgPressReleaseKey::PressReleaseKey_Key_Left;
@@ -211,6 +227,18 @@ bool TgX11KeyCode::keyCodeToEventDataRelease(Display *display, unsigned int keyC
         case XK_ISO_Level3_Shift:
             m_modsKeyDown.m_altGr = false;
             break;
+        case XK_Control_R:
+            m_modsKeyDown.m_ctrlRight = false;
+            break;
+        case XK_Control_L:
+            m_modsKeyDown.m_ctrlLeft = false;
+            break;
+        case XK_Alt_L:
+            m_modsKeyDown.m_altLeft = false;
+            break;
+        case XK_Alt_R:
+            m_modsKeyDown.m_altRight = false;
+            break;
         default:
             data.m_event.m_keyEvent.m_key = static_cast<uint32_t>(keySym);
             break;
@@ -237,7 +265,7 @@ int TgX11KeyCode::generateModsKeyDown()
     if (m_modsKeyDown.m_altGr) {
         ret |= TgPressModsKeyDown::PressModsKeyDown_AltGr;
     }
-    if (m_modsKeyDown.m_alt) {
+    if (m_modsKeyDown.m_altLeft || m_modsKeyDown.m_altRight) {
         ret |= TgPressModsKeyDown::PressModsKeyDown_Alt;
     }
     return ret;
