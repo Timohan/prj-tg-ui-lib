@@ -175,6 +175,7 @@ TgFontInfo *TgFontGlyphCache::generateCache(const std::vector<uint32_t> &listCha
     newInfo->m_fontFile = fontFile;
     newInfo->m_fontSize = fontSize;
     if (!onlyForCalculation) {
+        newInfo->m_addedToCache = true;
         m_listCachedFont.push_back(newInfo);
     }
     TG_FUNCTION_END();

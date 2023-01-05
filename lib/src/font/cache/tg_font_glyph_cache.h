@@ -23,15 +23,16 @@ struct TgFontText;
 
 struct TgFontInfo
 {
-    prj_ttf_reader_data_t *m_data;
-    GLuint m_textureImage;
+    prj_ttf_reader_data_t *m_data = nullptr;
+    GLuint m_textureImage = 0;
     std::vector<TgRender *>m_listRender;
     std::vector<uint32_t>m_listCharacter;
     std::vector<float>m_listTopPositionY;
     std::vector<float>m_listBottomPositionY;
     std::string m_fontFile;
-    float m_fontSize;
-    float m_fontHeight;
+    float m_fontSize = 0;
+    float m_fontHeight = 0;
+    bool m_addedToCache = false;
 };
 
 class TgFontGlyphCache

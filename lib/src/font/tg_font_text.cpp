@@ -164,8 +164,9 @@ void TgFontText::generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculat
     size_t i, indexToUse;
     std::vector<bool>m_characterUsed;
     m_characterUsed.resize(getCharacterCount(), false);
-    m_listFontInfo.clear();
+    clearCacheValues();
     m_listFontInfo.resize(getCharacterCount(), nullptr);
+    bool added;
 
     while (1) {
         indexToUse = m_characterUsed.size();
@@ -182,18 +183,55 @@ void TgFontText::generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculat
         fontInfo = nullptr;
         if (getCharacter(indexToUse)->m_fontFileNameIndex != -1) {
             std::vector<uint32_t> listCharacters = getCharactersByFontFileNameIndex(m_listCharacter[indexToUse].m_fontFileNameIndex);
-
             fontInfo = TgGlobalApplication::getInstance()->getFontGlyphCache()->generateCacheForText(listCharacters,
                                         m_listFontFileNames.at( getCharacter(indexToUse)->m_fontFileNameIndex ).c_str(), fontSize, onlyForCalculation);
         }
 
+        added = false;
         for (i=0;i<m_characterUsed.size();i++) {
             if (getCharacter(i)->m_fontFileNameIndex == getCharacter(indexToUse)->m_fontFileNameIndex) {
                 m_characterUsed[i] = true;
                 m_listFontInfo[i] = fontInfo;
+                added = true;
             }
         }
+        if (!added) {
+            if (fontInfo->m_data) {
+                prj_ttf_reader_clear_data(&fontInfo->m_data);
+            }
+            delete fontInfo;
+        }
     }
+}
+
+/*!
+ * \brief TgFontText::clearCacheValues
+ *
+ * clearing cache font cache values that were used onlyForCalculation == true on function
+ * generateFontTextInfoGlyphs
+ */
+void TgFontText::clearCacheValues()
+{
+    size_t i, i2;
+    std::vector<size_t>listToDelete;
+    for (i=0;i<m_listFontInfo.size();i++) {
+        if (!m_listFontInfo[i]
+            || m_listFontInfo[i]->m_addedToCache
+            || !m_listFontInfo[i]->m_data) {
+            continue;
+        }
+        for (i2=i+1;i2<m_listFontInfo.size();i2++) {
+            if (m_listFontInfo[i]->m_data == m_listFontInfo[i2]->m_data) {
+                m_listFontInfo[i2]->m_addedToCache = true;
+            }
+        }
+        prj_ttf_reader_clear_data(&m_listFontInfo[i]->m_data);
+        listToDelete.push_back(i);
+    }
+    for (i=0;i<listToDelete.size();i++) {
+        delete m_listFontInfo[listToDelete[i]];
+    }
+    m_listFontInfo.clear();
 }
 
 /*!

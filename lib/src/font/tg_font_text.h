@@ -67,6 +67,8 @@ public:
     void clearListLinesWidth();
     void setListLinesWidth(size_t lineNumber, float lineWidth);
     float getTextLineWidth(size_t lineNumber);
+
+    void clearCacheValues();
 private:
     float m_textWidth;
     float m_visibleTopY;
