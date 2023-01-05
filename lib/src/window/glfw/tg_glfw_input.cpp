@@ -148,8 +148,6 @@ void TgGlfwInput::scrollMove(GLFWwindow *window, double xoffset, double yoffset)
         eventData.m_event.m_mouseEvent.m_scroll_move_y = yoffset;
         eventData.m_event.m_mouseEvent.m_time = m_startTime.elapsedTimeFromBegin();
         eventData.m_event.m_mouseEvent.m_mouseType = TgMouseType::NoButton;
-        eventData.m_event.m_mouseEvent.m_hoverDisabled = false;
-        eventData.m_event.m_mouseEvent.m_hoverEnabled = false;
         TgGlobalApplication::getInstance()->addEvent(window, &eventData);
     }
     TG_FUNCTION_END();
@@ -175,8 +173,6 @@ void TgGlfwInput::cursorPositionCallback(GLFWwindow *window, double xpos, double
     eventData.m_event.m_mouseEvent.m_y = m_mousePositionY;
     eventData.m_event.m_mouseEvent.m_time = m_startTime.elapsedTimeFromBegin();
     eventData.m_event.m_mouseEvent.m_mouseType = TgMouseType::NoButton;
-    eventData.m_event.m_mouseEvent.m_hoverDisabled = false;
-    eventData.m_event.m_mouseEvent.m_hoverEnabled = false;
     TgGlobalApplication::getInstance()->addEvent(window, &eventData);
     TG_FUNCTION_END();
 }
@@ -250,8 +246,6 @@ void TgGlfwInput::mouseRelease(GLFWwindow *window, TgMouseType mouseType)
         eventData.m_event.m_mouseEvent.m_y = m_mousePositionY;
         eventData.m_event.m_mouseEvent.m_time = m_startTime.elapsedTimeFromBegin();
         eventData.m_event.m_mouseEvent.m_mouseType = mouseType;
-        eventData.m_event.m_mouseEvent.m_hoverDisabled = false;
-        eventData.m_event.m_mouseEvent.m_hoverEnabled = false;
         TgGlobalApplication::getInstance()->addEvent(window, &eventData);
     }
     TG_FUNCTION_END();
