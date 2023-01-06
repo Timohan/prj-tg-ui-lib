@@ -17,12 +17,21 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
+#include <mutex>
 #include "../../common/time_difference.h"
 #include "../../event/tg_events.h"
 #include "tg_x11_keycode.h"
 
 struct TgWindowInfo;
 class TgMainWindowPrivate;
+
+enum TgListenerX11State
+{
+    NotRunning = 0,
+    Running,
+    EndRunning,
+    EndedRunning
+};
 
 class TgMainWindowX11 : private TgX11KeyCode
 {
@@ -32,7 +41,8 @@ public:
 
     int initWindow(const char *windowTitle, const TgWindowInfo *info);
     bool setupViewForRender();
-    bool renderEnd(const TgWindowInfo *info);
+    bool renderEnd();
+    void waitForEnd();
 #ifdef FUNCIONAL_TEST
     Display *getDisplay();
     Window *getWindow();
@@ -45,9 +55,13 @@ private:
     GLXContext m_context;
     Colormap m_colorMap;
     TimeDifference m_startTime;
+    TgListenerX11State m_threadIsRunning = TgListenerX11State::NotRunning;
+    std::mutex m_mutex;
 
-    void inputListener(const TgWindowInfo *info);
+    void inputListener();
     static TgMouseType getButtonType(unsigned int button);
+    void sendEndMsg();
+    int waitForMsg(int fd);
 };
 
 #endif // TG_MAIN_WINDOW_X11_H

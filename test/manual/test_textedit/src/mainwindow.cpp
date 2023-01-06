@@ -7,7 +7,8 @@ MainWindow::MainWindow(int width, int height) :
     m_background(this),
     m_buttonClose(this, 20, 20, 200, 50, "Close button"),
     m_buttonChangeText(this, 240, 20, 200, 50, "Change text"),
-    m_textEdit(this, 20, 100, 200, 30, "Center text", "", 21, 0, 0, 0)
+    m_textEdit(this, 20, 100, 200, 30, "Center text", "", 21, 0, 0, 0),
+    m_textEditSecondary(this, 20, 140, 200, 30, "", "", 21, 0, 0, 0)
 {
     m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonChangeText.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTextClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );

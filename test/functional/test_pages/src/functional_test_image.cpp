@@ -49,8 +49,8 @@ bool FunctionalTestImage::isImageToEqual(MainWindow *mainWindow, const char *ima
                 || pngColors[2] !=  imageColors[2]) {
                 if (!canBeDifference) {
                     TG_ERROR_LOG("Image have a pixel: " + imagePath + " " + std::to_string(x) + "/" + std::to_string(y) +
-                        "(" + std::to_string(pngColors[0]) + "," + std::to_string(pngColors[1]) + "," + std::to_string(pngColors[2]) + ")" +
-                        "(" + std::to_string(imageColors[0]) + "," + std::to_string(imageColors[1]) + "," + std::to_string(imageColors[2]) + ")" );
+                        "Should be: (" + std::to_string(pngColors[0]) + "," + std::to_string(pngColors[1]) + "," + std::to_string(pngColors[2]) + ")" +
+                        "But it is: (" + std::to_string(imageColors[0]) + "," + std::to_string(imageColors[1]) + "," + std::to_string(imageColors[2]) + ")" );
                 }
                 ret = false;
             }

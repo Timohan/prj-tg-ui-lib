@@ -14,6 +14,7 @@
 #include "../../../global/tg_global_log.h"
 #include "../../tg_item2d.h"
 #include "tg_item2d_private.h"
+#include "../../../global/private/tg_global_wait_renderer.h"
 
 TgItem2dVisible::TgItem2dVisible(TgItem2d *parent, TgItem2dPrivate *currentItem2dPrivate) :
     m_parent(parent),
@@ -116,6 +117,7 @@ void TgItem2dVisible::setVisible(bool visible)
         msgVisible.m_fromItem = nullptr;
         m_currentItem2dPrivate->sendMessageToChildrenFromBegin(&msgVisible);
     }
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 

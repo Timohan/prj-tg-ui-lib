@@ -39,6 +39,9 @@ public:
 
     void setAllowedNumberMouseButtonCount(size_t allowedNumberMouseButtonDownCount);
     size_t getAllowedNumberMouseButtonCount();
+#ifndef USE_GLFW
+    void waitForEnd();
+#endif
 
 #ifdef FUNCIONAL_TEST
     Display *getDisplay();

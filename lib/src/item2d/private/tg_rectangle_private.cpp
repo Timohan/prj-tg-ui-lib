@@ -17,6 +17,7 @@
 #include "../../shader/tg_shader_2d.h"
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgRectanglePrivate::TgRectanglePrivate(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a) :
     m_initVerticesDone(false),
@@ -79,6 +80,7 @@ void TgRectanglePrivate::setColor(const unsigned char r, const unsigned char g, 
     m_g = static_cast<float>(g)/255.0f;
     m_b = static_cast<float>(b)/255.0f;
     m_a = static_cast<float>(a)/255.0f;
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 

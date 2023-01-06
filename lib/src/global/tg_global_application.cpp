@@ -9,6 +9,7 @@
  * \author Timo Hannukkala <timohannukkala@hotmail.com>
  */
 #include "tg_global_application.h"
+#include <thread>
 #include "tg_global_log.h"
 #include "../window/tg_mainwindow.h"
 #include "private/tg_global_menu_holder.h"
@@ -177,6 +178,19 @@ void TgGlobalApplication::addEvent(GLFWwindow *window, const TgEventData *eventD
     }
     m_mutex.unlock();
 }
+#else
+/*!
+ * \brief TgGlobalApplication::waitForEnd
+ *
+ * wait for end the window(s)
+ */
+void TgGlobalApplication::waitForEnd()
+{
+    std::vector<TgMainWindow *>::iterator it;
+    for (it=m_listMainWindow.begin();it!=m_listMainWindow.end();it++) {
+        (*it)->waitForEnd();
+    }
+}
 #endif
 /*!
  * \brief TgGlobalApplication::exit
@@ -185,7 +199,14 @@ void TgGlobalApplication::addEvent(GLFWwindow *window, const TgEventData *eventD
  */
 void TgGlobalApplication::exit()
 {
+#ifndef USE_GLFW
+    std::thread([this]() {
+        waitForEnd();
+        m_exit = true;
+    }).detach();
+#else
     m_exit = true;
+#endif
 }
 
 /*!

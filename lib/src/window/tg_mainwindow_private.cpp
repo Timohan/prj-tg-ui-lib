@@ -19,6 +19,7 @@
 #include "../item2d/private/item2d/tg_item2d_private.h"
 #include "glfw/tg_mainwindow_glfw.h"
 #include "../global/private/tg_global_menu_holder.h"
+#include "../global/private/tg_global_wait_renderer.h"
 
 /*!
  * \brief TgWindowInfo::TgWindowInfo
@@ -304,7 +305,7 @@ bool TgMainWindowPrivate::renderEnd()
 #ifdef USE_GLFW
     return TgMainWindowGlfw::renderEnd();
 #else
-    return TgMainWindowX11::renderEnd(&m_windowInfo);
+    return TgMainWindowX11::renderEnd();
 #endif
 }
 
@@ -325,6 +326,7 @@ const TgWindowInfo *TgMainWindowPrivate::getWindowInfo() const
 void TgMainWindowPrivate::addEvent(const TgEventData *eventData)
 {
     m_events.addEvent(eventData);
+    TgGlobalWaitRenderer::getInstance()->release();
 }
 
 /*!

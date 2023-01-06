@@ -42,6 +42,8 @@ public:
     TgFontDefault *getFontDefault();
 #ifdef USE_GLFW
     void addEvent(GLFWwindow *window, const TgEventData *eventData);
+#else
+    void waitForEnd();
 #endif
     void exit();
     bool getExit();

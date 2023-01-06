@@ -14,6 +14,7 @@
 #include "../../global/tg_global_log.h"
 #include "../tg_rectangle.h"
 #include "../tg_image.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgBackgroundPrivate::TgBackgroundPrivate(TgItem2d *currentItem, const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a) :
     m_currentItem(currentItem),
@@ -69,6 +70,7 @@ void TgBackgroundPrivate::setColor(const unsigned char r, const unsigned char g,
     }
     m_rectangle->setColor(r, g, b, a);
     m_rectangle->setVisible(a);
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
@@ -92,6 +94,7 @@ void TgBackgroundPrivate::setImage(const char *imageFilename)
     }
     m_image->setImage(imageFilename);
     m_image->setVisible(true);
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 

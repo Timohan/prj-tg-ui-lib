@@ -301,6 +301,7 @@ void FunctionalTest::sendKeyPress(uint32_t key, uint32_t waitAfterRelease, bool 
         XSendEvent(m_mainWindow->getDisplay(), *m_mainWindow->getWindow(), True, KeyPressMask, (XEvent *)&event);
         std::this_thread::sleep_for(std::chrono::milliseconds(waitAfterRelease));
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 bool FunctionalTest::isCorrectButtonSelected(int page, int index)

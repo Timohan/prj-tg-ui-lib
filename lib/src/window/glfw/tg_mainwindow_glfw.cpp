@@ -16,6 +16,7 @@
 #include <GLFW/glfw3.h>
 #include "../../global/tg_global_log.h"
 #include "tg_glfw_input.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgMainWindowGlfw::TgMainWindowGlfw() :
     m_window(nullptr)
@@ -93,6 +94,7 @@ bool TgMainWindowGlfw::setupViewForRender()
         TG_FUNCTION_END();
         return false;
     }
+    TgGlobalWaitRenderer::getInstance()->waitForRender();
     TG_FUNCTION_END();
     return true;
 }

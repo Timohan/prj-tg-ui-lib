@@ -20,7 +20,7 @@
 #include "../../../item2d/tg_item2d.h"
 #include "../../../item2d/private/item2d/tg_item2d_private.h"
 #include "../../../window/tg_mainwindow_private.h"
-
+#include "../../../global/private/tg_global_wait_renderer.h"
 
 TgItem2dMenu::TgItem2dMenu(TgItem2d *currentItem, TgItem2d *parentItem) :
     m_currentItem(currentItem),

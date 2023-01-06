@@ -17,6 +17,7 @@ private:
     TgButton m_buttonClose;
     TgButton m_buttonChangeText;
     TgTextedit m_textEdit;
+    TgTextedit m_textEditSecondary;
 
     void onButtonCloseClick(TgMouseType type, float x, float y);
     void onButtonChangeTextClick(TgMouseType type, float x, float y);

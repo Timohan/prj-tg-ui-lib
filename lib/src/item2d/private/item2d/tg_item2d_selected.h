@@ -15,6 +15,7 @@
 #include <functional>
 #include <mutex>
 #include "../../../event/tg_event_data.h"
+#include "../../../global/private/tg_global_wait_renderer.h"
 
 class TgItem2d;
 class TgItem2dPrivate;
@@ -36,11 +37,13 @@ public:
 
     void setNextTabItem(TgItem2d *nextTabItem);
     void setPrevTabItem(TgItem2d *prevTabItem);
+    void setMaxTimeoutOnRendering(size_t maxTimeoutOnRendering);
 protected:
     bool handleEventSelected(TgEventData *eventData, TgEventResult &result);
     void handleMessageToChildren(const TgItem2dPrivateMessage *message);
 
 private:
+    size_t m_maxTimeoutOnRendering = DEFAULT_RENDER_WAIT_MAX_TIMEOUT;
     TgItem2d *m_parent;
     TgItem2d *m_currentItem;
     TgItem2dPrivate *m_currentItem2dPrivate;

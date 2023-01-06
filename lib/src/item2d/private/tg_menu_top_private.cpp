@@ -17,6 +17,7 @@
 #include "item2d/tg_item2d_private.h"
 #include "../private/tg_menu_item_private.h"
 #include "../../global/private/tg_global_deleter.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgMenuTopPrivate::TgMenuTopPrivate(TgItem2d *currentItem, TgItem2d *parentItem) :
     m_currentItem(currentItem),

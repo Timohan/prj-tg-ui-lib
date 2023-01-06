@@ -49,3 +49,10 @@ sudo make install
 
 tests are in test/functional folder
 No glfw supported functional tests. (only manual tests works with glfw too)
+
+## disabling CPU optimization
+cd lib  
+make DISABLE_CPU_OPTIMIZE=on  
+sudo make install  
+
+This will make that rendering is continuous without semaphore locks, and makes CPU usage to 100%.

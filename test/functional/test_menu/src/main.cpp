@@ -26,7 +26,6 @@
  */
 int main(int argc , char *argv[])
 {
-    XInitThreads();
     static TgApplication m_application;
     m_application.setFont("/usr/share/fonts/truetype/samyak-fonts/Samyak-Gujarati.ttf", 1);
     m_application.setFont("/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf", 2);

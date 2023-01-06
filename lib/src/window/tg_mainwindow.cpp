@@ -118,6 +118,18 @@ void TgMainWindow::addEvent(GLFWwindow *window, const TgEventData *eventData)
     }
     TG_FUNCTION_END();
 }
+#else
+/*!
+ * \brief TgMainWindow::waitForEnd
+ * when application is ending, this function is called
+ * and stops X11 listener thread nicely and waits for it
+ */
+void TgMainWindow::waitForEnd()
+{
+    TG_FUNCTION_BEGIN();
+    m_mainwindowPrivate->waitForEnd();
+    TG_FUNCTION_END();
+}
 #endif
 
 /*!

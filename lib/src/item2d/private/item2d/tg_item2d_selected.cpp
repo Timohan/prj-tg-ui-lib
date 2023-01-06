@@ -14,6 +14,7 @@
 #include "../../../global/tg_global_log.h"
 #include "../../tg_item2d.h"
 #include "tg_item2d_private.h"
+#include "../../../global/private/tg_global_wait_renderer.h"
 
 TgItem2dSelected::TgItem2dSelected(TgItem2d *parent, TgItem2d *currentItem, TgItem2dPrivate *currentItem2dPrivate) :
     m_parent(parent),
@@ -76,6 +77,19 @@ void TgItem2dSelected::setSelected(bool selected)
     if (f_selectedChanged) {
         f_selectedChanged(selected);
     }
+    TgGlobalWaitRenderer::getInstance()->release(selected ? m_maxTimeoutOnRendering : DEFAULT_RENDER_WAIT_MAX_TIMEOUT);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2dSelected::setMaxTimeoutOnRendering
+ *
+ * \param maxTimeoutOnRendering
+ */
+void TgItem2dSelected::setMaxTimeoutOnRendering(size_t maxTimeoutOnRendering)
+{
+    TG_FUNCTION_BEGIN();
+    m_maxTimeoutOnRendering = maxTimeoutOnRendering;
     TG_FUNCTION_END();
 }
 

@@ -20,6 +20,7 @@
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
 #include "tg_textfield_private.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 #define TG_TEXTEDIT_SELECTED_AREA_BACKGROUND_R  51
 #define TG_TEXTEDIT_SELECTED_AREA_BACKGROUND_G  100
@@ -59,6 +60,8 @@ TgTexteditPrivate::TgTexteditPrivate(TgItem2d *currentItem, const char *text, co
     m_cursorPositionImage.setType(TgImagePartType::TgImagePartType_Part3_UpToDown);
     m_cursorPositionImage.setImageCropPosition3TopToBottom(4.0f/32.0f, 4.0f/32.0f);
     m_cursorPositionImage.setImageAreaSize3TopToBottom(4.0f, 4.0f);
+
+    currentItem->m_private->setMaxTimeoutOnRendering(DEFAULT_RENDER_WAIT_MAX_TIMEOUT > 10 ? 10 : DEFAULT_RENDER_WAIT_MAX_TIMEOUT);
 
     TG_FUNCTION_END();
 }
@@ -107,6 +110,7 @@ void TgTexteditPrivate::setText(const std::vector<TgTextFieldText> &listText)
         m_currentItem->setPositionChanged(true);
     }
     m_mutex.unlock();
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 

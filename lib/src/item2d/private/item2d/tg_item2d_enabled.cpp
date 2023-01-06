@@ -14,6 +14,7 @@
 #include "../../../global/tg_global_log.h"
 #include "../../tg_item2d.h"
 #include "tg_item2d_private.h"
+#include "../../../global/private/tg_global_wait_renderer.h"
 
 TgItem2dEnabled::TgItem2dEnabled(TgItem2d *parent, TgItem2dPrivate *currentItem2dPrivate) :
     m_parent(parent),
@@ -109,6 +110,7 @@ void TgItem2dEnabled::setEnabled(bool enabled)
         msgEnabled.m_fromItem = nullptr;
         m_currentItem2dPrivate->sendMessageToChildrenFromBegin(&msgEnabled);
     }
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 

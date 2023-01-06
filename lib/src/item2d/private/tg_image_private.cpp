@@ -15,6 +15,7 @@
 #include "../tg_item2d.h"
 #include "../../shader/tg_shader_2d.h"
 #include "../../window/tg_mainwindow_private.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgImagePrivate::TgImagePrivate(const char *filename) :
     m_topLeftS(0), m_topLeftT(0),
@@ -219,5 +220,6 @@ void TgImagePrivate::setImage(const char *filename)
     m_imageAsset.m_textureIndex = 0;
     m_imageAsset.m_filename = filename;
     m_initImageAssetDone = false;
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }

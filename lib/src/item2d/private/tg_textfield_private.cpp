@@ -21,6 +21,7 @@
 #include "../../global/tg_global_log.h"
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgTextfieldPrivate::TgTextfieldPrivate(TgItem2d *currentItem,
                                        const char *text, const char *fontFile, float fontSize,
@@ -377,6 +378,7 @@ void TgTextfieldPrivate::setFontSize(float fontSize)
     m_fontSize = fontSize;
     m_initDone = false;
     m_mutex.unlock();
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
@@ -617,6 +619,7 @@ void TgTextfieldPrivate::setMaxLineCount(uint32_t maxLineCount)
     m_maxLineCount = maxLineCount;
     m_previousTextWidthCalc = -1.0f;
     m_mutex.unlock();
+    TgGlobalWaitRenderer::getInstance()->release();
 }
 
 uint32_t TgTextfieldPrivate::getMaxLineCount() const
@@ -633,6 +636,7 @@ void TgTextfieldPrivate::setWordWrap(TgTextFieldWordWrap wordWrap)
         m_previousTextWidthCalc = -1.0f;
     }
     m_mutex.unlock();
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
@@ -664,6 +668,7 @@ void TgTextfieldPrivate::setAllowBreakLineGoOverMaxLine(bool allowBreakLineGoOve
         m_previousTextWidthCalc = -1.0f;
     }
     m_mutex.unlock();
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 

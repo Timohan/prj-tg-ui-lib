@@ -15,6 +15,7 @@
 #include "../../../global/tg_global_log.h"
 #include "tg_item2d_private.h"
 #include "../../../window/tg_mainwindow_private.h"
+#include "../../../global/private/tg_global_wait_renderer.h"
 
 TgItem2dPosition::TgItem2dPosition(TgItem2d *parent, TgItem2dPrivate *currentItemPrivate) :
     m_x(0),
@@ -466,6 +467,7 @@ void TgItem2dPosition::setPositionChanged(bool positionChanged)
         msg.m_type = TgItem2dPrivateMessageType::PositionChanged;
         m_currentItemPrivate->sendMessageToChildren(&msg);
     }
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 

@@ -29,6 +29,7 @@ TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
     if (parent) {
         parent->addChild(current, false);
     }
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
@@ -46,6 +47,7 @@ TgItem2dPrivate::TgItem2dPrivate(float x, float y, float width, float height, Tg
     if (parent) {
         parent->addChild(current, topMenu);
     }
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
@@ -58,6 +60,7 @@ TgItem2dPrivate::~TgItem2dPrivate()
     sendMessageToChildrenFromBegin(&msg);
     m_listChildrenItem.clear();
     m_listChildrenTopMenu.clear();
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
@@ -84,6 +87,7 @@ void TgItem2dPrivate::addChild(TgItem2d *child, bool topMenu)
         m_listChildrenTopMenu.push_back(child);
     }
     setRequireRecheckVisibleChangeToChildren(true);
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
@@ -392,6 +396,7 @@ void TgItem2dPrivate::setToTop(TgItem2d *child, std::vector<TgItem2d *>&listChil
         if (listChildren[i] == child) {
             listChildren.erase(listChildren.begin()+i);
             listChildren.push_back(child);
+            TgGlobalWaitRenderer::getInstance()->release();
             break;
         }
     }

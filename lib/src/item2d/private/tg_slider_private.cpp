@@ -12,6 +12,7 @@
 #include "tg_slider_private.h"
 #include "../../global/tg_global_log.h"
 #include "../../global/private/tg_global_defines.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgSliderPrivate::TgSliderPrivate(TgItem2d *parent, TgItem2d *currentItem, TgSliderType type) :
     m_parent(parent),

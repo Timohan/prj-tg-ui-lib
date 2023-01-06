@@ -13,6 +13,7 @@
 #include "../../global/tg_global_log.h"
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgImagePartPrivate::TgImagePartPrivate(TgItem2d *currentItem, const char *imageFilename, TgImagePartType type) :
     m_type(type),

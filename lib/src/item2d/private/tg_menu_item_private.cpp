@@ -15,6 +15,7 @@
 #include "mouse_capture/tg_mouse_capture_private.h"
 #include "../../global/private/tg_global_defines.h"
 #include "../../global/private/tg_global_menu_holder.h"
+#include "../../global/private/tg_global_wait_renderer.h"
 
 TgMenuItemPrivate::TgMenuItemPrivate(TgMenuItem *parentItem, TgMenuItem *currentItem, const char *text, const TgShortCut *shortCut) :
     m_currentItem(currentItem),
