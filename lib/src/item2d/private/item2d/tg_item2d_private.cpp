@@ -384,8 +384,11 @@ void TgItem2dPrivate::setToTop(TgItem2d *child)
 void TgItem2dPrivate::setToTop(TgItem2d *child, std::vector<TgItem2d *>&listChildren)
 {
     TG_FUNCTION_BEGIN();
-    size_t i;
-    for (i=0;i<listChildren.size()-1;i++) {
+    if (listChildren.empty()) {
+        TG_FUNCTION_END();
+        return;
+    }
+    for (size_t i=0;i<listChildren.size()-1;i++) {
         if (listChildren[i] == child) {
             listChildren.erase(listChildren.begin()+i);
             listChildren.push_back(child);
