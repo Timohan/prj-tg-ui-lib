@@ -51,6 +51,7 @@ public:
     static TgGlobalDeleter *getInstance();
     void addTopMenu(TgMenuTopPrivate *topItem, TgMenuItem *menuItem);
     void addSubMenu(TgItem2dMenu *parentMenu, TgMenuItem *menuItem);
+    void add(TgItem2d *itemToDelete);
     bool removeItems();
 
 private:

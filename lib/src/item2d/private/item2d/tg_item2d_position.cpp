@@ -16,6 +16,7 @@
 #include "tg_item2d_private.h"
 #include "../../../window/tg_mainwindow_private.h"
 #include "../../../global/private/tg_global_wait_renderer.h"
+#include "../grid_view/tg_grid_view_cell_private.h"
 
 TgItem2dPosition::TgItem2dPosition(TgItem2d *parent, TgItem2dPrivate *currentItemPrivate) :
     m_x(0),
@@ -182,17 +183,22 @@ float TgItem2dPosition::getHeight()
  *
  * set width for item
  * \param width
+ * \return true if width is changed
  */
-void TgItem2dPosition::setWidth(float width)
+bool TgItem2dPosition::setWidth(float width, bool useCallback)
 {
     TG_FUNCTION_BEGIN();
     if (std::fabs(m_width - width) <= std::numeric_limits<double>::epsilon()) {
         TG_FUNCTION_END();
-        return;
+        return false;
     }
     m_width = width;
     setPositionChanged(true);
+    if (useCallback && m_currentGridViewCell) {
+        m_currentGridViewCell->widthChanged(width);
+    }
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!
@@ -200,17 +206,22 @@ void TgItem2dPosition::setWidth(float width)
  *
  * set height for item
  * \param height
+ * \return true if height is changed
  */
-void TgItem2dPosition::setHeight(float height)
+bool TgItem2dPosition::setHeight(float height, bool useCallback)
 {
     TG_FUNCTION_BEGIN();
     if (std::fabs(m_height - height) <= std::numeric_limits<double>::epsilon()) {
         TG_FUNCTION_END();
-        return;
+        return false;
     }
     m_height = height;
     setPositionChanged(true);
+    if (useCallback && m_currentGridViewCell) {
+        m_currentGridViewCell->heightChanged(height);
+    }
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!
@@ -663,4 +674,14 @@ void TgItem2dPosition::setUseRoundedPositionValues(bool useRoundedPositionValues
                  ? TgItem2dPrivateMessageType::ParentItemToUseRoundedPositionValues
                  : TgItem2dPrivateMessageType::ParentItemToUseNotRoundedPositionValues;
     m_currentItemPrivate->sendMessageToChildren(&msg, false);
+}
+
+/*!
+ * \brief TgItem2dPosition::setCurrentGridViewCell
+ *
+ * \param currentGridViewCell
+ */
+void TgItem2dPosition::setCurrentGridViewCell(TgGridViewCellPrivate *currentGridViewCell)
+{
+    m_currentGridViewCell = currentGridViewCell;
 }

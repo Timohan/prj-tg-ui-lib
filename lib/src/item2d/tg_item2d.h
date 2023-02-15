@@ -156,6 +156,9 @@ private:
     friend class TgMenuItemPrivate;
     friend class TgMenuItem;
     friend class TgMenuTop;
+    friend class TgGridView;
+    friend class TgGridViewCell;
+    friend class TgGridViewPrivate;
 };
 
 #endif // TG_ITEM_2D_H

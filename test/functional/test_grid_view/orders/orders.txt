@@ -1,0 +1,87 @@
+msg start basic moving row 0
+isImage grid_view_empty_40_40.png
+MakeStep 1
+isImage grid_view_fill_0_0_40_40.png
+MMC 0 780 60 780 200 0 1 0
+MMC 0 780 200 780 200 1 0 1
+isImage grid_view_fill_0_5_40_40.png
+MMC 0 20 584 200 584 0 1 0
+MMC 0 200 584 200 584 1 0 1
+isImage grid_view_fill_8_5_40_40.png
+MMC 1 780 200 780 584 1 1 1
+MMC 1 200 584 780 584 1 1 1
+isImage grid_view_fill_40_40_40_40.png
+MakeStep 2
+isImage grid_view_fill_40_35_40_35.png
+MakeStep 3
+isImage grid_view_fill_34_35_34_35.png
+MakeStep 4
+isImage grid_view_fill_34_35_34_37.png
+MakeStep 5
+isImage grid_view_fill_34_35_38_37.png
+MMC 1 780 502 780 584 1 1 1
+isImage grid_view_fill_34_37_38_37.png
+MMC 1 664 584 780 584 1 1 1
+isImage grid_view_fill_38_37_38_37.png
+MakeStep 6
+isImage grid_view_fill_38_37_38_37_red.png
+MakeStep 7
+isImage grid_view_fill_38_0_38_20_red.png
+MakeStep 8
+isImage grid_view_fill_0_0_7_20.png
+MakeStep 9
+isImage grid_view_fill_0_0_7_21.png
+MMC 1 780 60 780 584 1 1 1
+isImage grid_view_fill_0_21_7_21.png
+MMC 1 780 536 780 37 1 1 1
+isImage grid_view_fill_0_0_7_21.png
+MakeStep 7
+isImage grid_view_fill_0_0_7_20.png
+MakeStep 10
+isImage grid_view_fill_0_0_8_20.png
+MMC 1 20 584 780 584 1 1 1
+isImage grid_view_fill_8_0_8_20.png
+MMC 1 761 584 4 584 1 1 1
+isImage grid_view_fill_0_0_8_20.png
+MakeStep 8
+isImage grid_view_fill_0_0_7_20.png
+MakeStep 11
+isImage grid_view_fill_0_0_7_20_larger_1_column.png
+MMC 1 20 584 780 584 1 1 1
+isImage grid_view_fill_1_0_7_20_larger_1_column.png
+MMC 1 761 584 4 584 1 1 1
+isImage grid_view_fill_0_0_7_20_larger_1_column.png
+MakeStep 7
+isImage grid_view_fill_0_0_7_20_larger_1_column.png
+MMC 1 20 584 780 584 1 1 1
+msg Start Column to 9
+MakeStep 12
+isImage grid_view_fill_1_0_9_20_larger_1_column.png
+MMC 1 365 584 780 584 1 1 1
+isImage grid_view_fill_2_0_9_20_larger_1_column.png
+MMC 1 761 584 4 584 1 1 1
+isImage grid_view_fill_0_0_7_20_larger_1_column.png
+MakeStep 13
+isImage grid_view_fill_0_0_7_20_larger_1_column_row.png
+MMC 1 780 60 780 584 1 1 1
+isImage grid_view_fill_0_1_9_20_larger_1_column_row.png
+MakeStep 14
+isImage grid_view_fill_0_1_9_22_larger_1_column_row.png
+MMC 1 780 492 780 584 1 1 1
+isImage grid_view_fill_0_2_9_22_larger_1_column_row.png
+MakeStep 15
+isImage grid_view_fill_0_0_2_3_larger_1_column_row.png
+MakeStep 16
+isImage grid_view_empty.png
+MakeStep 17
+isImage grid_view_0_0_4_3.png
+MakeStep 18
+isImage grid_view_empty.png
+MakeStep 19
+isImage grid_view_0_0_4_3.png
+MakeStep 20
+isImage grid_view_0_0_4_3_red.png
+MakeStep 1
+isImage grid_view_0_0_4_3_red_filled.png
+
+

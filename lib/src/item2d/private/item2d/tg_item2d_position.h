@@ -13,6 +13,7 @@
 #define TG_ITEM_2D_POSITION_H
 
 class TgItem2dPrivate;
+class TgGridViewCellPrivate;
 #include <functional>
 #include "../../tg_item2d.h"
 
@@ -37,8 +38,8 @@ public:
 
     void setX(float x);
     void setY(float y);
-    void setWidth(float width);
-    void setHeight(float height);
+    bool setWidth(float width, bool useCallback = true);
+    bool setHeight(float height, bool useCallback = true);
 
     void setMarginLeft(float left);
     void setMarginTop(float top);
@@ -73,6 +74,8 @@ public:
     bool getUseRoundedPositionValues();
     void setUseRoundedPositionValues(bool useRoundedPositionValues);
 
+    void setCurrentGridViewCell(TgGridViewCellPrivate *currentGridViewCell);
+
 private:
     float m_x;
     float m_y;
@@ -83,6 +86,7 @@ private:
 
     TgItem2d *m_parent;
     TgItem2dPrivate *m_currentItemPrivate;
+    TgGridViewCellPrivate *m_currentGridViewCell = nullptr;
 
     TgItem2dAnchor m_anchor;
     TgAnchorMargingValues m_marginValues; // AnchorFollowParentSize

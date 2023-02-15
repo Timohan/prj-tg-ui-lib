@@ -69,6 +69,10 @@ item2d_private_item2d_SRCDIR:=$(CURRENT_DIR)src/item2d/private/item2d
 item2d_private_item2d_SRCS:=$(wildcard $(item2d_private_item2d_SRCDIR)/*.cpp)
 item2d_private_item2d_OBJS:=$(item2d_private_item2d_SRCS:.cpp=.o)
 
+item2d_private_gridview_SRCDIR:=$(CURRENT_DIR)src/item2d/private/grid_view
+item2d_private_gridview_SRCS:=$(wildcard $(item2d_private_gridview_SRCDIR)/*.cpp)
+item2d_private_gridview_OBJS:=$(item2d_private_gridview_SRCS:.cpp=.o)
+
 math_SRCDIR:=$(CURRENT_DIR)src/math
 math_SRCS:=$(wildcard $(math_SRCDIR)/*.cpp)
 math_OBJS:=$(math_SRCS:.cpp=.o)
@@ -124,8 +128,8 @@ endif
 
 all: default
 
-default: $(render_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
-	$(CCX) $(render_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
+default: $(render_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
+	$(CCX) $(render_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
 
 $(mainwindow_window_manager_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
@@ -134,6 +138,9 @@ $(application_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
 $(render_OBJS):%.o: %.cpp
+	$(CCX) $(CXXFLAGS) -c $< -o $@
+
+$(item2d_private_gridview_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
 $(global_OBJS):%.o: %.cpp
@@ -193,6 +200,7 @@ clean:
 	rm -f src/item2d/*.o
 	rm -f src/item2d/private/*.o
 	rm -f src/item2d/private/mouse_capture/*.o
+	rm -f src/item2d/private/grid_view/*.o
 	rm -f src/item2d/private/item2d/*.o
 	rm -f src/math/*.o
 	rm -f src/image/*.o
