@@ -13,6 +13,7 @@
 #include "tg_global_log.h"
 #include "../window/tg_mainwindow.h"
 #include "private/tg_global_menu_holder.h"
+#include "private/tg_global_wait_renderer.h"
 
 TgGlobalApplication *TgGlobalApplication::m_globalApplication = nullptr;
 
@@ -201,6 +202,7 @@ void TgGlobalApplication::exit()
 {
 #ifndef USE_GLFW
     std::thread([this]() {
+        TgGlobalWaitRenderer::getInstance()->release(1);
         waitForEnd();
         m_exit = true;
     }).detach();
