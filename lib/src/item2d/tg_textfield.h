@@ -92,6 +92,7 @@ public:
     TgTextFieldWordWrap getWordWrap() const;
     void setAllowBreakLineGoOverMaxLine(bool allowBreakLineGoOverMaxLine);
     bool getAllowBreakLineGoOverMaxLine() const;
+    void getColor(uint8_t &r, uint8_t &g, uint8_t &b);
 
 protected:
     virtual void render(const TgWindowInfo *windowInfo) override;

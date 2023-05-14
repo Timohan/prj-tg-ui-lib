@@ -353,7 +353,8 @@ size_t TgMainWindowPrivate::getAllowedNumberMouseButtonCount()
 
 void TgMainWindowPrivate::handlePrivateMessage(const TgItem2dPrivateMessage *message)
 {
-    if (message->m_type == TgItem2dPrivateMessageType::EventSetMainMenuItems) {
+    if (message->m_type == TgItem2dPrivateMessageType::EventSetMainMenuItems
+        || message->m_type == TgItem2dPrivateMessageType::EventHideTheList) {
         handlePrivateMessageWindowMenu(message);
     }
     if (message->m_type == TgItem2dPrivateMessageType::ItemToVisibleChanged

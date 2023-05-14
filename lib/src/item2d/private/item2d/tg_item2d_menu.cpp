@@ -231,6 +231,25 @@ void TgItem2dMenu::getAreaSizeOfMenuItems(std::vector<TgMenuItem *> &listMenu, f
  */
 void TgItem2dMenu::setMenuItemsOpen(TgEventData *eventData, const TgWindowInfo *windowInfo)
 {
+    setMenuItemsOpen(m_topMenu, m_currentItem, m_parentItem, m_listChildrenMenu, eventData, windowInfo);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2dMenu::setMenuItemsOpen
+ *
+ * set menu items to open, sets menu items positions and so on
+ * \param topMenu
+ * \param currentItem
+ * \param parentItem
+ * \param listChildrenMenu
+ * \param eventData
+ * \param windowInfo
+ */
+void TgItem2dMenu::setMenuItemsOpen(bool topMenu, TgItem2d *currentItem, TgItem2d *parentItem,
+                                    std::vector<TgMenuItem *>&listChildrenMenu,
+                                    TgEventData *eventData, const TgWindowInfo *windowInfo)
+{
     float startX = 0;
     float startY = 0;
     TgItem2dPrivateMessage msg;
@@ -240,10 +259,10 @@ void TgItem2dMenu::setMenuItemsOpen(TgEventData *eventData, const TgWindowInfo *
     float submenuArrowWidth = 0;
     size_t i;
     msg.m_fromItem = nullptr;
-    if (!m_listChildrenMenu.empty()) {
-        getAreaSizeOfMenuItems(m_listChildrenMenu, width, height, shortcutWidth, submenuArrowWidth);
+    if (!listChildrenMenu.empty()) {
+        getAreaSizeOfMenuItems(listChildrenMenu, width, height, shortcutWidth, submenuArrowWidth);
 
-        switch (m_listChildrenMenu.at(0)->m_private->getMenuType()) {
+        switch (listChildrenMenu.at(0)->m_private->getMenuType()) {
             case TgMenuItemPrivate::MenuType::MenuType_NormalMenu:
             default:
                 startX = static_cast<float>(eventData->m_event.m_mouseEvent.m_x)+5;
@@ -263,8 +282,8 @@ void TgItem2dMenu::setMenuItemsOpen(TgEventData *eventData, const TgWindowInfo *
                 break;
             case TgMenuItemPrivate::MenuType::MenuType_TopMenu:
             case TgMenuItemPrivate::MenuType::MenuType_TopDropDownMenu:
-                startX = m_currentItem->getX();
-                startY = m_currentItem->getY() + m_currentItem->getHeight();
+                startX = currentItem->getX();
+                startY = currentItem->getY() + currentItem->getHeight();
                 if (static_cast<int>(startX+width+shortcutWidth+submenuArrowWidth) > windowInfo->m_windowWidth) {
                     startX = static_cast<float>(eventData->m_event.m_mouseEvent.m_x) - (width + shortcutWidth + submenuArrowWidth) - 5;
                     if (startX < 0) {
@@ -274,39 +293,55 @@ void TgItem2dMenu::setMenuItemsOpen(TgEventData *eventData, const TgWindowInfo *
                 break;
             case TgMenuItemPrivate::MenuType::MenuType_SubMenu:
                 break;
+            case TgMenuItemPrivate::MenuType::MenuType_ComboBoxMenu:
+                startX = currentItem->getX();
+                startY = currentItem->getY() + currentItem->getHeight();
+                if (static_cast<int>(startX+width+shortcutWidth+submenuArrowWidth) > windowInfo->m_windowWidth) {
+                    startX = static_cast<float>(currentItem->getX() + currentItem->getWidth()) - (width + shortcutWidth + submenuArrowWidth);
+                    if (startX < 0) {
+                        startX = 0;
+                    }
+                }
+                if (static_cast<int>(startY+height) > windowInfo->m_windowHeight) {
+                    startY = static_cast<float>(currentItem->getY()) - height;
+                    if (startY < 0) {
+                        startY = 0;
+                    }
+                }
+                break;
         }
     }
-    if (m_topMenu) {
-        msg.m_fromItem = m_parentItem;
-        msg.m_toItem = m_currentItem;
+    if (topMenu) {
+        msg.m_fromItem = parentItem;
+        msg.m_toItem = currentItem;
     }
     TgItem2dPrivateMessage msgToVisible;
     msgToVisible.m_type = TgItem2dPrivateMessageType::ParentItemToVisible;
     float y = startY;
 
-    for (i=0;i<m_listChildrenMenu.size();i++) {
-        reinterpret_cast<TgItem2d *>(m_listChildrenMenu[i])->m_private->parentVisibleChanged(true);
-        reinterpret_cast<TgItem2d *>(m_listChildrenMenu[i])->m_private->sendMessageToChildren(&msgToVisible, false);
-        if (!m_listChildrenMenu[i]->getVisible()) {
+    for (i=0;i<listChildrenMenu.size();i++) {
+        reinterpret_cast<TgItem2d *>(listChildrenMenu[i])->m_private->parentVisibleChanged(true);
+        reinterpret_cast<TgItem2d *>(listChildrenMenu[i])->m_private->sendMessageToChildren(&msgToVisible, false);
+        if (!listChildrenMenu[i]->getVisible()) {
             continue;
         }
-        m_listChildrenMenu[i]->setX(startX);
-        m_listChildrenMenu[i]->setY(y);
-        m_listChildrenMenu[i]->setAnchorState(TgItem2dAnchor::AnchorRelativeToParent);
-        m_listChildrenMenu[i]->setWidth(width+shortcutWidth+submenuArrowWidth);
-        m_listChildrenMenu[i]->setHeight(TG_MENU_DEFAULT_HEIGHT);
-        m_listChildrenMenu[i]->m_private->setSubMenuArrowPosition();
-        m_listChildrenMenu[i]->m_private->setShortCutPosition(width);
-        m_listChildrenMenu[i]->hideSubMenuList();
-        msg.m_listAdditionalItems.push_back(m_listChildrenMenu[i]);
-        y += m_listChildrenMenu[i]->getHeight();
+        listChildrenMenu[i]->setX(startX);
+        listChildrenMenu[i]->setY(y);
+        listChildrenMenu[i]->setAnchorState(TgItem2dAnchor::AnchorRelativeToParent);
+        listChildrenMenu[i]->setWidth(width+shortcutWidth+submenuArrowWidth);
+        listChildrenMenu[i]->setHeight(TG_MENU_DEFAULT_HEIGHT);
+        listChildrenMenu[i]->m_private->setSubMenuArrowPosition();
+        listChildrenMenu[i]->m_private->setShortCutPosition(width);
+        listChildrenMenu[i]->hideSubMenuList();
+        msg.m_listAdditionalItems.push_back(listChildrenMenu[i]);
+        y += listChildrenMenu[i]->getHeight();
     }
 
     if (eventData->m_type == TgEventType::EventTypeMouseMoveForMenuParent) {
         msg.m_primaryValue = 1;
     }
     msg.m_type = TgItem2dPrivateMessageType::EventSetMainMenuItems;
-    m_currentItem->sendMessageToChildrenFromBegin(&msg);
+    currentItem->sendMessageToChildrenFromBegin(&msg);
     TG_FUNCTION_END();
 }
 

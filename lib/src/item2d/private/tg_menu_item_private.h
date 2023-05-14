@@ -23,6 +23,11 @@ class TgMenuItem;
 #define MENU_ITEM_RIGHT_TEXT_MARGIN 10.0f
 #define MENU_ITEM_FONT_SIZE         17.0f
 
+#define MENU_ITEM_DEFAULT_BACKGROUND_R static_cast<unsigned char>(245)
+#define MENU_ITEM_DEFAULT_BACKGROUND_G static_cast<unsigned char>(245)
+#define MENU_ITEM_DEFAULT_BACKGROUND_B static_cast<unsigned char>(245)
+#define MENU_ITEM_DEFAULT_BACKGROUND_A static_cast<unsigned char>(255)
+
 /*!
  * \brief TgMenuItemPrivate
  * Menu item
@@ -35,6 +40,7 @@ public:
         MenuType_TopMenu,
         MenuType_TopDropDownMenu,
         MenuType_SubMenu,
+        MenuType_ComboBoxMenu,
     };
 
     explicit TgMenuItemPrivate(TgMenuItem *parentItem, TgMenuItem *currentItem, const char *text, const TgShortCut *shortCut);
@@ -48,6 +54,8 @@ public:
 
     void setMenuType(MenuType menuType);
     MenuType getMenuType();
+    bool getMenuRendering();
+    void setMenuRendering(bool menuRendering);
 
     void setHighlightOff();
     void setSubMenuArrowPosition();
@@ -56,6 +64,7 @@ public:
     std::string getName();
 
     TgEventResult handleEvent(TgEventData *eventData);
+    void setBackgroundColor(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
 private:
     TgMenuItem *m_currentItem;
 
@@ -68,6 +77,7 @@ private:
     TgImage m_subMenuArrowImage;
     TgShortCut m_shortCut;
     uint64_t m_globalMenuIndex = 0;
+    bool m_menuRendering = false;
 
     float getSubMenuArrowX();
     float getSubMenuArrowY();

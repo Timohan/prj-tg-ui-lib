@@ -530,6 +530,24 @@ float TgTextfieldPrivate::getAllDrawTextHeight()
 }
 
 /*!
+ * \brief TgTextfieldPrivate::getColor
+ * get default color of the text field
+ * \param r red
+ * \param g green
+ * \param b blue
+ */
+void TgTextfieldPrivate::getColor(uint8_t &r, uint8_t &g, uint8_t &b)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    r = m_r;
+    g = m_g;
+    b = m_b;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+}
+
+/*!
  * \brief TgTextfieldPrivate::editText
  *
  * modifies the text

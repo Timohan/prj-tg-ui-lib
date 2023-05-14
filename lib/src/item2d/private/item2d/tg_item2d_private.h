@@ -40,6 +40,7 @@ enum TgItem2dPrivateMessageType
     EventClearButtonPressForThisItem,
     EventChangeButtonPressToThisItem,
     EventSetMainMenuItems,
+    EventHideTheList,
 
     CurrentItemToInvisible,  /*!< This is only used on virtual void handlePrivateMessage(const TgItem2dPrivateMessage *message); */
     CurrentItemToDisabled,

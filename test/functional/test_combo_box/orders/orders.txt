@@ -1,0 +1,190 @@
+msg start screen
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isImage start_screen.png
+KeyPress 9
+KeyRelease 9
+Sleep 500
+isItemSelected 0 1
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isImage start_screen_selected0.png
+KeyPress 9
+KeyRelease 9
+Sleep 500
+isItemSelected 0 0
+isItemSelected 1 1
+isItemSelected 2 0
+isItemSelected 3 0
+isImage start_screen_selected1.png
+KeyPress XK_Shift_L
+KeyPress 9
+KeyRelease 9
+KeyRelease XK_Shift_L
+Sleep 500
+isItemSelected 0 1
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+isImage start_screen_selected0.png
+KeyPress XK_KP_Down
+KeyRelease XK_KP_Down
+Sleep 500
+isComboBoxItemChanged 0 1
+KeyPress XK_KP_Up
+KeyRelease XK_KP_Up
+Sleep 500
+isComboBoxItemChanged 0 0
+MMC 1 25 35 25 35 1 1 1
+isImage start_screen_selected0_open0.png
+isItemSelected 0 1
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+MMC 0 25 35 25 130 0 0 0
+isImage start_screen_selected0_open0_hover2.png
+MMC 1 25 130 25 130 1 1 1
+Sleep 500
+isComboBoxItemChanged 0 2
+isItemSelected 0 1
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+MMC 0 25 130 25 555 0 0 0
+isImage start_screen_selected0_hover2.png
+MMC 1 25 555 25 555 1 1 1
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 1
+isItemSelected 3 0
+isImage start_screen_selected2_open2.png
+MMC 1 25 472 25 472 1 1 1
+isComboBoxItemChanged 2 1
+KeyPress 9
+KeyRelease 9
+Sleep 500
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 1
+KeyPress 32
+KeyRelease 32
+Sleep 500
+isImage start_screen_selected4_open0.png
+KeyPress 9
+KeyRelease 9
+Sleep 500
+isItemSelected 0 0
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 1
+MakeStep 1
+KeyPress 9
+KeyRelease 9
+Sleep 100
+KeyPress 9
+KeyRelease 9
+Sleep 500
+isImage start_screen_selected1_itemcount1.png
+isItemSelected 0 0
+isItemSelected 1 1
+isItemSelected 2 0
+isItemSelected 3 0
+MakeStep 2
+Sleep 500
+isImage start_screen_selected1_itemcount1.png
+isComboBoxItemChanged 1 1
+MakeStep 3
+Sleep 500
+isImage start_screen_selected1_itemcount1.png
+isComboBoxItemChanged 1 2
+MakeStep 4
+Sleep 500
+isImage start_screen_selected1_itemcount1.png
+KeyPress 32
+KeyRelease 32
+Sleep 500
+isImage start_screen_selected1_open1_itemcount4.png
+KeyPress XK_KP_Down
+KeyRelease XK_KP_Down
+Sleep 500
+isComboBoxItemChanged 1 3
+KeyPress XK_KP_Up
+KeyRelease XK_KP_Up
+Sleep 500
+isComboBoxItemChanged 1 2
+isImage start_screen_selected1_open1_itemcount4.png
+msg combobox list visible -> add item (after) -> combobox list hide
+MakeStep 5
+isImage start_screen_selected1_itemcount1.png
+msg combobox list visible -> add item (same position) -> combobox list hide
+KeyPress 32
+KeyRelease 32
+Sleep 500
+MakeStep 6
+Sleep 500
+isImage start_screen_selected1_itemcount1.png
+isComboBoxItemChanged 1 3
+msg combobox list visible -> add item (first) -> combobox list hide
+KeyPress 32
+KeyRelease 32
+Sleep 500
+MakeStep 7
+Sleep 500
+isImage start_screen_selected1_itemcount1.png
+isComboBoxItemChanged 1 4
+msg remove last item when menu is visible
+KeyPress 32
+KeyRelease 32
+Sleep 500
+MakeStep 8
+Sleep 500
+isImage start_screen_selected1_itemcount1.png
+msg remove first item when menu is visible
+KeyPress 32
+KeyRelease 32
+Sleep 500
+MakeStep 9
+Sleep 500
+isImage start_screen_selected1_itemcount1.png
+isComboBoxItemChanged 1 3
+msg remove selected item when menu is visible and selected item is not last
+KeyPress 32
+KeyRelease 32
+Sleep 500
+MakeStep 10
+Sleep 500
+isComboBoxItemChanged 1 2
+isImage start_screen_selected1_itemcount4_tr01.png
+KeyPress XK_KP_Down
+KeyRelease XK_KP_Down
+Sleep 500
+isComboBoxItemChanged 1 3
+isImage start_screen_selected1_itemcount4_tr1.png
+msg remove last item when menu is visible
+KeyPress 32
+KeyRelease 32
+Sleep 500
+MakeStep 8
+Sleep 500
+isComboBoxItemChanged 1 2
+isImage start_screen_selected1_itemcount4_tr01.png
+msg remove last items (except one)
+MakeStep 8
+Sleep 50
+isComboBoxItemChanged 1 1
+MakeStep 8
+Sleep 50
+isComboBoxItemChanged 1 0
+msg remove last item when menu is visible
+KeyPress 32
+KeyRelease 32
+Sleep 500
+MakeStep 8
+Sleep 500
+isImage start_screen_selected1_itemcount0.png
+
+

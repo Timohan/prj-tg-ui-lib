@@ -317,11 +317,12 @@ void TgImagePart::setType(TgImagePartType type)
  * set image's filename
  *
  * \param imageFileName full filepath of image file
+ * \return true if image path is changed, return false if not
  */
-void TgImagePart::setImage(const char *imageFileName)
+bool TgImagePart::setImage(const char *imageFileName)
 {
     TG_FUNCTION_BEGIN();
-    m_private->setImage(imageFileName);
     TG_FUNCTION_END();
+    return m_private->setImage(imageFileName);
 }
 

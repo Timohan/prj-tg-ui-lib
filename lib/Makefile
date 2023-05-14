@@ -126,6 +126,8 @@ mainwindow_window_manager_SRCS:=$(wildcard $(mainwindow_window_manager_SRCDIR)/*
 mainwindow_window_manager_OBJS:=$(mainwindow_window_manager_SRCS:.cpp=.o)
 endif
 
+CXXFLAGS+=-DPRINT_ALL_ITEMS=0
+
 all: default
 
 default: $(render_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)

@@ -176,7 +176,6 @@ void TgButtonPrivate::checkPositionValues(TgItem2d *currentItem)
  *
  * Sets new images for button
  */
-
 void TgButtonPrivate::changeButtonImageFile()
 {
     TG_FUNCTION_BEGIN();
@@ -220,7 +219,6 @@ void TgButtonPrivate::setImage(TgButtonState state, const char *filename)
 {
     TG_FUNCTION_BEGIN();
     if (TgButtonState::ButtonStateCount == state) {
-        TG_ERROR_LOG("Incorrect button state: TgButtonState::ButtonStateCount");
         TG_FUNCTION_END();
         return;
     }

@@ -71,7 +71,7 @@ public:
     TgImagePartType getType() const;
     void setType(TgImagePartType type);
 
-    void setImage(const char *imageFileName);
+    bool setImage(const char *imageFileName);
 
 private:
     TgImagePartPrivate *m_private;

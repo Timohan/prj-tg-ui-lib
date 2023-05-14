@@ -19,6 +19,12 @@
 
 class TgMouseCapture;
 
+class TgMouseCaptureInternalCallback
+{
+public:
+    virtual void onClickedCallback(TgItem2d *currentItem) = 0;
+};
+
 class TgMouseCaptureClick
 {
 public:
@@ -26,11 +32,13 @@ public:
     void connectOnMouseClicked(std::function<void(TgMouseType, float, float)> mouseClicked);
     void disconnectOnMouseClicked();
     void sendMouseClickedNoButton();
+    void setMouseCaptureInternalCallback(TgMouseCaptureInternalCallback *captureInternalCallback);
 
 protected:
     void setMouseReleased(TgMouseType type, bool inArea, float x, float y, double time, bool releaseWoCallback);
 
 private:
+    TgMouseCaptureInternalCallback *m_mouseCaptureInternalCallback = nullptr;
     TgMouseCapture *m_currentMouseCapture;
     std::function<void(TgMouseType, float, float)> f_mouseClicked;
     std::recursive_mutex m_mutex;

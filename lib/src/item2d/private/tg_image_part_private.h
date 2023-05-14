@@ -43,7 +43,7 @@ public:
     void render(const TgWindowInfo *windowInfo, TgItem2d *currentItem);
     void checkPositionValues(TgItem2d *currentItem);
 
-    void setImage(const char *filename);
+    bool setImage(const char *filename);
 private:
     enum VerticeIndexPositionParts9
     {

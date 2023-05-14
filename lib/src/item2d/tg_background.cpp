@@ -148,4 +148,3 @@ void TgBackground::setImage(const char *imageFilename)
     m_private->setImage(imageFilename);
     TG_FUNCTION_END();
 }
-

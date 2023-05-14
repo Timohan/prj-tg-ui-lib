@@ -17,6 +17,15 @@
 #include "private/item2d/tg_item2d_private.h"
 #include "private/mouse_capture/tg_mouse_capture_private.h"
 
+/*! \brief TgMenuItem::TgMenuItem
+ * private function, use function
+ * TgMenuItem *addMenu(const char *text, const TgShortCut *shortCut);
+ * \param parentMenu parent menu, can be nullptr
+ * \param parent
+ * \param text
+ * \param shortCut
+ * \return
+ */
 TgMenuItem::TgMenuItem(TgMenuItem *parentMenu, TgItem2d *parent, const char *text, const TgShortCut *shortCut) :
     TgMouseCapture(parent, 0, 0, 100.0f, TG_MENU_DEFAULT_HEIGHT),
     m_private(new TgMenuItemPrivate(parentMenu, this, text, shortCut))
@@ -88,6 +97,16 @@ void TgMenuItem::onVisibleChanged(bool visible)
     TG_FUNCTION_BEGIN();
     m_private->onVisibleChanged(visible, !TgItem2d::m_private->getTopMenu() && TgItem2d::m_private->getPossibleVisibleMenuCount());
     TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgMenuItem::getText
+ *
+ * \return text of menu
+ */
+std::string TgMenuItem::getText() const
+{
+    return m_private->getName();
 }
 
 /*!
@@ -197,8 +216,31 @@ void TgMenuItem::onEnabledChanged(bool enabled)
  */
 void TgMenuItem::setVisible(bool visible)
 {
+    TG_FUNCTION_BEGIN();
     TgItem2d::m_private->setVisible(visible);
-    if (visible && m_private->getMenuType() != TgMenuItemPrivate::MenuType::MenuType_TopMenu) {
+    if (visible
+        && m_private->getMenuType() != TgMenuItemPrivate::MenuType::MenuType_TopMenu
+        && m_private->getMenuType() != TgMenuItemPrivate::MenuType::MenuType_ComboBoxMenu) {
         TgItem2d::m_private->parentVisibleChanged(false);
+    } else if (visible && m_private->getMenuType() == TgMenuItemPrivate::MenuType::MenuType_ComboBoxMenu) {
+        TgItem2d::m_private->parentVisibleChanged(true);
     }
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgMenuItem::setBackgroundColor
+ *
+ * set menu item's basic background color
+ *
+ * \param r
+ * \param g
+ * \param b
+ * \param a
+ */
+void TgMenuItem::setBackgroundColor(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setBackgroundColor(r, g, b, a);
+    TG_FUNCTION_END();
 }

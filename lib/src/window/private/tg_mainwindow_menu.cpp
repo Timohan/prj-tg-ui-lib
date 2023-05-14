@@ -41,11 +41,20 @@ void TgMainWindowMenu::handlePrivateMessageWindowMenu(const TgItem2dPrivateMessa
             m_currentMenuItem = reinterpret_cast<TgMenuItem *>(message->m_toItem);
         }
         for (size_t i=0;i<message->m_listAdditionalItems.size();i++) {
-            m_listMenuItem.push_back(reinterpret_cast<TgMenuItem *>(message->m_listAdditionalItems[i]));
+            TgMenuItem *item = reinterpret_cast<TgMenuItem *>(message->m_listAdditionalItems[i]);
+            m_listMenuItem.push_back(item);
+            item->m_private->setMenuRendering(true);
         }
         if (message->m_primaryValue == 0) {
             m_mutexMenu.unlock();
         }
+        TgGlobalWaitRenderer::getInstance()->release(DEFAULT_RENDER_WAIT_MAX_TIMEOUT);
+    }
+    if (message->m_type == TgItem2dPrivateMessageType::EventHideTheList) {
+        m_mutexMenu.lock();
+        hideList();
+        m_mutexMenu.unlock();
+        TgGlobalWaitRenderer::getInstance()->release(DEFAULT_RENDER_WAIT_MAX_TIMEOUT);
     }
 }
 
@@ -72,11 +81,18 @@ void TgMainWindowMenu::renderChildrenMenu(const TgWindowInfo *windowInfo)
  * \brief TgMainWindowMenu::checkPositionValuesChildrenWindowMenu
  *
  * check position values
- *
+ * \param windowInfo
  */
-void TgMainWindowMenu::checkPositionValuesChildrenWindowMenu()
+void TgMainWindowMenu::checkPositionValuesChildrenWindowMenu(const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
+    m_mutexMenu.lock();
+    if (!m_listMenuItem.empty()) {
+        for (size_t i=0;i<m_listMenuItem.size();i++) {
+            m_listMenuItem[i]->checkPositionValuesChildren(windowInfo);
+        }
+    }
+    m_mutexMenu.unlock();
     TG_FUNCTION_END();
 }
 
@@ -90,6 +106,7 @@ void TgMainWindowMenu::hideList()
         reinterpret_cast<TgItem2d *>(m_listMenuItem[i])->m_private->parentVisibleChanged(false);
         reinterpret_cast<TgItem2d *>(m_listMenuItem[i])->m_private->sendMessageToChildren(&msgToInvisible, false);
         m_listMenuItem[i]->hideSubMenuList();
+        m_listMenuItem[i]->m_private->setMenuRendering(false);
     }
     m_listMenuItem.clear();
     if (m_currentMenuItem) {
@@ -113,6 +130,10 @@ TgEventResult TgMainWindowMenu::handleEventsMenu(TgEventData *eventData, const T
     TG_FUNCTION_BEGIN();
     m_mutexMenu.lock();
     TgEventResult ret = TgEventResult::EventResultNotCompleted;
+    if (m_listMenuItem.empty()) {
+        m_mutexMenu.unlock();
+        return TgEventResult::EventResultNotCompleted;
+    }
     size_t i, completedMenuIndex = m_listMenuItem.size();
     for (i=0;i<m_listMenuItem.size();i++) {
         if (m_listMenuItem[i]->handleChildrenEventMenu(eventData, windowInfo) == TgEventResult::EventResultCompleted) {
@@ -128,6 +149,15 @@ TgEventResult TgMainWindowMenu::handleEventsMenu(TgEventData *eventData, const T
                 m_listMenuItem[i]->hideSubMenuList();
             }
         }
+    }
+    if (ret == TgEventResult::EventResultNotCompleted
+        && !m_listMenuItem.empty()
+        && eventData->m_type == TgEventType::EventTypeCharacterCallback
+        && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
+        && (eventData->m_event.m_keyEvent.m_key == 32 || eventData->m_event.m_keyEvent.m_key == '\t')
+        && m_listMenuItem[0]->m_private->getMenuType() == TgMenuItemPrivate::MenuType::MenuType_ComboBoxMenu) {
+        hideList();
+        ret = TgEventResult::EventResultCompleted;
     }
     if (ret == TgEventResult::EventResultNotCompleted
         && eventData->m_type == TgEventType::EventTypeMousePress

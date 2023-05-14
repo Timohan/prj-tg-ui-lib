@@ -89,7 +89,7 @@ void TgMainWindow::render(const TgWindowInfo *)
         m_mainwindowPrivate->hideList();
     }
     customBeforeRender();
-    m_mainwindowPrivate->checkPositionValuesChildrenWindowMenu();
+    m_mainwindowPrivate->checkPositionValuesChildrenWindowMenu(m_mainwindowPrivate->getWindowInfo());
     checkPositionValuesChildren(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->setupViewForRender();
     customRender();
@@ -172,6 +172,7 @@ void TgMainWindow::handlePrivateMessage(const TgItem2dPrivateMessage *message)
     }
     else if (message->m_type == TgItem2dPrivateMessageType::ItemToVisibleChanged
         || message->m_type == TgItem2dPrivateMessageType::EventSetMainMenuItems
+        || message->m_type == TgItem2dPrivateMessageType::EventHideTheList
         || message->m_type == TgItem2dPrivateMessageType::EventClearButtonPressForThisItem
         || message->m_type == TgItem2dPrivateMessageType::ItemToEnabledChanged) {
         m_mainwindowPrivate->handlePrivateMessage(message);

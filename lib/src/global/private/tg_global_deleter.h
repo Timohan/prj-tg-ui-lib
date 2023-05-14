@@ -19,12 +19,14 @@ class TgItem2d;
 class TgMenuTopPrivate;
 class TgMenuItem;
 class TgItem2dMenu;
+class TgComboBoxPrivate;
 
 enum TgDeleterInfoType
 {
     NormalItem = 0,
     TopMenuItem,
     SubMenuItem,
+    ComboBoxMenuItem,
 };
 
 struct TgDeleterInfo
@@ -42,6 +44,10 @@ struct TgDeleterInfo
             TgItem2dMenu *m_subItem;
             TgMenuItem *m_item;
         } m_subMenuItem;
+        struct {
+            TgComboBoxPrivate *m_comboBoxItem;
+            TgMenuItem *m_item;
+        } m_comboBoxMenuItem;
     } m_itemType;
 };
 
@@ -51,6 +57,7 @@ public:
     static TgGlobalDeleter *getInstance();
     void addTopMenu(TgMenuTopPrivate *topItem, TgMenuItem *menuItem);
     void addSubMenu(TgItem2dMenu *parentMenu, TgMenuItem *menuItem);
+    void addComboBoxMenu(TgComboBoxPrivate *comboBoxMenu, TgMenuItem *menuItem);
     void add(TgItem2d *itemToDelete);
     bool removeItems();
 

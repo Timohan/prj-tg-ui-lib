@@ -482,16 +482,18 @@ void TgImagePartPrivate::checkPositionValues(TgItem2d *currentItem)
  * set image's filename
  *
  * \param filename
+ * \return true if image path is changed, return false if not
  */
-void TgImagePartPrivate::setImage(const char *filename)
+bool TgImagePartPrivate::setImage(const char *filename)
 {
     TG_FUNCTION_BEGIN();
     if (m_imageAsset.m_filename.compare(filename) == 0) {
         TG_FUNCTION_END();
-        return;
+        return false;
     }
     m_imageAsset.m_textureIndex = 0;
     m_imageAsset.m_filename = filename;
     m_initImageAssetDone = false;
     TG_FUNCTION_END();
+    return true;
 }

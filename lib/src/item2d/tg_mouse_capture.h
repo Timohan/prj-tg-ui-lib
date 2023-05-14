@@ -91,6 +91,7 @@ private:
     friend class TgMouseCapturePrivate;
     friend class TgMainWindowMenu;
     friend class TgMenuItemPrivate;
+    friend class TgComboBoxPrivate;
 };
 
 #endif // TG_MOUSE_CAPTURE_H

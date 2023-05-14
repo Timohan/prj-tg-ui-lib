@@ -229,6 +229,7 @@ void TgItem2dPrivate::sendMessageToChildren(const TgItem2dPrivateMessage *messag
             case TgItem2dPrivateMessageType::EventChangeButtonPressToThisItem:
             case TgItem2dPrivateMessageType::RemovingItem2d:
             case TgItem2dPrivateMessageType::EventSetMainMenuItems:
+            case TgItem2dPrivateMessageType::EventHideTheList:
             default:
                 break;
             case TgItem2dPrivateMessageType::ParentItemToVisible:
@@ -310,6 +311,7 @@ void TgItem2dPrivate::sendMessageToChildren(const TgItem2dPrivateMessage *messag
             case TgItem2dPrivateMessageType::ItemToEnabledChanged:
             case TgItem2dPrivateMessageType::EventChangeButtonPressToThisItem:
             case TgItem2dPrivateMessageType::EventSetMainMenuItems:
+            case TgItem2dPrivateMessageType::EventHideTheList:
             default:
                 break;
         }

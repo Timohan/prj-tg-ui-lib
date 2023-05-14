@@ -358,3 +358,17 @@ bool TgTextfield::getAllowBreakLineGoOverMaxLine() const
     TG_FUNCTION_END();
     return m_private->getAllowBreakLineGoOverMaxLine();
 }
+
+/*!
+ * \brief TgTextfield::getColor
+ * get default color of the text field
+ * \param r red
+ * \param g green
+ * \param b blue
+ */
+void TgTextfield::getColor(uint8_t &r, uint8_t &g, uint8_t &b)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->getColor(r, g, b);
+    TG_FUNCTION_END();
+}

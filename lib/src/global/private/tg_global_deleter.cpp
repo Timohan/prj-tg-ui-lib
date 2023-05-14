@@ -15,6 +15,7 @@
 #include "../../item2d/tg_menu_top.h"
 #include "../../item2d/private/tg_menu_top_private.h"
 #include "../../item2d/private/item2d/tg_item2d_menu.h"
+#include "../../item2d/private/tg_combo_box_private.h"
 
 TgGlobalDeleter *TgGlobalDeleter::m_globalDeleter = nullptr;
 
@@ -50,6 +51,17 @@ void TgGlobalDeleter::addSubMenu(TgItem2dMenu *parentMenu, TgMenuItem *menuItem)
     m_mutex.unlock();
 }
 
+void TgGlobalDeleter::addComboBoxMenu(TgComboBoxPrivate *comboBoxMenu, TgMenuItem *menuItem)
+{
+    m_mutex.lock();
+    TgDeleterInfo item;
+    item.m_type = TgDeleterInfoType::ComboBoxMenuItem;
+    item.m_itemType.m_comboBoxMenuItem.m_comboBoxItem = comboBoxMenu;
+    item.m_itemType.m_comboBoxMenuItem.m_item = menuItem;
+    m_listItemsToDelete.push_back(item);
+    m_mutex.unlock();
+}
+
 void TgGlobalDeleter::add(TgItem2d *itemToDelete)
 {
     m_mutex.lock();
@@ -74,6 +86,9 @@ bool TgGlobalDeleter::removeItems()
                 break;
             case TgDeleterInfoType::SubMenuItem:
                 m_listItemsToDelete[i].m_itemType.m_subMenuItem.m_subItem->deleteMenu( m_listItemsToDelete[i].m_itemType.m_subMenuItem.m_item );
+                break;
+            case TgDeleterInfoType::ComboBoxMenuItem:
+                m_listItemsToDelete[i].m_itemType.m_comboBoxMenuItem.m_comboBoxItem->deleteMenu( m_listItemsToDelete[i].m_itemType.m_topMenuItem.m_item );
                 break;
             default:
                 break;

@@ -13,6 +13,7 @@
 #define TG_MENU_ITEM_H
 
 #include <functional>
+#include <string>
 #include "../global/tg_global_macros.h"
 #include "tg_mouse_capture.h"
 
@@ -41,6 +42,9 @@ public:
     float getMinShortcutWidth();
 
     virtual void setVisible(bool visible);
+    std::string getText() const;
+
+    void setBackgroundColor(const unsigned char r = 255, const unsigned char g = 255, const unsigned char b = 255, const unsigned char a = 255);
 
 protected:
     virtual void onHoverChanged(bool hover) override;
@@ -61,6 +65,7 @@ private:
     friend class TgMenuTopPrivate;
     friend class TgMainWindowMenu;
     friend class TgGlobalMenuHolder;
+    friend class TgComboBoxPrivate;
 };
 
 #endif // TG_MENU_ITEM_H

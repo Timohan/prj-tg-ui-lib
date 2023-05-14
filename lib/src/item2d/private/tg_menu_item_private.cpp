@@ -19,7 +19,7 @@
 
 TgMenuItemPrivate::TgMenuItemPrivate(TgMenuItem *parentItem, TgMenuItem *currentItem, const char *text, const TgShortCut *shortCut) :
     m_currentItem(currentItem),
-    m_background(currentItem, 245, 245, 245),
+    m_background(currentItem, MENU_ITEM_DEFAULT_BACKGROUND_R, MENU_ITEM_DEFAULT_BACKGROUND_G, MENU_ITEM_DEFAULT_BACKGROUND_B, MENU_ITEM_DEFAULT_BACKGROUND_A),
     m_backgroundEnabled(currentItem, 150, 150, 150),
     m_backgroundHover(currentItem, 226, 226, 226),
     m_itemText(currentItem, text, "", MENU_ITEM_FONT_SIZE, 0, 0, 0),
@@ -216,4 +216,43 @@ TgEventResult TgMenuItemPrivate::handleEvent(TgEventData *eventData)
     }
     TG_FUNCTION_END();
     return TgEventResult::EventResultNotCompleted;
+}
+
+/*!
+ * \brief TgMenuItemPrivate::setBackgroundColor
+ *
+ * set menu item's basic background color
+ *
+ * \param r
+ * \param g
+ * \param b
+ * \param a
+ */
+void TgMenuItemPrivate::setBackgroundColor(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a)
+{
+    m_background.setColor(r, g, b, a);
+}
+
+/*!
+ * \brief TgMenuItemPrivate::getMenuRendering
+ *
+ * get if menu is rendering
+ *
+ * \return menuRendering
+ */
+bool TgMenuItemPrivate::getMenuRendering()
+{
+    return m_menuRendering;
+}
+
+/*!
+ * \brief TgMenuItemPrivate::setMenuRendering
+ *
+ * set if menu is rendering
+ *
+ * \param menuRendering
+ */
+void TgMenuItemPrivate::setMenuRendering(bool menuRendering)
+{
+    m_menuRendering = menuRendering;
 }

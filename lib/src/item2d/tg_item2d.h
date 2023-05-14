@@ -159,6 +159,7 @@ private:
     friend class TgGridView;
     friend class TgGridViewCell;
     friend class TgGridViewPrivate;
+    friend class TgComboBoxPrivate;
 };
 
 #endif // TG_ITEM_2D_H

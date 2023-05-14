@@ -30,7 +30,7 @@ public:
     void renderChildrenMenu(const TgWindowInfo *windowInfo);
     TgEventResult handleEventsMenu(TgEventData *eventData, const TgWindowInfo *windowInfo);
     size_t menuItemCount();
-    void checkPositionValuesChildrenWindowMenu();
+    void checkPositionValuesChildrenWindowMenu(const TgWindowInfo *windowInfo);
     bool isMenuEnabled();
 protected:
     void hideList();
