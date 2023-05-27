@@ -29,6 +29,7 @@ public:
     void widthChanged(float width);
     void heightChanged(float height);
     void setBackground(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
+    void setFontSize(float fontSize);
 
 private:
     TgGridViewCell *m_currentItem;

@@ -96,3 +96,16 @@ void TgGridViewCell::setHeight(float height)
     TgItem2d::setHeight(height);
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgGridViewCell::setFontSize
+ *
+ * set font height for cell
+ * \param fontSize
+ */
+void TgGridViewCell::setFontSize(float fontSize)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setFontSize(fontSize);
+    TG_FUNCTION_END();
+}

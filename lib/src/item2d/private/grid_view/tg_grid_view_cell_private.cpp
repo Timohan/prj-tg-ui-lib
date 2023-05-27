@@ -78,3 +78,16 @@ void TgGridViewCellPrivate::setBackground(const unsigned char r, const unsigned 
 {
     m_background.setColor(r, g, b, a);
 }
+
+/*!
+ * \brief TgGridViewCellPrivate::setFontSize
+ *
+ * set font height for cell
+ * \param fontSize
+ */
+void TgGridViewCellPrivate::setFontSize(float fontSize)
+{
+    TG_FUNCTION_BEGIN();
+    m_text.setFontSize(fontSize);
+    TG_FUNCTION_END();
+}

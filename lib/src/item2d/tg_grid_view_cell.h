@@ -39,6 +39,8 @@ public:
     void setBackground(const unsigned char r = 255, const unsigned char g = 255, const unsigned char b = 255, const unsigned char a = 255);
     void setWidth(float width);
     void setHeight(float height);
+    void setFontSize(float fontSize);
+
 private:
     explicit TgGridViewCell(TgGridView *parent, float x, float y, float width, float height);
 
