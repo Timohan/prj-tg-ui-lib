@@ -40,6 +40,19 @@ public:
     void setWidth(float width);
     void setHeight(float height);
     void setFontSize(float fontSize);
+    void setTextHorizontalAlign(TgTextfieldHorizontalAlign align);
+    void setTextVerticalAlign(TgTextfieldVerticalAlign align);
+    TgTextfieldHorizontalAlign getTextAlignHorizontal() const;
+    TgTextfieldVerticalAlign getTextAlignVertical() const;
+    void setTextMargin(float left, float top, float right, float bottom);
+    void setTextMarginLeft(float left);
+    void setTextMarginTop(float top);
+    void setTextMarginRight(float right);
+    void setTextMarginBottom(float bottom);
+    float getTextMarginLeft();
+    float getTextMarginTop();
+    float getTextMarginRight();
+    float getTextMarginBottom();
 
 private:
     explicit TgGridViewCell(TgGridView *parent, float x, float y, float width, float height);

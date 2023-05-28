@@ -90,7 +90,7 @@ MouseStateChange::MouseStateChange(size_t index, HoverVisibleChangeState state)
     m_state = state;
 }
 
-void MainWindow::setMakeStep(int index)
+bool MainWindow::setMakeStep(int index)
 {
     switch (index) {
     case 1:
@@ -190,7 +190,53 @@ void MainWindow::setMakeStep(int index)
         m_gridview.getCell(1, 1)->setBackground(255, 10, 10, 255);
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
         break;
+    case 21:
+        m_gridview.setColumCount(6);
+        m_gridview.setRowCount(6);
+        for (size_t x = 0; x < m_gridview.getColumCount(); x++) {
+            for (size_t y = 0; y < m_gridview.getRowCount(); y++) {
+                if (!m_gridview.getCell(x, y)->getText().empty()) {
+                    continue;
+                }
+                TgTextFieldText field0;
+                field0.m_text = std::string(std::to_string(x) + "/" + std::to_string(y));
+                field0.m_textColorR = 255;
+                field0.m_textColorG = 0;
+                field0.m_textColorB = 0;
+                std::vector<TgTextFieldText> vecText;
+                vecText.push_back(field0);
+                m_gridview.getCell(x, y)->setText(vecText);
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        break;
+    case 22:
+        m_gridview.getCell(0, 0)->setTextMarginLeft(5);
+        m_gridview.getCell(0, 1)->setTextMarginRight(15);
+        m_gridview.getCell(0, 2)->setTextMarginTop(10);
+        m_gridview.getCell(0, 3)->setTextMarginBottom(6);
+        m_gridview.getCell(1, 0)->setTextHorizontalAlign(TgTextfieldHorizontalAlign::AlignLeft);
+        m_gridview.getCell(1, 1)->setTextHorizontalAlign(TgTextfieldHorizontalAlign::AlignRight);
+        m_gridview.getCell(1, 2)->setTextVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
+        m_gridview.getCell(1, 3)->setTextVerticalAlign(TgTextfieldVerticalAlign::AlignTop);
+        m_gridview.getCell(0, 4)->setFontSize(15);
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        break;
+    case 23:
+        if (static_cast<int>(m_gridview.getCell(0, 0)->getTextMarginLeft()) != 5
+            || static_cast<int>(m_gridview.getCell(0, 1)->getTextMarginRight()) != 15
+            || static_cast<int>(m_gridview.getCell(0, 2)->getTextMarginTop()) != 10
+            || static_cast<int>(m_gridview.getCell(0, 3)->getTextMarginBottom()) != 6
+            || m_gridview.getCell(1, 0)->getTextAlignHorizontal() != TgTextfieldHorizontalAlign::AlignLeft
+            || m_gridview.getCell(1, 1)->getTextAlignHorizontal() != TgTextfieldHorizontalAlign::AlignRight
+            || m_gridview.getCell(1, 2)->getTextAlignVertical() != TgTextfieldVerticalAlign::AlignBottom
+            || m_gridview.getCell(1, 3)->getTextAlignVertical() != TgTextfieldVerticalAlign::AlignTop) {
+            return false;
+        }
+        break;
     default:
         break;
     }
+    return true;
 }
+

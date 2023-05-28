@@ -83,5 +83,8 @@ MakeStep 20
 isImage grid_view_0_0_4_3_red.png
 MakeStep 1
 isImage grid_view_0_0_4_3_red_filled.png
-
+MakeStep 21
+MakeStep 22
+isImage grid_view_fill_6_6_different_hor_ver_fontsize.png
+MakeStep 23
 

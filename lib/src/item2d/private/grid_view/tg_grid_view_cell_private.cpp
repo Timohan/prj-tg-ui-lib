@@ -91,3 +91,146 @@ void TgGridViewCellPrivate::setFontSize(float fontSize)
     m_text.setFontSize(fontSize);
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgGridViewCellPrivate::setHorizontalAlign
+ *
+ * set text field's horizontal align
+ * \param align horizontal align
+ */
+void TgGridViewCellPrivate::setHorizontalAlign(TgTextfieldHorizontalAlign align)
+{
+    TG_FUNCTION_BEGIN();
+    m_text.setHorizontalAlign(align);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::setVerticalAlign
+ *
+ * set text field's vertical align
+ * \param align vertical align
+ */
+void TgGridViewCellPrivate::setVerticalAlign(TgTextfieldVerticalAlign align)
+{
+    TG_FUNCTION_BEGIN();
+    m_text.setVerticalAlign(align);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::getAlignHorizontal
+ *
+ * \return get horizontal align
+ */
+TgTextfieldHorizontalAlign TgGridViewCellPrivate::getAlignHorizontal() const
+{
+    return m_text.getAlignHorizontal();
+}
+/*!
+ * \brief TgGridViewCellPrivate::getAlignVertical
+ *
+ * \return get vertical align
+ */
+TgTextfieldVerticalAlign TgGridViewCellPrivate::getAlignVertical() const
+{
+    return m_text.getAlignVertical();
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::setMargin
+ *
+ * set text margin left, top, right and bottom values
+ * \param left
+ * \param top
+ * \param right
+ * \param bottom
+ */
+void TgGridViewCellPrivate::setTextMargin(float left, float top, float right, float bottom)
+{
+    m_text.setMargin(left, top, right, bottom);
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::setTextMarginLeft
+ *
+ * set text margin left
+ * \param left
+ */
+void TgGridViewCellPrivate::setTextMarginLeft(float left)
+{
+    m_text.setMarginLeft(left);
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::setTextMarginTop
+ *
+ * set text margin top
+ * \param top
+ */
+void TgGridViewCellPrivate::setTextMarginTop(float top)
+{
+    m_text.setMarginTop(top);
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::setTextMarginRight
+ *
+ * set text margin right
+ * \param right
+ */
+void TgGridViewCellPrivate::setTextMarginRight(float right)
+{
+    m_text.setMarginRight(right);
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::setTextMarginBottom
+ *
+ * set text margin bottom
+ * \param bottom
+ */
+void TgGridViewCellPrivate::setTextMarginBottom(float bottom)
+{
+    m_text.setMarginBottom(bottom);
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::getMarginLeft
+ *
+ * \return left margin
+ */
+float TgGridViewCellPrivate::getTextMarginLeft()
+{
+    return m_text.getMarginLeft();
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::getTextMarginTop
+ *
+ * \return top margin
+ */
+float TgGridViewCellPrivate::getTextMarginTop()
+{
+    return m_text.getMarginTop();
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::getTextMarginRight
+ *
+ * \return right margin
+ */
+float TgGridViewCellPrivate::getTextMarginRight()
+{
+    return m_text.getMarginRight();
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::getTextMarginBottom
+ *
+ * \return bottom margin
+ */
+float TgGridViewCellPrivate::getTextMarginBottom()
+{
+    return m_text.getMarginBottom();
+}

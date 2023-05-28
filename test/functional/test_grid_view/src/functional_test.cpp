@@ -148,7 +148,12 @@ void FunctionalTest::start()
                 case isItemSelected:
                     break;
                 case TestOrderType::MakeStep:
-                    m_mainWindow->setMakeStep( m_testOrders.getTestOrder(i)->m_listNumber.at(0) );
+                    if (!m_mainWindow->setMakeStep( m_testOrders.getTestOrder(i)->m_listNumber.at(0) )) {
+                        TG_ERROR_LOG("MakeStep test is incorrect, index: ", m_testOrders.getTestOrder(i)->m_lineNumber);
+                        m_returnIndex = 1;
+                        m_mainWindow->exit();
+                        return;
+                    }
                     break;
                 default:
                     TG_ERROR_LOG("Test case is incorrect");

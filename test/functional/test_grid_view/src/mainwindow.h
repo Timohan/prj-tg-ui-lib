@@ -48,7 +48,7 @@ public:
 
     std::string getString(HoverVisibleChangeState state);
 
-    void setMakeStep(int index);
+    bool setMakeStep(int index);
 
 private:
     std::mutex m_mutex;

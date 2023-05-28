@@ -30,6 +30,19 @@ public:
     void heightChanged(float height);
     void setBackground(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
     void setFontSize(float fontSize);
+    void setHorizontalAlign(TgTextfieldHorizontalAlign align);
+    void setVerticalAlign(TgTextfieldVerticalAlign align);
+    TgTextfieldHorizontalAlign getAlignHorizontal() const;
+    TgTextfieldVerticalAlign getAlignVertical() const;
+    void setTextMargin(float left, float top, float right, float bottom);
+    void setTextMarginLeft(float left);
+    void setTextMarginTop(float top);
+    void setTextMarginRight(float right);
+    void setTextMarginBottom(float bottom);
+    float getTextMarginLeft();
+    float getTextMarginTop();
+    float getTextMarginRight();
+    float getTextMarginBottom();
 
 private:
     TgGridViewCell *m_currentItem;
