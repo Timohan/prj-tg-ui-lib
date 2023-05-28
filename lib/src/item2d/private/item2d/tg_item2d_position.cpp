@@ -69,7 +69,8 @@ TgItem2dPosition::TgItem2dPosition(float x, float y, float width, float height, 
 float TgItem2dPosition::getX()
 {
     TG_FUNCTION_BEGIN();
-    if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize) {
+    if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize
+        || m_anchor == TgItem2dAnchor::AnchorRelativeToParentXFollowParentSize) {
         TG_FUNCTION_END();
         return m_marginValues.m_left;
     }
@@ -114,7 +115,8 @@ float TgItem2dPosition::getWidth()
         TG_FUNCTION_END();
         return m_parent->getWidth();
     }
-    if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize) {
+    if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize
+        || m_anchor == TgItem2dAnchor::AnchorRelativeToParentXFollowParentSize) {
         if (m_useRoundedPositionValues) {
             TG_FUNCTION_END();
             return std::roundf(m_parent->getWidth() - m_marginValues.m_left - m_marginValues.m_right);
@@ -274,7 +276,8 @@ void TgItem2dPosition::setMarginLeft(float left)
         return;
     }
     m_marginValues.m_left = left;
-    if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize) {
+    if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize
+        || m_anchor == TgItem2dAnchor::AnchorRelativeToParentXFollowParentSize) {
         setPositionChanged(true);
     }
     TG_FUNCTION_END();
@@ -314,7 +317,8 @@ void TgItem2dPosition::setMarginRight(float right)
         return;
     }
     m_marginValues.m_right = right;
-    if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize) {
+    if (m_anchor == TgItem2dAnchor::AnchorFollowParentSize
+        || m_anchor == TgItem2dAnchor::AnchorRelativeToParentXFollowParentSize) {
         setPositionChanged(true);
     }
     TG_FUNCTION_END();

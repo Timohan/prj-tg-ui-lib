@@ -24,6 +24,7 @@ TgMenuTopPrivate::TgMenuTopPrivate(TgItem2d *currentItem, TgItem2d *parentItem) 
     m_parentItem(parentItem),
     m_background(currentItem)
 {
+    m_currentItem->setAnchorState(TgItem2dAnchor::AnchorRelativeToParentXFollowParentSize);
 }
 
 TgMenuTopPrivate::~TgMenuTopPrivate()
