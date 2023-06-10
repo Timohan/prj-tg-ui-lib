@@ -78,6 +78,7 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
     uint32_t currentLine = 1;
     bool firstCharacterAdded = false;
     float textLinesWidth = 0;
+    float textWidthToSet = 0;
     size_t previousSpaceIndex = c;
     fontText->setTextWidth(0);
     fontText->clearListLinesWidth();
@@ -95,6 +96,9 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
                     fontText->getCharacter(i2)->m_lineNumber = currentLine - 1;
                 }
                 break;
+            }
+            if (textWidthToSet < positionLeftX) {
+                textWidthToSet = positionLeftX;
             }
             if (maxLineCount == 0 || maxLineCount > currentLine) {
                 previousSpaceIndex = c;
@@ -145,6 +149,9 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
                 leftCharacterInfo = fontText->getCharacter(previousSpaceIndex);
                 fontText->setListLinesWidth(leftCharacterInfo->m_lineNumber,
                     leftCharacterInfo->positionLeftX);
+                if (textWidthToSet < leftCharacterInfo->positionLeftX) {
+                    textWidthToSet = leftCharacterInfo->positionLeftX;
+                }
                 i = previousSpaceIndex;
                 positionLeftX = 0;
                 currentLine++;
@@ -153,6 +160,9 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
             }
             if (left_glyph) {
                 textLinesWidth += positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+                if (textWidthToSet < textLinesWidth) {
+                    textWidthToSet = textLinesWidth;
+                }
             }
             positionLeftX = 0;
             currentLine++;
@@ -160,6 +170,9 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
                     && isOverTheLine(currentLine, positionLeftX, glyph, maxLineCount, maxLineWidth)) {
             if (left_glyph) {
                 textLinesWidth += positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+                if (textWidthToSet < textLinesWidth) {
+                    textWidthToSet = textLinesWidth;
+                }
             }
             positionLeftX = 0;
             currentLine++;
@@ -194,7 +207,10 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
     }
 
     if (left_glyph) {
-        fontText->setTextWidth(textLinesWidth + positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x));
+        if (textWidthToSet < textLinesWidth + positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x)) {
+            textWidthToSet = textLinesWidth + positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+        }
+        fontText->setTextWidth(textWidthToSet);
     }
     fontText->setAllLineCount(currentLine);
 
