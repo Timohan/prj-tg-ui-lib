@@ -15,6 +15,7 @@
 #include "../../tg_item2d.h"
 #include "tg_item2d_private.h"
 #include "../../../global/private/tg_global_wait_renderer.h"
+#include "tg_item2d_tooltip.h"
 
 TgItem2dVisible::TgItem2dVisible(TgItem2d *parent, TgItem2dPrivate *currentItem2dPrivate) :
     m_parent(parent),
@@ -98,6 +99,9 @@ void TgItem2dVisible::setVisible(bool visible)
                 m_visibleState = TgItem2dVisibilityState::TgItem2dInvisible;
                 break;
         }
+        if (m_currentItem2dPrivate) {
+            m_currentItem2dPrivate->itemGoneDisabledOrInvisible();
+        }
         if (f_visibleChanged) {
             f_visibleChanged(false);
         }
@@ -161,6 +165,9 @@ bool TgItem2dVisible::parentVisibleChanged(bool visible)
             case TgItem2dVisibilityState::TgItem2dVisible:
                 m_visibleState = TgItem2dVisibilityState::TgItem2dVisibleButParentInvisible;
                 break;
+        }
+        if (m_currentItem2dPrivate) {
+            m_currentItem2dPrivate->itemGoneDisabledOrInvisible();
         }
         if (f_visibleChanged) {
             f_visibleChanged(false);

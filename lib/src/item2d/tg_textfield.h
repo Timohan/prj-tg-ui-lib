@@ -47,9 +47,9 @@ enum TgTextfieldVerticalAlign {
 struct TgTextFieldText
 {
     std::string m_text;     /*!< utf8 text */
-    uint8_t m_textColorR;   /*!< m_text's red color */
-    uint8_t m_textColorG;   /*!< m_text's green color */
-    uint8_t m_textColorB;   /*!< m_text's blue color */
+    uint8_t m_textColorR = 0;   /*!< m_text's red color */
+    uint8_t m_textColorG = 0;   /*!< m_text's green color */
+    uint8_t m_textColorB = 0;   /*!< m_text's blue color */
 };
 
 /*!
@@ -83,8 +83,10 @@ public:
     size_t getCharacterCount();
     uint32_t getCharacterByIndex(size_t index);
     void setFontSize(float fontSize);
+    float getFontSize();
     float getTextWidth();
     float getTextHeight();
+    std::string getFontFile();
     void setMaxLineCount(uint32_t maxLineCount);
     uint32_t getMaxLineCount() const;
     float getAllDrawTextHeight();

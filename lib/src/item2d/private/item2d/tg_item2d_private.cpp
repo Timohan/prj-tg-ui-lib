@@ -21,6 +21,7 @@ TgItem2dPrivate::TgItem2dPrivate(TgItem2d *parent, TgItem2d *current) :
     TgItem2dPosition(parent, this),
     TgItem2dSelected(parent, current, this),
     TgItem2dMenu(current, parent),
+    TgItem2dTooltip(this),
     m_internalCallback(nullptr),
     m_parent(parent),
     m_currentItem(current)
@@ -39,6 +40,7 @@ TgItem2dPrivate::TgItem2dPrivate(float x, float y, float width, float height, Tg
     TgItem2dPosition(x, y, width, height, parent, this),
     TgItem2dSelected(parent, current, this),
     TgItem2dMenu(current, parent),
+    TgItem2dTooltip(this),
     m_internalCallback(nullptr),
     m_parent(parent),
     m_currentItem(current)
@@ -174,6 +176,13 @@ TgEventResult TgItem2dPrivate::handleEventsChildren(TgEventData *eventData, cons
     TG_FUNCTION_BEGIN();
     TgEventResult ret = TgEventResult::EventResultNotCompleted;
     for (size_t i=0;i<listChildren.size();i++) {
+        if (eventData->m_type == TgEventType::EventTypeDeleteLater) {
+            if (listChildren[listChildren.size()-1-i]->m_private->getDeleteLater()) {
+                delete listChildren[listChildren.size()-1-i];
+       //         listChildren.erase(listChildren.begin()+listChildren.size()-1-i);
+            }
+            continue;
+        }
         if (eventData->m_type == TgEventType::EventTypeCharacterCallback
             || eventData->m_type == TgEventType::EventTypeCharacterCallbackShortCut
             || eventData->m_type == TgEventType::EventTypeSelectLastItem
@@ -443,4 +452,15 @@ void TgItem2dPrivate::setDeleting()
 {
     m_deleting = true;
     setDeletingSubMenu();
+}
+
+void TgItem2dPrivate::deleteLater()
+{
+    m_deleteLater = true;
+    TgGlobalWaitRenderer::getInstance()->release();
+}
+
+bool TgItem2dPrivate::getDeleteLater()
+{
+    return m_deleteLater;
 }

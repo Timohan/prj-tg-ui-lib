@@ -17,6 +17,7 @@
 #include "../math/tg_matrix4x4.h"
 #include "../event/tg_events.h"
 #include "private/tg_mainwindow_menu.h"
+#include "private/tg_mainwindow_tooltip.h"
 #ifdef USE_GLFW
 #include "glfw/tg_mainwindow_glfw.h"
 #else
@@ -80,6 +81,7 @@ class TgMainWindowPrivate
 : public TgMainWindowX11
 #endif
 , public TgMainWindowMenu
+, public TgMainWindowTooltip
 {
 public:
     explicit TgMainWindowPrivate(int width, int height, TgItem2d *item, int minWidth, int minHeight, int maxWidth, int maxHeight);

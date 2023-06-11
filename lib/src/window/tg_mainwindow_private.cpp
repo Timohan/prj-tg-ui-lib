@@ -130,6 +130,10 @@ int TgMainWindowPrivate::initWindow(const char *windowTitle)
 void TgMainWindowPrivate::handleEvents()
 {
     TG_FUNCTION_BEGIN();
+    TgEventData handleDeleteLater;
+    handleDeleteLater.m_type = TgEventType::EventTypeDeleteLater;
+    startHandleEventsChildren(&handleDeleteLater);
+
     TgEventData *eventData;
     TgEventResult ret;
     m_events.lock();
@@ -163,6 +167,7 @@ void TgMainWindowPrivate::handleEvents()
                     eventData->m_event.m_mouseEvent.m_currentMouseDownItem = m_currentItem;
                 }
             }
+            m_currentItem->m_private->handleEventToolTip(eventData, &m_windowInfo, true);
             ret = handleEventsMenu(eventData, &m_windowInfo);
             if (ret == TgEventResult::EventResultNotCompleted) {
                 if (!isMenuEnabled() || eventData->m_type != TgEventType::EventTypeMouseMove) {

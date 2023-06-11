@@ -69,6 +69,7 @@ TgMouseCapture::~TgMouseCapture()
 TgEventResult TgMouseCapture::handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
+    TgItem2d::m_private->handleEventToolTip(eventData, windowInfo);
     if (TgItem2d::m_private->handleEventItem2dMenu(eventData, windowInfo) == TgEventResult::EventResultCompleted) {
         TG_FUNCTION_END();
         return TgEventResult::EventResultCompleted;

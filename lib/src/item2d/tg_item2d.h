@@ -113,6 +113,8 @@ public:
     TgMenuItem *getMenu(size_t index);
     virtual bool removeMenu(size_t i);
 
+    void setTooltip(const char *text);
+    void deleteLater();
 protected:
     virtual void render(const TgWindowInfo *windowInfo);
     virtual void checkPositionValues();
@@ -145,6 +147,7 @@ private:
     friend class TgItem2dPrivate;
     friend class TgItem2dVisible;
     friend class TgItem2dEnabled;
+    friend class TgMainWindowTooltip;
     friend class TgMainWindowPrivate;
     friend class TgTextfieldPrivate;
     friend class TgButtonPrivate;
@@ -161,6 +164,7 @@ private:
     friend class TgGridViewCell;
     friend class TgGridViewPrivate;
     friend class TgComboBoxPrivate;
+
 };
 
 #endif // TG_ITEM_2D_H

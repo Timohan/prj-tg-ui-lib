@@ -17,6 +17,9 @@ MainWindow::MainWindow(int width, int height) :
     m_buttonAddCount.connectOnMouseClicked( std::bind(&MainWindow::onButtonAddedCountClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
     m_buttonReduceCount.connectOnMouseClicked( std::bind(&MainWindow::onButtonReduceCountClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
 
+    m_buttonClose.setTooltip("Close");
+    m_buttonAdd.setTooltip("Add\nItem");
+    m_buttonRemove.setTooltip("Remove item");
 }
 
 MainWindow::~MainWindow()
@@ -59,8 +62,7 @@ void MainWindow::onButtonRemoveClick(TgMouseType type, float x, float y)
         return;
     }
     std::cout << "Removing the button - callback by button: "  << type << "\n";
-    TgItem2d *item = m_buttonAdded;
-    delete item;
+    m_buttonAdded->deleteLater();
     m_buttonAdded = nullptr;
 }
 

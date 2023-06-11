@@ -22,6 +22,7 @@ struct TgWindowInfo;
 #include "tg_item2d_selected.h"
 #include "tg_item2d_enabled.h"
 #include "tg_item2d_menu.h"
+#include "tg_item2d_tooltip.h"
 
 enum TgItem2dPrivateMessageType
 {
@@ -61,7 +62,7 @@ public:
     virtual void onSelectedCallback() = 0;
 };
 
-class TgItem2dPrivate : public TgItem2dVisible, public TgItem2dEnabled, public TgItem2dPosition, public TgItem2dSelected, public TgItem2dMenu
+class TgItem2dPrivate : public TgItem2dVisible, public TgItem2dEnabled, public TgItem2dPosition, public TgItem2dSelected, public TgItem2dMenu, public TgItem2dTooltip
 {
 public:
     explicit TgItem2dPrivate(TgItem2d *parent, TgItem2d *current);
@@ -81,6 +82,9 @@ public:
     bool getDeleting();
     void setDeleting();
 
+    void deleteLater();
+    bool getDeleteLater();
+
 protected:
     std::vector<TgItem2d *>m_listChildrenItem;
     std::vector<TgItem2d *>m_listChildrenTopMenu;
@@ -90,6 +94,7 @@ private:
     TgItem2d *m_parent;
     TgItem2d *m_currentItem;
     bool m_deleting = false;
+    bool m_deleteLater = false;
 
     void addChild(TgItem2d *child, bool topMenu);
     void sendMessageToChildren(const TgItem2dPrivateMessage *message, bool allowFunctionalityToThisItem = true);

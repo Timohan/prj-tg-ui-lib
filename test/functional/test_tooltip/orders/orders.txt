@@ -1,0 +1,68 @@
+msg start basic tooltip 0
+isImage start_view.png
+MMC 0 24 50 24 20 0 0 0
+MakeStep 1
+isImage start_view_tl_tooltip.png
+MMC 0 16 500 16 585 0 0 0
+MakeStep 1
+isImage start_view_bl_tooltip.png
+MMC 0 770 500 770 585 0 0 0
+MakeStep 1
+MMC 0 770 50 770 20 0 0 0
+MakeStep 1
+isImage start_view_tr_tooltip.png
+msg make tr disabled during tooltip on
+MakeStep 2
+MakeStep 3
+isImage start_view_tr_tooltip_disabled.png
+MakeStep 2
+MMC 0 770 50 770 51 0 0 0
+MakeStep 4
+MMC 0 770 50 770 20 0 0 0
+MakeStep 1
+isImage start_view_tr_tooltip.png
+msg make tr hidden during tooltip on
+MakeStep 5
+MakeStep 3
+isImage start_view_tr_tooltip_invisible.png
+MMC 0 770 50 770 51 0 0 0
+MakeStep 6
+MakeStep 3
+isImage start_view.png
+msg start tl tooltip disabled
+MMC 0 24 50 24 20 0 0 0
+MakeStep 1
+isImage start_view_tl_tooltip.png
+MakeStep 7
+MMC 0 24 20 24 21 0 0 0
+MakeStep 1
+isImage start_view_tl_tooltip_disabled.png
+MakeStep 8
+MMC 0 24 21 24 20 0 0 0
+MakeStep 1
+isImage start_view_tl_tooltip_invisible.png
+MakeStep 1
+MakeStep 9
+MMC 0 24 21 45 45 0 0 0
+MakeStep 1
+isImage view_bg_on_another.png
+MakeStep 10
+MMC 0 45 45 44 44 0 0 0
+MakeStep 1
+MakeStep 1
+isImage start_view_secondary.png
+MakeStep 10
+MMC 0 45 44 25 44 0 0 0
+MakeStep 1
+isImage view_tooltip_on_background_tl.png
+MMC 0 25 44 45 44 0 0 0
+MakeStep 1
+isImage start_view_secondary.png
+MakeStep 11
+MMC 0 24 21 45 45 0 0 0
+MakeStep 1
+isImage view_bg_on_another.png
+MakeStep 12
+MakeStep 3
+isImage view_tooltip_empty_tl_invisible.png
+

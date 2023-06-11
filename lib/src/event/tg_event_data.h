@@ -48,6 +48,7 @@ enum TgEventType {
     EventTypeSelectLastItem,        /**< changes (select) to last item (shift-tab key press) */
     EventTypeWindowResize,          /**< when window resize this event is called */
     EventTypeSetItem2dToTop,        /**< when this item is set to top of parent, this is called */
+    EventTypeDeleteLater,           /**< Handle delete later */
 };
 
 /*!

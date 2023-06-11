@@ -78,6 +78,8 @@ private:
 
     virtual void render(const TgWindowInfo *windowInfo) override;
     virtual void checkPositionValues() override;
+
+    friend class TgMainWindowTooltip;
 };
 
 #endif // TG_IMAGE_PART_H

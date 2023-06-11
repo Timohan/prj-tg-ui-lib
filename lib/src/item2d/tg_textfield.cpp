@@ -213,6 +213,30 @@ void TgTextfield::setFontSize(float fontSize)
 }
 
 /*!
+ * \brief TgTextfield::getFontSize
+ *
+ * \return font size
+ */
+float TgTextfield::getFontSize()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getFontSize();
+}
+
+/*!
+ * \brief TgTextfield::getFontFile
+ *
+ * \return get main font file
+ */
+std::string TgTextfield::getFontFile()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getFontFile();
+}
+
+/*!
  * \brief TgTextfield::getCharacterCount
  *
  * \return get count of characters in this text

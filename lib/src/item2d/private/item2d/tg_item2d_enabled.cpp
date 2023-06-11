@@ -15,6 +15,7 @@
 #include "../../tg_item2d.h"
 #include "tg_item2d_private.h"
 #include "../../../global/private/tg_global_wait_renderer.h"
+#include "tg_item2d_tooltip.h"
 
 TgItem2dEnabled::TgItem2dEnabled(TgItem2d *parent, TgItem2dPrivate *currentItem2dPrivate) :
     m_parent(parent),
@@ -91,6 +92,9 @@ void TgItem2dEnabled::setEnabled(bool enabled)
                 m_enabledState = TgItem2dEnabledState::TgItem2dDisabled;
                 break;
         }
+        if (m_currentItem2dPrivate) {
+            m_currentItem2dPrivate->itemGoneDisabledOrInvisible();
+        }
         if (f_enabledChanged) {
             f_enabledChanged(false);
         }
@@ -154,6 +158,9 @@ bool TgItem2dEnabled::parentEnabledChanged(bool enabled)
             case TgItem2dEnabledState::TgItem2dEnabled:
                 m_enabledState = TgItem2dEnabledState::TgItem2dEnabledButParentDisabled;
                 break;
+        }
+        if (m_currentItem2dPrivate) {
+            m_currentItem2dPrivate->itemGoneDisabledOrInvisible();
         }
         if (f_enabledChanged) {
             f_enabledChanged(false);

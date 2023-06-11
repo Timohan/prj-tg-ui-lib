@@ -15,6 +15,7 @@
 #include "../event/tg_events.h"
 #include "../item2d/private/item2d/tg_item2d_private.h"
 #include "../global/private/tg_global_deleter.h"
+#include "../global/private/tg_global_tooltip.h"
 
 /*!
  * \brief TgMainWindow::TgMainWindow
@@ -84,18 +85,22 @@ void TgMainWindow::render(const TgWindowInfo *)
         m_firstTimeRender = false;
     }
 
+    m_mainwindowPrivate->startHandleEvents();
     m_mainwindowPrivate->handleEvents();
+    m_mainwindowPrivate->startRendering(m_mainwindowPrivate->getWindowInfo());
     if (TgGlobalDeleter::getInstance()->removeItems()) {
         m_mainwindowPrivate->hideList();
     }
     customBeforeRender();
     m_mainwindowPrivate->checkPositionValuesChildrenWindowMenu(m_mainwindowPrivate->getWindowInfo());
     checkPositionValuesChildren(m_mainwindowPrivate->getWindowInfo());
+    m_mainwindowPrivate->checkPositionValuesTooltip(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->setupViewForRender();
     customRender();
     m_mainwindowPrivate->setup2DShaderToUniforms();
     renderChildren(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderChildrenMenu(m_mainwindowPrivate->getWindowInfo());
+    m_mainwindowPrivate->renderTooltip(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderEnd();
     checkOnResizeChangedOnChildren();
     TG_FUNCTION_END();

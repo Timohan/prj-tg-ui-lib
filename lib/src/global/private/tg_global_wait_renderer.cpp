@@ -12,6 +12,7 @@
 #include "tg_global_wait_renderer.h"
 #include "../tg_global_macros.h"
 #include "../tg_global_log.h"
+#include "tg_global_tooltip.h"
 
 TgGlobalWaitRenderer *TgGlobalWaitRenderer::m_globalWaitRender = nullptr;
 
@@ -40,6 +41,10 @@ void TgGlobalWaitRenderer::waitForRender()
         m_mutex.lock();
         if (m_nextTimeMaxTimeOut > 0) {
             size_t waitTime = m_nextTimeMaxTimeOut;
+            int msTooltipWait = TgGlobalTooltip::getInstance()->getMsToWaitRendering();
+            if (msTooltipWait > 0 && static_cast<size_t>(msTooltipWait) < waitTime) {
+                waitTime = static_cast<size_t>(msTooltipWait);
+            }
             m_nextTimeMaxTimeOut = m_currentTimeMaxTimeOut;
             m_mutex.unlock();
             m_semHandler.try_lock_until(std::chrono::steady_clock::now() + std::chrono::milliseconds(waitTime));

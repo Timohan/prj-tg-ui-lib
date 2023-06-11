@@ -383,6 +383,21 @@ void TgTextfieldPrivate::setFontSize(float fontSize)
 }
 
 /*!
+ * \brief TgTextfieldPrivate::getFontSize
+ *
+ * \return font size
+ */
+float TgTextfieldPrivate::getFontSize()
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    float ret = m_fontSize;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
  * \brief TgTextfieldPrivate::getCharacterCount
  *
  * \return get count of characters in this text

@@ -40,6 +40,7 @@ public:
     void setText(const std::vector<TgTextFieldText> &listText, TgItem2d *currentItem);
     void editText(std::vector<uint32_t>&listAddCharacter, const size_t startCharacterIndex, const size_t characterCountToRemove);
     void setFontSize(float fontSize);
+    float getFontSize();
     size_t getCharacterCount();
     uint32_t getCharacterByIndex(size_t index);
     void getTextPosition(const size_t cursorPosition, float &positionX);

@@ -183,9 +183,11 @@ void TgItem2d::sendMessageToChildren(const TgItem2dPrivateMessage *message)
  * \param windowInfo
  * \return event result
  */
-TgEventResult TgItem2d::handleEvent(TgEventData *eventData, const TgWindowInfo *)
+TgEventResult TgItem2d::handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
+    m_private->handleEventToolTip(eventData, windowInfo);
+
     if (((eventData->m_type == TgEventType::EventTypeCharacterCallback 
         && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey)
         || eventData->m_type == TgEventType::EventTypeSelectNextItem
@@ -1001,4 +1003,27 @@ TgMenuItem *TgItem2d::getMenu(size_t index)
 bool TgItem2d::removeMenu(size_t i)
 {
     return m_private->removeSubMenu(i);
+}
+
+/*!
+ * \brief TgItem2d::setTooltip
+ *
+ * set tooltip text
+ *
+ * \return text
+ */
+void TgItem2d::setTooltip(const char *text)
+{
+    m_private->setTooltip(text);
+}
+
+/*!
+ * \brief TgItem2d::deleteLater
+ *
+ * set item to delete later
+ * - use this to delete items
+ */
+void TgItem2d::deleteLater()
+{
+    m_private->deleteLater();
 }
