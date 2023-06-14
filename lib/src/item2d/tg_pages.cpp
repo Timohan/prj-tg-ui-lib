@@ -159,10 +159,11 @@ void TgPages::setPageSwitchTime(double pageSwitchTime)
  * Renders the pages
  * \param windowInfo
  */
-void TgPages::render(const TgWindowInfo *)
+bool TgPages::render(const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

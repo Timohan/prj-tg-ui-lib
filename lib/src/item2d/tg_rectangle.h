@@ -32,7 +32,7 @@ public:
     void setColor(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
 
 protected:
-    virtual void render(const TgWindowInfo *windowInfo) override;
+    virtual bool render(const TgWindowInfo *windowInfo) override;
     virtual void checkPositionValues() override;
 
 private:

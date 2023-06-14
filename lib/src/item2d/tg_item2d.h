@@ -116,7 +116,7 @@ public:
     void setTooltip(const char *text);
     void deleteLater();
 protected:
-    virtual void render(const TgWindowInfo *windowInfo);
+    virtual bool render(const TgWindowInfo *windowInfo);
     virtual void checkPositionValues();
 
     void renderChildren(const TgWindowInfo *windowInfo);
@@ -164,6 +164,10 @@ private:
     friend class TgGridViewCell;
     friend class TgGridViewPrivate;
     friend class TgComboBoxPrivate;
+    friend class TgImage;
+    friend class TgImagePart;
+    friend class TgRectangle;
+    friend class TgTextfield;
 
 };
 

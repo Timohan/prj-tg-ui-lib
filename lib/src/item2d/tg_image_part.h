@@ -76,7 +76,7 @@ public:
 private:
     TgImagePartPrivate *m_private;
 
-    virtual void render(const TgWindowInfo *windowInfo) override;
+    virtual bool render(const TgWindowInfo *windowInfo) override;
     virtual void checkPositionValues() override;
 
     friend class TgMainWindowTooltip;

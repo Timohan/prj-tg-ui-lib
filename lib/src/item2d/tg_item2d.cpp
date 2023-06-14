@@ -140,11 +140,14 @@ void TgItem2d::checkPositionValuesChildren(const TgWindowInfo *windowInfo)
  * rendering functionality (this is empty)
  * because this is virtual function
  * \param windowInfo
+ * \return true if item was rendered, false if
+ * item was not render because it was outside or invisible
  */
-void TgItem2d::render(const TgWindowInfo *)
+bool TgItem2d::render(const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

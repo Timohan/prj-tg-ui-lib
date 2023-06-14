@@ -117,15 +117,17 @@ void TgButton::setImageAreaSize(float leftAreaSize, float topAreaSize, float rig
  *
  * Renders the image
  * \param windowInfo
+ * \return true if item was rendered, false if
+ * item was not render because it was outside or invisible
  */
-void TgButton::render(const TgWindowInfo *windowInfo)
+bool TgButton::render(const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
-        return;
+        return false;
     }
-    m_private->render(windowInfo, this);
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

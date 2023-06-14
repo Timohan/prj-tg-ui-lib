@@ -14,6 +14,7 @@
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
 #include "../../global/private/tg_global_wait_renderer.h"
+#include "item2d/tg_item2d_position.h"
 
 TgImagePartPrivate::TgImagePartPrivate(TgItem2d *currentItem, const char *imageFilename, TgImagePartType type) :
     m_type(type),
@@ -429,10 +430,17 @@ void TgImagePartPrivate::setTranform(TgItem2d *currentItem)
  * Renders the image
  * \param windowInfo
  * \param currentItem
+ * \param itemPosition
+ * \return true if item was rendered, false if
+ * item was not render because it was outside or invisible
  */
-void TgImagePartPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem)
+bool TgImagePartPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition)
 {
     TG_FUNCTION_BEGIN();
+    if (!itemPosition->isRenderVisible(windowInfo)) {
+        TG_FUNCTION_END();
+        return false;
+    }
     glUniform4f(windowInfo->m_maxRenderValues,
                 currentItem->getXminOnVisible(),
                 currentItem->getYminOnVisible(),
@@ -452,6 +460,7 @@ void TgImagePartPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *curren
     }
     glBindVertexArray(0);
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

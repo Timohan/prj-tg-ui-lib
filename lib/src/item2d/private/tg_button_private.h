@@ -29,7 +29,6 @@ class TgButtonPrivate : private TgItem2dInternalCallback
 public:
     explicit TgButtonPrivate(TgItem2d *currentItem, const char *buttonText);
     virtual ~TgButtonPrivate();
-    void render(const TgWindowInfo *windowInfo, TgItem2d *currentItem);
     void checkPositionValues(TgItem2d *currentItem);
 
     void setImageCropPosition(float imageCropLeft, float imageCropTop, float imageCropRight, float imageCropBottom);

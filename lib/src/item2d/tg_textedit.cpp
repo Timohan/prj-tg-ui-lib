@@ -81,10 +81,11 @@ TgTextedit::~TgTextedit()
  *
  * \param windowInfo
  */
-void TgTextedit::render(const TgWindowInfo *)
+bool TgTextedit::render(const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

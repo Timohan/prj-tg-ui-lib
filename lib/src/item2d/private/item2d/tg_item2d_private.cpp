@@ -107,8 +107,9 @@ void TgItem2dPrivate::renderChildren(const TgWindowInfo *windowInfo)
     }
     size_t i;
     for (i=0;i<m_listChildrenItem.size();i++) {
-        m_listChildrenItem[i]->render(windowInfo);
-        m_listChildrenItem[i]->renderChildren(windowInfo);
+        if (m_listChildrenItem[i]->render(windowInfo)) {
+            m_listChildrenItem[i]->renderChildren(windowInfo);
+        }
     }
     for (i=0;i<m_listChildrenTopMenu.size();i++) {
         m_listChildrenTopMenu[i]->render(windowInfo);

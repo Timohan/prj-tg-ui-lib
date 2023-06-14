@@ -22,6 +22,7 @@
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
 #include "../../global/private/tg_global_wait_renderer.h"
+#include "item2d/tg_item2d_position.h"
 
 TgTextfieldPrivate::TgTextfieldPrivate(TgItem2d *currentItem,
                                        const char *text, const char *fontFile, float fontSize,
@@ -284,13 +285,20 @@ void TgTextfieldPrivate::checkPositionValues()
  * Renders the text
  * \param windowInfo
  * \param currentItem
+ * \param itemPosition
+ * \return true if item was rendered, false if
+ * item was not render because it was outside or invisible
  */
-void TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem)
+bool TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition)
 {
     TG_FUNCTION_BEGIN();
     if (!m_fontText) {
         TG_FUNCTION_END();
-        return;
+        return true;
+    }
+
+    if (!itemPosition->isRenderVisible(windowInfo)) {
+        return false;
     }
 
     glUniform1i( windowInfo->m_shaderRenderTypeIndex, 1);
@@ -299,13 +307,12 @@ void TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *curren
                 currentItem->getXmaxOnVisible(windowInfo),
                 currentItem->getYmaxOnVisible(windowInfo));
 
-    if (m_fontText) {
-        TgGlobalApplication::getInstance()->getFontGlyphCache()->render(m_fontText, windowInfo->m_shaderTransformIndex,
-            windowInfo->m_shaderColorIndex, m_listTransform);
-    }
+    TgGlobalApplication::getInstance()->getFontGlyphCache()->render(m_fontText, windowInfo->m_shaderTransformIndex,
+        windowInfo->m_shaderColorIndex, m_listTransform);
 
     glUniform1i( windowInfo->m_shaderRenderTypeIndex, 0);
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

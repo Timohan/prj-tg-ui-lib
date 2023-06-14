@@ -18,6 +18,7 @@
 
 class TgItem2d;
 struct TgWindowInfo;
+class TgItem2dPosition;
 
 #define IMAGE_PARTS_MAX_COUNT           9
 #define IMAGE_PARTS_VERTICES_MAX_COUNT  36
@@ -40,7 +41,7 @@ public:
     TgImagePartType getType() const;
     void setType(TgImagePartType type);
 
-    void render(const TgWindowInfo *windowInfo, TgItem2d *currentItem);
+    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition);
     void checkPositionValues(TgItem2d *currentItem);
 
     bool setImage(const char *filename);

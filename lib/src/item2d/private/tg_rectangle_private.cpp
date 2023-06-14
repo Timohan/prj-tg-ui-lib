@@ -18,6 +18,7 @@
 #include "../tg_item2d.h"
 #include "../../window/tg_mainwindow_private.h"
 #include "../../global/private/tg_global_wait_renderer.h"
+#include "item2d/tg_item2d_position.h"
 
 TgRectanglePrivate::TgRectanglePrivate(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a) :
     m_initVerticesDone(false),
@@ -172,10 +173,15 @@ void TgRectanglePrivate::checkPositionValues(TgItem2d *currentItem)
  * Renders the rectangle
  * \param windowInfo
  * \param currentItem
+ * \return true if item was rendered, false if
+ * item was not render because it was outside or invisible
  */
-void TgRectanglePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem)
+bool TgRectanglePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition)
 {
     TG_FUNCTION_BEGIN();
+    if (!itemPosition->isRenderVisible(windowInfo)) {
+        return false;
+    }
     glUniform4f(windowInfo->m_maxRenderValues,
                 currentItem->getXminOnVisible(), currentItem->getYminOnVisible(),
                 currentItem->getXmaxOnVisible(windowInfo),
@@ -184,5 +190,6 @@ void TgRectanglePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *curren
     glUniformMatrix4fv(windowInfo->m_shaderTransformIndex, 1, 0, m_transform.getMatrixTable()->data);
     TgRender::render(getTextureIndex());
     TG_FUNCTION_END();
+    return true;
 }
 

@@ -86,15 +86,17 @@ void TgRectangle::setColor(const unsigned char r, const unsigned char g, const u
  *
  * Renders the rectangle
  * \param windowInfo
+ * \return true if item was rendered, false if
+ * item was not render because it was outside or invisible
  */
-void TgRectangle::render(const TgWindowInfo *windowInfo)
+bool TgRectangle::render(const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
-        return;
+        return false;
     }
-    m_private->render(windowInfo, this);
     TG_FUNCTION_END();
+    return m_private->render(windowInfo, this, reinterpret_cast<TgItem2d *>(this)->m_private);
 }
 
 /*!

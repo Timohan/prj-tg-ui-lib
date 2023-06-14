@@ -478,6 +478,7 @@ void TgItem2dPosition::setPositionChanged(bool positionChanged)
     TG_FUNCTION_BEGIN();
     m_positionChanged = positionChanged;
     if (positionChanged) {
+        m_renderVisibility = RenderVisibility_NotCalculated;
         TgItem2dPrivateMessage msg;
         msg.m_type = TgItem2dPrivateMessageType::PositionChanged;
         m_currentItemPrivate->sendMessageToChildren(&msg);
@@ -636,6 +637,47 @@ float TgItem2dPosition::getYmaxOnVisible(const TgWindowInfo *windowInfo)
     }
     TG_FUNCTION_END();
     return maxY;
+}
+
+/*!
+ * \brief TgItem2dPosition::isRenderVisible
+ *
+ * checks if render is visible
+ *
+ * \param windowInfo
+ * \return true if render is visible and it can be done
+ * false if no rendering is visible, so rendering can be skipped
+ */
+bool TgItem2dPosition::isRenderVisible(const TgWindowInfo *windowInfo)
+{
+    if (m_renderVisibility != RenderVisibility_NotCalculated) {
+        return m_renderVisibility == RenderVisibility_Visible;
+    }
+    float xMinOnVisible = getXminOnVisible();
+    if (windowInfo->m_windowWidth < static_cast<int>(xMinOnVisible)) {
+        m_renderVisibility = RenderVisibility_Invisible;
+        return false;
+    }
+    float yMinOnVisible = getYminOnVisible();
+    if (windowInfo->m_windowHeight < static_cast<int>(yMinOnVisible)) {
+        m_renderVisibility = RenderVisibility_Invisible;
+        return false;
+    }
+
+    float xMaxOnVisible = getXmaxOnVisible(windowInfo);
+    if (xMaxOnVisible < 0) {
+        m_renderVisibility = RenderVisibility_Invisible;
+        return false;
+    }
+
+    float yMaxOnVisible = getYmaxOnVisible(windowInfo);
+    if (yMaxOnVisible < 0) {
+        m_renderVisibility = RenderVisibility_Invisible;
+        return false;
+    }
+
+    m_renderVisibility = RenderVisibility_Visible;
+    return true;
 }
 
 /*!

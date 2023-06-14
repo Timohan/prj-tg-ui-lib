@@ -106,10 +106,11 @@ TgBackground::~TgBackground()
     TG_FUNCTION_END();
 }
 
-void TgBackground::render(const TgWindowInfo *)
+bool TgBackground::render(const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
+    return true;
 }
 
 void TgBackground::checkPositionValues()

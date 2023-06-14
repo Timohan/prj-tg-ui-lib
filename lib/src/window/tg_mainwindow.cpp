@@ -77,7 +77,7 @@ int TgMainWindow::initWindow()
  * main window's render
  *
  */
-void TgMainWindow::render(const TgWindowInfo *)
+bool TgMainWindow::render(const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
     if (m_firstTimeRender) {
@@ -104,6 +104,7 @@ void TgMainWindow::render(const TgWindowInfo *)
     m_mainwindowPrivate->renderEnd();
     checkOnResizeChangedOnChildren();
     TG_FUNCTION_END();
+    return true;
 }
 
 #ifdef USE_GLFW

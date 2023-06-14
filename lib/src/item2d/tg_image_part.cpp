@@ -20,6 +20,7 @@
 #include "tg_image_part.h"
 #include "../global/tg_global_log.h"
 #include "private/tg_image_part_private.h"
+#include "private/item2d/tg_item2d_private.h"
 
 /*!
  * \brief TgImagePart::TgImagePart
@@ -258,15 +259,17 @@ void TgImagePart::setImageAreaSize3TopToBottom(float topAreaSize, float bottomAr
  *
  * Renders the image
  * \param windowInfo
+ * \return true if item was rendered, false if
+ * item was not render because it was outside or invisible
  */
-void TgImagePart::render(const TgWindowInfo *windowInfo)
+bool TgImagePart::render(const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
-        return;
+        return false;
     }
-    m_private->render(windowInfo, this);
     TG_FUNCTION_END();
+    return m_private->render(windowInfo, this, reinterpret_cast<TgItem2d *>(this)->m_private);
 }
 
 /*!

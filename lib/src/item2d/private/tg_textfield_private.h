@@ -23,13 +23,14 @@
 struct TgFontText;
 class TgItem2d;
 struct TgWindowInfo;
+class TgItem2dPosition;
 
 class TgTextfieldPrivate
 {
 public:
     explicit TgTextfieldPrivate(TgItem2d *currentItem, const char *text, const char *fontFile, float fontSize, uint8_t r, uint8_t g, uint8_t b);
     ~TgTextfieldPrivate();
-    void render(const TgWindowInfo *windowInfo, TgItem2d *current);
+    bool render(const TgWindowInfo *windowInfo, TgItem2d *current, TgItem2dPosition *itemPosition);
     void checkPositionValues();
     void setHorizontalAlign(TgItem2d *currentItem, TgTextfieldHorizontalAlign align);
     void setVerticalAlign(TgItem2d *currentItem, TgTextfieldVerticalAlign align);

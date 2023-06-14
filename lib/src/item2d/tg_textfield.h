@@ -97,7 +97,7 @@ public:
     void getColor(uint8_t &r, uint8_t &g, uint8_t &b);
 
 protected:
-    virtual void render(const TgWindowInfo *windowInfo) override;
+    virtual bool render(const TgWindowInfo *windowInfo) override;
     virtual void checkPositionValues() override;
 
 private:

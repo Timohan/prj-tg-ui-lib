@@ -139,21 +139,6 @@ std::string TgButtonPrivate::getImageFileName()
 }
 
 /*!
- * \brief TgButtonPrivate::render
- *
- * Renders the image
- * \param windowInfo
- * \param currentItem
- */
-void TgButtonPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem)
-{
-    TG_FUNCTION_BEGIN();
-    (void)windowInfo;
-    (void)currentItem;
-    TG_FUNCTION_END();
-}
-
-/*!
  * \brief TgButtonPrivate::checkPositionValues
  *
  * Checks position values before rendering starts

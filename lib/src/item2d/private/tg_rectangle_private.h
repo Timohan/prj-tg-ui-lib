@@ -18,13 +18,14 @@
 
 class TgItem2d;
 struct TgWindowInfo;
+class TgItem2dPosition;
 
 class TgRectanglePrivate : protected TgRender
 {
 public:
     explicit TgRectanglePrivate(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
     ~TgRectanglePrivate();
-    void render(const TgWindowInfo *windowInfo, TgItem2d *currentItem);
+    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition);
     void setColor(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
     void checkPositionValues(TgItem2d *currentItem);
 

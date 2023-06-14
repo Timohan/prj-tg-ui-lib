@@ -16,6 +16,7 @@
 #include "../../shader/tg_shader_2d.h"
 #include "../../window/tg_mainwindow_private.h"
 #include "../../global/private/tg_global_wait_renderer.h"
+#include "item2d/tg_item2d_position.h"
 
 TgImagePrivate::TgImagePrivate(const char *filename) :
     m_topLeftS(0), m_topLeftT(0),
@@ -166,10 +167,17 @@ void TgImagePrivate::setTranform(TgItem2d *currentItem)
  * Renders the image
  * \param windowInfo
  * \param currentItem
+ * \param itemPosition
+ * \return true if item was rendered, false if
+ * item was not render because it was outside or invisible
  */
-void TgImagePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem)
+bool TgImagePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition)
 {
     TG_FUNCTION_BEGIN();
+    if (!itemPosition->isRenderVisible(windowInfo)) {
+        TG_FUNCTION_END();
+        return false;
+    }
     glUniform4f(windowInfo->m_maxRenderValues,
                 currentItem->getXminOnVisible(),
                 currentItem->getYminOnVisible(),
@@ -179,6 +187,7 @@ void TgImagePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentIte
     glUniformMatrix4fv(windowInfo->m_shaderTransformIndex, 1, 0, m_transform.getMatrixTable()->data);
     TgRender::render(getTextureIndex());
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

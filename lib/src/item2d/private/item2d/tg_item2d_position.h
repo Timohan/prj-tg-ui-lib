@@ -25,6 +25,13 @@ struct TgAnchorMargingValues // using when AnchorFollowParentSize
     float m_bottom;
 };
 
+enum RenderVisibility
+{
+    RenderVisibility_NotCalculated = 0,
+    RenderVisibility_Visible,
+    RenderVisibility_Invisible
+};
+
 class TgItem2dPosition
 {
 public:
@@ -76,6 +83,8 @@ public:
 
     void setCurrentGridViewCell(TgGridViewCellPrivate *currentGridViewCell);
 
+    bool isRenderVisible(const TgWindowInfo *windowInfo);
+
 private:
     float m_x;
     float m_y;
@@ -83,6 +92,7 @@ private:
     float m_height;
     float m_addMinHeightOnVisible;
     float m_addMaxHeightOnVisible;
+    RenderVisibility m_renderVisibility = RenderVisibility_NotCalculated;
 
     TgItem2d *m_parent;
     TgItem2dPrivate *m_currentItemPrivate;

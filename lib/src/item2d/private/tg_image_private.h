@@ -20,13 +20,14 @@
 
 class TgItem2d;
 struct TgWindowInfo;
+class TgItem2dPosition;
 
 class TgImagePrivate : protected TgRender
 {
 public:
     explicit TgImagePrivate(const char *filename);
     ~TgImagePrivate();
-    void render(const TgWindowInfo *windowInfo, TgItem2d *currentItem);
+    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition);
     void checkPositionValues(TgItem2d *currentItem);
     void setTextureST(float topLeftS, float topLeftT,
                       float topRightS, float topRightT,

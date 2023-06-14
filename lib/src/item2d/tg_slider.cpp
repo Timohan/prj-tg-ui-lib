@@ -70,10 +70,11 @@ TgSlider::~TgSlider()
  * Renders the slider
  * \param windowInfo
  */
-void TgSlider::render(const TgWindowInfo *)
+bool TgSlider::render(const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!

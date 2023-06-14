@@ -39,7 +39,7 @@ public:
      void setImage(const char *imageFilename);
 
 protected:
-    virtual void render(const TgWindowInfo *windowInfo) override;
+    virtual bool render(const TgWindowInfo *windowInfo) override;
     virtual void checkPositionValues() override;
 
 private:

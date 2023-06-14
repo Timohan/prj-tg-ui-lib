@@ -69,10 +69,11 @@ TgPage::~TgPage()
  * Renders the page
  * \param windowInfo
  */
-void TgPage::render(const TgWindowInfo *)
+bool TgPage::render(const TgWindowInfo *)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
+    return true;
 }
 
 /*!
