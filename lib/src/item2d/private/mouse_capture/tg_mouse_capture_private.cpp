@@ -24,6 +24,7 @@ TgMouseCapturePrivate::TgMouseCapturePrivate(TgMouseCapture *currentMouseCapture
     f_mouseScrollMove(nullptr)
 {
     TG_FUNCTION_BEGIN();
+    reinterpret_cast<TgItem2d *>(currentMouseCapture)->m_private->setCanBlockTooltip(true);
     TG_FUNCTION_END();
 }
 

@@ -27,6 +27,7 @@ public:
     TgItem2dTooltip(TgItem2dPrivate *currentItemPrivate);
     ~TgItem2dTooltip();
 
+    void setCanBlockTooltip(bool canBlockTooltip);
     void setTooltip(const char *text);
     void handleEventToolTip(TgEventData *eventData, const TgWindowInfo *windowInfo, bool fromMainWindow = false);
     void itemGoneDisabledOrInvisible();
@@ -34,6 +35,7 @@ public:
 private:
     TgItem2dPrivate *m_currentItem;
     std::string m_text;
+    bool m_canBlockTooltip = false;
 };
 
 #endif // TG_ITEM_2D_PRIVATE_TOOLTIP_H

@@ -53,6 +53,7 @@ public:
     float getTextMarginTop();
     float getTextMarginRight();
     float getTextMarginBottom();
+    void setTooltip(const char *text);
 
 private:
     explicit TgGridViewCell(TgGridView *parent, float x, float y, float width, float height);

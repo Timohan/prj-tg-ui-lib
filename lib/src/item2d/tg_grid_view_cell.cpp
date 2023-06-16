@@ -252,3 +252,15 @@ float TgGridViewCell::getTextMarginBottom()
 {
     return m_private->getTextMarginBottom();
 }
+
+/*!
+ * \brief TgGridViewCell::setTooltip
+ *
+ * set tooltip text
+ *
+ * \return text
+ */
+void TgGridViewCell::setTooltip(const char *text)
+{
+    TgItem2d::setTooltip(text);
+}

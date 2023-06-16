@@ -13,6 +13,7 @@
 #include "../../global/tg_global_log.h"
 #include "../../global/private/tg_global_defines.h"
 #include "../../global/private/tg_global_wait_renderer.h"
+#include "item2d/tg_item2d_private.h"
 
 TgSliderPrivate::TgSliderPrivate(TgItem2d *parent, TgItem2d *currentItem, TgSliderType type) :
     m_parent(parent),
@@ -37,6 +38,7 @@ TgSliderPrivate::TgSliderPrivate(TgItem2d *parent, TgItem2d *currentItem, TgSlid
     f_sliderMaxPositionChanged(nullptr)
 {
     TG_FUNCTION_BEGIN();
+    currentItem->m_private->setCanBlockTooltip(true);
     setSliderButtonPositioning();
     TG_FUNCTION_END();
 }

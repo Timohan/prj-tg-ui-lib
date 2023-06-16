@@ -13,6 +13,7 @@
 #include "../global/tg_global_log.h"
 #include "private/tg_slider_private.h"
 #include <iostream>
+#include "private/item2d/tg_item2d_private.h"
 
 /*!
  * \brief TgSlider::TgSlider
@@ -100,6 +101,8 @@ void TgSlider::checkPositionValues()
 TgEventResult TgSlider::handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
+    TgItem2d::m_private->handleEventToolTip(eventData, windowInfo);
+
     if (eventData->m_type == TgEventType::EventTypeMousePress
         && eventData->m_event.m_mouseEvent.m_mouseType == TgMouseType::ButtonLeft
         && getXminOnVisible() <= eventData->m_event.m_mouseEvent.m_x

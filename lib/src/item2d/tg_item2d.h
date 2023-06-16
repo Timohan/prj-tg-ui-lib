@@ -168,6 +168,8 @@ private:
     friend class TgImagePart;
     friend class TgRectangle;
     friend class TgTextfield;
+    friend class TgSlider;
+    friend class TgSliderPrivate;
 
 };
 

@@ -69,6 +69,11 @@ void TgItem2dTooltip::handleEventToolTip(TgEventData *eventData, const TgWindowI
     if ((eventData->m_type == TgEventType::EventTypeMouseMove
             || eventData->m_type == TgEventType::EventTypeMouseMoveForMenuParent)
         && m_currentItem->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)) {
+        if (m_canBlockTooltip && m_text.empty()) {
+            TgGlobalTooltip::getInstance()->setTooltipOnDisabled();
+            TG_FUNCTION_END();
+            return;
+        }
         TgGlobalTooltip::getInstance()->setTooltip(m_text,
                                                    static_cast<int>(eventData->m_event.m_mouseEvent.m_x),
                                                    static_cast<int>(eventData->m_event.m_mouseEvent.m_y),
@@ -103,4 +108,16 @@ void TgItem2dTooltip::itemGoneDisabledOrInvisible()
     TG_FUNCTION_BEGIN();
     TgGlobalTooltip::getInstance()->clearTooltip(this);
     TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgItem2dTooltip::setCanBlockTooltip
+ *
+ * set can block tooltip
+ * \param if true, this item can block tooltip, just
+ * as it is disabled
+ */
+void TgItem2dTooltip::setCanBlockTooltip(bool canBlockTooltip)
+{
+    m_canBlockTooltip = canBlockTooltip;
 }
