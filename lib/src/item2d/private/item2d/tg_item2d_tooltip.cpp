@@ -53,7 +53,12 @@ void TgItem2dTooltip::setTooltip(const char *text)
 void TgItem2dTooltip::handleEventToolTip(TgEventData *eventData, const TgWindowInfo *windowInfo, bool fromMainWindow)
 {
     TG_FUNCTION_BEGIN();
-    if (!m_currentItem->getVisible()) {
+    if (!m_currentItem->getVisible()
+        || TgGlobalTooltip::getInstance()->getTooltipOnDisabled()
+        || TgGlobalTooltip::getInstance()->getValidToolTipDone()
+        || ((eventData->m_type == TgEventType::EventTypeMouseMove
+            || eventData->m_type == TgEventType::EventTypeMouseMoveForMenuParent)
+            && eventData->m_event.m_mouseEvent.m_currentMouseDownItem)) {
         TG_FUNCTION_END();
         return;
     }

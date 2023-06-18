@@ -38,6 +38,26 @@ void TgGlobalTooltip::setTooltipOnDisabled()
 }
 
 /*!
+ * \brief TgGlobalTooltip::getTooltipOnDisabled
+ *
+ * \param true if tooltip is on disabled
+ */
+bool TgGlobalTooltip::getTooltipOnDisabled()
+{
+    return m_setValidToolTipDone;
+}
+
+/*!
+ * \brief TgGlobalTooltip::getValidToolTipDone
+ *
+ * \param true if tooltip is done
+ */
+bool TgGlobalTooltip::getValidToolTipDone()
+{
+    return m_setValidToolTipDone;
+}
+
+/*!
  * \brief TgGlobalTooltip::setTooltip
  *
  * called from items due handling the events

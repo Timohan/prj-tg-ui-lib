@@ -33,6 +33,8 @@ public:
     void setTooltip(const std::string &text, int x, int y, TgItem2dTooltip *currentTooltipParentItem);
     void clearTooltip(TgItem2dTooltip *currentTooltip);
     void setTooltipOnDisabled();
+    bool getTooltipOnDisabled();
+    bool getValidToolTipDone();
 
     void startHandleEvents();
     std::string startRendering(int &x, int &y);
