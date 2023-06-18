@@ -24,6 +24,7 @@ enum TestOrderType {
     isItemSelected,
     setSelected,
     MakeStep,
+    isImage,
 };
 
 struct TestOrder

@@ -16,10 +16,8 @@ FunctionalTest *getTest()
     return &m_test;
 }
 
-FunctionalTest::FunctionalTest() :
-    m_returnIndex(0)
+FunctionalTest::FunctionalTest() : m_returnIndex(0)
 {
-
 }
 
 void FunctionalTest::setMainWindow(MainWindow *mainWindow)
@@ -34,7 +32,8 @@ int FunctionalTest::getReturnIndex()
 
 void FunctionalTest::start()
 {
-    std::thread([this]() {
+    std::thread([this]()
+                {
         sleep(2);
         size_t i;
         m_testOrders.loadOrders();
@@ -155,6 +154,17 @@ void FunctionalTest::start()
                         return;
                     }
                     break;
+                case TestOrderType::isImage:
+                    std::this_thread::sleep_for(std::chrono::milliseconds( 100 ) );
+                    if (!FunctionalTestImage::isImageToEqual(m_mainWindow,
+                        m_testOrders.getTestOrder(i)->m_listString[0].c_str(), 800, 600)) {
+                        TG_ERROR_LOG("Image is not correct, index: ", m_testOrders.getTestOrder(i)->m_lineNumber, "/", m_testOrders.getTestOrder(i)->m_listString[0]);
+                        m_returnIndex = 1;
+                        sleep(100);
+                        m_mainWindow->exit();
+                        return;
+                    }
+                    break;
                 default:
                     TG_ERROR_LOG("Test case is incorrect");
                     m_returnIndex = 1;
@@ -164,19 +174,22 @@ void FunctionalTest::start()
         }
         TG_INFO_LOG("All tests ok");
         sleep(1);
-        m_mainWindow->exit();
-    }).detach();
+        m_mainWindow->exit(); })
+        .detach();
 }
 
 bool FunctionalTest::isMove(int index, int fromX, int fromY, int toX, int toY, bool inArea)
 {
     int x = fromX;
     int y = fromY;
-    while (1) {
-        if (!isMove(index, x, y, inArea)) {
+    while (1)
+    {
+        if (!isMove(index, x, y, inArea))
+        {
             return false;
         }
-        if (x == toX && y == toY) {
+        if (x == toX && y == toY)
+        {
             break;
         }
         x = moveValueToDirection(x, toX);
@@ -189,21 +202,19 @@ bool FunctionalTest::isMove(int index, int fromX, int fromY, int toX, int toY, b
 bool FunctionalTest::isMove(int index, int x, int y, bool inArea)
 {
     HoverVisibleChangeState wantedState = HoverVisibleChangeState::MouseMove;
-    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex) {
+    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex)
+    {
         return false;
     }
-    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index)
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x != x
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y != y
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_area != inArea
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState) {
+    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index) || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x != x || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y != y || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_area != inArea || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState)
+    {
         TG_ERROR_LOG("Move change is incorrect ", m_latestHoverIndex, index, x, y, inArea,
-            m_mainWindow->getString(wantedState),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
-            m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y,
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_area);
+                     m_mainWindow->getString(wantedState),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
+                     m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y,
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_area);
         return false;
     }
     m_latestHoverIndex++;
@@ -212,20 +223,19 @@ bool FunctionalTest::isMove(int index, int x, int y, bool inArea)
 
 bool FunctionalTest::checkIsMousePressed(int index, int x, int y)
 {
-    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex) {
+    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex)
+    {
         return false;
     }
     HoverVisibleChangeState wantedState = HoverVisibleChangeState::MousePress;
-    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index)
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x != x
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y != y
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState) {
+    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index) || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x != x || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y != y || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState)
+    {
         TG_ERROR_LOG("MousePressed change is incorrect ", m_latestHoverIndex, index, x, y,
-            m_mainWindow->getString(wantedState),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
-            m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y);
+                     m_mainWindow->getString(wantedState),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
+                     m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y);
         return false;
     }
     m_latestHoverIndex++;
@@ -234,20 +244,19 @@ bool FunctionalTest::checkIsMousePressed(int index, int x, int y)
 
 bool FunctionalTest::checkIsMouseClicked(int index, int x, int y)
 {
-    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex) {
+    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex)
+    {
         return false;
     }
     HoverVisibleChangeState wantedState = HoverVisibleChangeState::MouseClicked;
-    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index)
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x != x
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y != y
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState) {
+    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index) || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x != x || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y != y || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState)
+    {
         TG_ERROR_LOG("MouseClicked change is incorrect ", m_latestHoverIndex, index, x, y,
-            m_mainWindow->getString(wantedState),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
-            m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y);
+                     m_mainWindow->getString(wantedState),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
+                     m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y);
         return false;
     }
     m_latestHoverIndex++;
@@ -256,22 +265,20 @@ bool FunctionalTest::checkIsMouseClicked(int index, int x, int y)
 
 bool FunctionalTest::checkIsMouseReleased(int index, int x, int y, bool inArea)
 {
-    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex) {
+    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex)
+    {
         return false;
     }
     HoverVisibleChangeState wantedState = HoverVisibleChangeState::MouseRelease;
-    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index)
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x != x
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y != y
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_area != inArea
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState) {
+    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index) || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x != x || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y != y || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_area != inArea || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState)
+    {
         TG_ERROR_LOG("checkIsMouseReleased change is incorrect ", m_latestHoverIndex, index, x, y, inArea,
-            m_mainWindow->getString(wantedState),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
-            m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y,
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_area);
+                     m_mainWindow->getString(wantedState),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
+                     m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y,
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_area);
         return false;
     }
     m_latestHoverIndex++;
@@ -280,16 +287,17 @@ bool FunctionalTest::checkIsMouseReleased(int index, int x, int y, bool inArea)
 
 bool FunctionalTest::isCorrectHover(size_t index, bool hover)
 {
-    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex) {
+    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex)
+    {
         return false;
     }
     HoverVisibleChangeState wantedState = hover ? HoverVisibleChangeState::HoverEnable : HoverVisibleChangeState::HoverDisable;
-    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != index
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState) {
+    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != index || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState)
+    {
         TG_ERROR_LOG("Hover change is incorrect ", m_latestHoverIndex, index,
-            m_mainWindow->getString(wantedState),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
-            m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state));
+                     m_mainWindow->getString(wantedState),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
+                     m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state));
         return false;
     }
     m_latestHoverIndex++;
@@ -298,16 +306,17 @@ bool FunctionalTest::isCorrectHover(size_t index, bool hover)
 
 bool FunctionalTest::isCorrectVisible(size_t index, bool visible)
 {
-    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex) {
+    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex)
+    {
         return false;
     }
     HoverVisibleChangeState wantedState = visible ? HoverVisibleChangeState::Visible : HoverVisibleChangeState::Invisible;
-    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != index
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state !=  wantedState) {
+    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != index || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState)
+    {
         TG_ERROR_LOG("Visible change is incorrect ", m_latestHoverIndex, index,
-            m_mainWindow->getString(wantedState),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
-            m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state));
+                     m_mainWindow->getString(wantedState),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
+                     m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state));
         return false;
     }
     m_latestHoverIndex++;
@@ -316,16 +325,17 @@ bool FunctionalTest::isCorrectVisible(size_t index, bool visible)
 
 bool FunctionalTest::isCorrectEnabled(size_t index, bool enabled)
 {
-    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex) {
+    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex)
+    {
         return false;
     }
     HoverVisibleChangeState wantedState = enabled ? HoverVisibleChangeState::Enabled : HoverVisibleChangeState::Disabled;
-    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != index
-        || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state !=  wantedState) {
+    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != index || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState)
+    {
         TG_ERROR_LOG("Enabled change is incorrect ", m_latestHoverIndex, index,
-            m_mainWindow->getString(wantedState),
-            m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
-            m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state));
+                     m_mainWindow->getString(wantedState),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
+                     m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state));
         return false;
     }
     m_latestHoverIndex++;
@@ -375,25 +385,28 @@ void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int p
     event.xbutton.same_screen = True;
     event.xbutton.x = pressX;
     event.xbutton.y = pressY;
-    if (sendPress) {
+    if (sendPress)
+    {
         XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
     }
     XFlush(display);
-    if (timeBetweenPressRelease) {
+    if (timeBetweenPressRelease)
+    {
         sleep(timeBetweenPressRelease);
     }
 
     eventMove.xmotion.x = pressX;
     eventMove.xmotion.y = pressY;
-    while (1) {
+    while (1)
+    {
         eventMove.type = MotionNotify;
         eventMove.xmotion.x = moveValueToDirection(eventMove.xmotion.x, releaseX);
         eventMove.xmotion.y = moveValueToDirection(eventMove.xmotion.y, releaseY);
         XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &eventMove);
         XFlush(display);
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        if (eventMove.xmotion.x == releaseX
-            && eventMove.xmotion.y == releaseY) {
+        if (eventMove.xmotion.x == releaseX && eventMove.xmotion.y == releaseY)
+        {
             break;
         }
     }
@@ -401,11 +414,13 @@ void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int p
     event.xbutton.x = releaseX;
     event.xbutton.y = releaseY;
     event.xbutton.state = 0x100;
-    if (sendRelease) {
+    if (sendRelease)
+    {
         XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
     }
     XFlush(display);
-    if (waitAfterRelease) {
+    if (waitAfterRelease)
+    {
         sleep(waitAfterRelease);
     }
 }
@@ -424,10 +439,12 @@ void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int p
  */
 int FunctionalTest::moveValueToDirection(int currentValue, int directionValue)
 {
-    if (currentValue > directionValue) {
+    if (currentValue > directionValue)
+    {
         return currentValue - 1;
     }
-    if (currentValue < directionValue) {
+    if (currentValue < directionValue)
+    {
         return currentValue + 1;
     }
     return directionValue;
@@ -436,31 +453,34 @@ int FunctionalTest::moveValueToDirection(int currentValue, int directionValue)
 void FunctionalTest::sendKeyPress(uint32_t key, uint32_t waitAfterRelease, bool keyPress, bool keyRelease)
 {
     XKeyEvent event;
-    event.display     = m_mainWindow->getDisplay();
-    event.window      = *m_mainWindow->getWindow();
-    event.root        = *m_mainWindow->getWindow();
-    event.subwindow   = None;
-    event.time        = CurrentTime;
-    event.x           = 1;
-    event.y           = 1;
-    event.x_root      = 1;
-    event.y_root      = 1;
+    event.display = m_mainWindow->getDisplay();
+    event.window = *m_mainWindow->getWindow();
+    event.root = *m_mainWindow->getWindow();
+    event.subwindow = None;
+    event.time = CurrentTime;
+    event.x = 1;
+    event.y = 1;
+    event.x_root = 1;
+    event.y_root = 1;
     event.same_screen = True;
-    switch (key) {
-        case '\t':
-            key = XK_Tab;
-            break;
-        default:
-            break;
+    switch (key)
+    {
+    case '\t':
+        key = XK_Tab;
+        break;
+    default:
+        break;
     }
-    event.keycode     = XKeysymToKeycode(m_mainWindow->getDisplay(), key);
-    event.state       = 0;
+    event.keycode = XKeysymToKeycode(m_mainWindow->getDisplay(), key);
+    event.state = 0;
     event.type = KeyPress;
-    if (keyPress) {
+    if (keyPress)
+    {
         XSendEvent(m_mainWindow->getDisplay(), *m_mainWindow->getWindow(), True, KeyPressMask, (XEvent *)&event);
         std::this_thread::sleep_for(std::chrono::milliseconds(waitAfterRelease));
     }
-    if (keyRelease) {
+    if (keyRelease)
+    {
         event.type = KeyRelease;
         XSendEvent(m_mainWindow->getDisplay(), *m_mainWindow->getWindow(), True, KeyPressMask, (XEvent *)&event);
         std::this_thread::sleep_for(std::chrono::milliseconds(waitAfterRelease));

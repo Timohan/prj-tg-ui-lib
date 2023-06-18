@@ -96,6 +96,17 @@ bool FunctionalTestOrders::loadOrders()
                     textPos += text.size() + 1;
                 }
                 m_listOrder.push_back(orders);
+            } else if (getNextText(line) == "isImage") {
+                orders.m_type = TestOrderType::isImage;
+                textPos = getNextText(line).size()+1;
+
+                std::string text = getNextText(line.c_str()+textPos);
+                if (text.size() == 0) {
+                    TG_ERROR_LOG("Line is incorrect ", lineIndex );
+                    return false;
+                }
+                orders.m_listString.push_back(text);
+                m_listOrder.push_back(orders);
             } else if (getNextText(line) == "isVisible") {
                 orders.m_type = TestOrderType::isVisible;
                 textPos = getNextText(line).size()+1;
