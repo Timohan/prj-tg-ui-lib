@@ -170,6 +170,7 @@ private:
     friend class TgTextfield;
     friend class TgSlider;
     friend class TgSliderPrivate;
+    friend class TgPagesPrivate;
 
 };
 

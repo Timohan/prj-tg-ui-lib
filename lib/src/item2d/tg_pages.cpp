@@ -22,7 +22,7 @@
  */
 TgPages::TgPages(TgItem2d *parent) :
     TgItem2d(parent),
-    m_private(new TgPagesPrivate())
+    m_private(new TgPagesPrivate(this))
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
@@ -42,7 +42,7 @@ TgPages::TgPages(TgItem2d *parent) :
  */
 TgPages::TgPages(TgItem2d *parent, float x, float y, float width, float height) :
     TgItem2d(parent, x, y, width, height),
-    m_private(new TgPagesPrivate())
+    m_private(new TgPagesPrivate(this))
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();

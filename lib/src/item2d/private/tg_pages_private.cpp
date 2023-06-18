@@ -13,13 +13,16 @@
 #include "../../global/tg_global_log.h"
 #include "../tg_page.h"
 #include "tg_page_private.h"
+#include "../tg_item2d.h"
+#include "item2d/tg_item2d_private.h"
 
-TgPagesPrivate::TgPagesPrivate() :
+TgPagesPrivate::TgPagesPrivate(TgItem2d *currentItem) :
     m_currentPageIndex(0),
     m_pageSwitchMaxTime(0.25),
     m_pageSwitchType(TgPagesPageSwitchType::PageSwitchType_Direct)
 {
     TG_FUNCTION_BEGIN();
+    currentItem->m_private->setInternalResize(this);
     TG_FUNCTION_END();
 }
 
@@ -177,3 +180,21 @@ void TgPagesPrivate::checkPositionValues()
     TG_FUNCTION_END();
 }
 
+/*!
+ * \brief TgPagesPrivate::onInternalResize
+ *
+ * This is internal resize call to set that pages are correctly set
+ * by x, y, width, heigth
+ */
+void TgPagesPrivate::onInternalResize(float, float, float, float)
+{
+    TG_FUNCTION_BEGIN();
+    for (size_t i=0;i<m_listPage.size();i++) {
+        if (i == m_currentPageIndex) {
+            m_listPage[i]->m_private->setPageOnTopOfParent();
+        } else {
+            m_listPage[i]->m_private->setPageOutsideParent();
+        }
+    }
+    TG_FUNCTION_END();
+}

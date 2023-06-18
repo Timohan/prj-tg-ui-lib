@@ -32,6 +32,12 @@ enum RenderVisibility
     RenderVisibility_Invisible
 };
 
+class TgItem2dPositionInternalResize
+{
+public:
+    virtual void onInternalResize(float x, float y, float width, float height) = 0;
+};
+
 class TgItem2dPosition
 {
 public:
@@ -84,6 +90,7 @@ public:
     void setCurrentGridViewCell(TgGridViewCellPrivate *currentGridViewCell);
 
     bool isRenderVisible(const TgWindowInfo *windowInfo);
+    void setInternalResize(TgItem2dPositionInternalResize *internalResize);
 
 private:
     float m_x;
@@ -93,6 +100,7 @@ private:
     float m_addMinHeightOnVisible;
     float m_addMaxHeightOnVisible;
     RenderVisibility m_renderVisibility = RenderVisibility_NotCalculated;
+    TgItem2dPositionInternalResize *m_internalResize = nullptr;
 
     TgItem2d *m_parent;
     TgItem2dPrivate *m_currentItemPrivate;

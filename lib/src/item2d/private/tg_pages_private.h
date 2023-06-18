@@ -16,12 +16,13 @@
 #include <vector>
 #include "../tg_pages.h"
 #include "../../common/time_difference.h"
+#include "item2d/tg_item2d_position.h"
 
-class TgPagesPrivate
+class TgPagesPrivate : public TgItem2dPositionInternalResize
 {
 public:
-    explicit TgPagesPrivate();
-    ~TgPagesPrivate();
+    explicit TgPagesPrivate(TgItem2d *currentItem);
+    virtual ~TgPagesPrivate();
 
     void addPage(TgPage *page);
 
@@ -32,6 +33,8 @@ public:
     void setPageSwitchType(TgPagesPageSwitchType type);
     void checkPositionValues();
     void setPageSwitchTime(double pageSwitchTime);
+
+    virtual void onInternalResize(float x, float y, float width, float height) override;
 
 private:
     std::vector<TgPage *>m_listPage;

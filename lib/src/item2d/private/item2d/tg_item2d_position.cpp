@@ -58,6 +58,11 @@ TgItem2dPosition::TgItem2dPosition(float x, float y, float width, float height, 
 {    
 }
 
+void TgItem2dPosition::setInternalResize(TgItem2dPositionInternalResize *internalResize)
+{
+    m_internalResize = internalResize;
+}
+
 /*!
  * \brief TgItem2dPosition::getX
  *
@@ -442,12 +447,17 @@ void TgItem2dPosition::checkOnResizeChanged()
     float y = getYonWindow();
     float w = getWidth();
     float h = getHeight();
-    if (f_resizeChanged
+    if ((f_resizeChanged || m_internalResize)
         && (std::fabs(x - m_previousPosition.m_left) > std::numeric_limits<double>::epsilon()
             || std::fabs(y - m_previousPosition.m_top) > std::numeric_limits<double>::epsilon()
             || std::fabs(w - m_previousPosition.m_right) > std::numeric_limits<double>::epsilon()
             || std::fabs(h - m_previousPosition.m_bottom) > std::numeric_limits<double>::epsilon())) {
-        f_resizeChanged(getX(), getY(), w, h);
+        if (m_internalResize) {
+            m_internalResize->onInternalResize(getX(), getY(), w, h);
+        }
+        if (f_resizeChanged) {
+            f_resizeChanged(getX(), getY(), w, h);
+        }
     }
     m_previousPosition.m_left = x;
     m_previousPosition.m_top = y;
