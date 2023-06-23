@@ -19,13 +19,13 @@ private:
     TgButton m_buttonAddCount;
     TgButton m_buttonReduceCount;
 
-    void onButtonAddClick(TgMouseType type, float x, float y);
-    void onButtonCloseClick(TgMouseType type, float x, float y);
-    void onButtonAddedClick(TgMouseType type, float x, float y);
-    void onButtonRemoveClick(TgMouseType type, float x, float y);
+    void onButtonAddClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonAddedClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonRemoveClick(TgMouseType type, float x, float y, const void *id);
 
-    void onButtonAddedCountClick(TgMouseType type, float x, float y);
-    void onButtonReduceCountClick(TgMouseType type, float x, float y);
+    void onButtonAddedCountClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonReduceCountClick(TgMouseType type, float x, float y, const void *id);
 };
 
 #endif

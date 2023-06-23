@@ -9,9 +9,9 @@ Page1::Page1(TgPages *parent) :
     m_buttonChangeSwitchTime(this, 20, 90, 250, 50, "Page change time to 0.25"),
     m_buttonChangeSwitchTimeToSecond(this, 20, 160, 250, 50, "Page change time to 1")
 {
-    m_buttonChange.connectOnMouseClicked( std::bind(&Page1::onButtonClickPage0, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeSwitchTime.connectOnMouseClicked( std::bind(&Page1::onButtonPageChangeTimeToDefault, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeSwitchTimeToSecond.connectOnMouseClicked( std::bind(&Page1::onButtonPageChangeTimeToSecond, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonChange.connectOnMouseClicked( std::bind(&Page1::onButtonClickPage0, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeSwitchTime.connectOnMouseClicked( std::bind(&Page1::onButtonPageChangeTimeToDefault, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeSwitchTimeToSecond.connectOnMouseClicked( std::bind(&Page1::onButtonPageChangeTimeToSecond, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     this->connectOnVisibleChanged( std::bind(&Page1::onPageVisibleChanged, this, std::placeholders::_1) );
 
     m_buttonChange.connectOnSelectedChanged( std::bind(&Page1::onButtonChangeSelectedChanged, this, std::placeholders::_1) );
@@ -23,7 +23,7 @@ Page1::~Page1()
 {
 }
 
-void Page1::onButtonClickPage0(TgMouseType type, float x, float y)
+void Page1::onButtonClickPage0(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -32,7 +32,7 @@ void Page1::onButtonClickPage0(TgMouseType type, float x, float y)
     m_pages->setPage(0);
 }
 
-void Page1::onButtonPageChangeTimeToDefault(TgMouseType type, float x, float y)
+void Page1::onButtonPageChangeTimeToDefault(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -41,7 +41,7 @@ void Page1::onButtonPageChangeTimeToDefault(TgMouseType type, float x, float y)
     m_pages->setPageSwitchTime(0.25);
 }
 
-void Page1::onButtonPageChangeTimeToSecond(TgMouseType type, float x, float y)
+void Page1::onButtonPageChangeTimeToSecond(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;

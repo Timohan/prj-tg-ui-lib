@@ -14,7 +14,7 @@ MainWindow::MainWindow(int width, int height) :
     m_menuTop.addMenu("Selection");
     m_menuTop.addMenu("Help");
 
-    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 
     TgMenuItem *closeItem = m_buttonClose.addMenu("Move close button", nullptr);
     m_buttonClose.addMenu("Test menu 1", nullptr);
@@ -26,13 +26,13 @@ MainWindow::MainWindow(int width, int height) :
     testMenu2->addMenu("Test sub 4", nullptr);
     testMenu2->addMenu("Test sub 5", nullptr);
 
-    closeItem->connectOnMouseClicked( std::bind(&MainWindow::onMenuItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    closeItem->connectOnMouseClicked( std::bind(&MainWindow::onMenuItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 
     m_newItem = fileItem->addMenu("New", nullptr);
     fileItem->addMenu("Save", nullptr);
     fileItem->addMenu("Open", nullptr);
 
-    m_newItem->connectOnMouseClicked( std::bind(&MainWindow::onNewMenuItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_newItem->connectOnMouseClicked( std::bind(&MainWindow::onNewMenuItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 
     m_newItem->addMenu("New sub 0", nullptr);
     m_newItem->addMenu("New sub 1", nullptr);
@@ -73,18 +73,18 @@ MainWindow::MainWindow(int width, int height) :
     m_newBottomRightSub->addMenu("Bottom right sub 4s", &shortCutBottomLeft);
     TgMenuItem *newBottomRightSub5s = m_newBottomRightSub->addMenu("Bottom right sub 5s", nullptr);
 
-    newTopRight->connectOnMouseClicked( std::bind(&MainWindow::onNewTopRightItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    newBottomLeft->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomLeftItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    newBottomRight->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomRightItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_newBottomRightSub->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomRightSub5ItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    newBottomRightSub5s->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomRightSub5sItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    newTopRight->connectOnMouseClicked( std::bind(&MainWindow::onNewTopRightItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    newBottomLeft->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomLeftItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    newBottomRight->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomRightItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_newBottomRightSub->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomRightSub5ItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    newBottomRightSub5s->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomRightSub5sItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 }
 
 MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const void *)
 {
     if (type == TgMouseType::ButtonLeft) {
         std::cout << "Closing the application\n";
@@ -92,23 +92,23 @@ void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
     }
 }
 
-void MainWindow::onMenuItemClicked(TgMouseType type, float x, float y)
+void MainWindow::onMenuItemClicked(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Menu item clicked\n";
 }
 
-void MainWindow::onNewMenuItemClicked(TgMouseType type, float x, float y)
+void MainWindow::onNewMenuItemClicked(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "New Menu item clicked\n";
 }
 
-void MainWindow::onNewTopRightItemClicked(TgMouseType type, float x, float y)
+void MainWindow::onNewTopRightItemClicked(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "TopRight Menu item clicked\n";
     m_newItem->setEnabled(!m_newItem->getEnabled());
 }
 
-void MainWindow::onNewBottomLeftItemClicked(TgMouseType type, float x, float y)
+void MainWindow::onNewBottomLeftItemClicked(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "BottomLeft Menu item clicked\n";
     TgMenuItem *addedMenu = m_menuTop.addMenu("New add");
@@ -119,13 +119,13 @@ void MainWindow::onNewBottomLeftItemClicked(TgMouseType type, float x, float y)
     if (m_newItem) {
         TgMenuItem *add = m_newItem->addMenu("New new time", nullptr);
         if (add) {
-            add->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomRight1ItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+            add->connectOnMouseClicked( std::bind(&MainWindow::onNewBottomRight1ItemClicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
             std::cout << "Added sub new menu\n";
         }
     }
 }
 
-void MainWindow::onNewBottomRightItemClicked(TgMouseType type, float x, float y)
+void MainWindow::onNewBottomRightItemClicked(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "BottomRight Menu item clicked\n";
     if (m_menuTop.getMenuCount() > 1) {
@@ -142,12 +142,12 @@ void MainWindow::onNewBottomRightItemClicked(TgMouseType type, float x, float y)
     }
 }
 
-void MainWindow::onNewBottomRight1ItemClicked(TgMouseType type, float x, float y)
+void MainWindow::onNewBottomRight1ItemClicked(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "BottomRight 1 item clicked\n";
 }
 
-void MainWindow::onNewBottomRightSub5ItemClicked(TgMouseType type, float x, float y)
+void MainWindow::onNewBottomRightSub5ItemClicked(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "BottomRight Menu sub 5 item clicked\n";
     if (!m_newItem) {
@@ -164,7 +164,7 @@ void MainWindow::onNewBottomRightSub5ItemClicked(TgMouseType type, float x, floa
     }
 }
 
-void MainWindow::onNewBottomRightSub5sItemClicked(TgMouseType type, float x, float y)
+void MainWindow::onNewBottomRightSub5sItemClicked(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "BottomRight Menu sub 5s item clicked\n";
 }

@@ -19,7 +19,7 @@ MainWindow::~MainWindow()
  *
  * callback when button add is clicked
  */
-void MainWindow::onButtonAddClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonAddClick(TgMouseType type, float x, float y, const void *)
 {
 }
 
@@ -28,7 +28,7 @@ void MainWindow::onButtonAddClick(TgMouseType type, float x, float y)
  *
  * callback when button remove is clicked
  */
-void MainWindow::onButtonRemoveClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonRemoveClick(TgMouseType type, float x, float y, const void *)
 {
 }
 
@@ -37,7 +37,7 @@ void MainWindow::onButtonRemoveClick(TgMouseType type, float x, float y)
  *
  * callback when button close is clicked
  */
-void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Closing the application\n";
     exit();
@@ -48,7 +48,7 @@ void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
  *
  * callback when button added is clicked
  */
-void MainWindow::onButtonAddedClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonAddedClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Added button clicked\n";
 }

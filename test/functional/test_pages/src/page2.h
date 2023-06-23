@@ -30,13 +30,13 @@ private:
     TgTextfield m_textFieldForTestCenter;
     std::vector<float> m_allDrawHeight;
 
-    void onButtonClickPage0(TgMouseType type, float x, float y);
-    void onButtonClickFromDirect(TgMouseType type, float x, float y);
-    void onButtonClickFromTop(TgMouseType type, float x, float y);
-    void onButtonClickFromBottom(TgMouseType type, float x, float y);
-    void onButtonClickFromLeft(TgMouseType type, float x, float y);
-    void onButtonClickFromRight(TgMouseType type, float x, float y);
-    void onButtonChangeTextClick(TgMouseType type, float x, float y);
+    void onButtonClickPage0(TgMouseType type, float x, float y, const void *);
+    void onButtonClickFromDirect(TgMouseType type, float x, float y, const void *);
+    void onButtonClickFromTop(TgMouseType type, float x, float y, const void *);
+    void onButtonClickFromBottom(TgMouseType type, float x, float y, const void *);
+    void onButtonClickFromLeft(TgMouseType type, float x, float y, const void *);
+    void onButtonClickFromRight(TgMouseType type, float x, float y, const void *);
+    void onButtonChangeTextClick(TgMouseType type, float x, float y, const void *);
     void onPageVisibleChanged(bool visible);
 
     void onButtonChangeSelectedChanged(bool selected);

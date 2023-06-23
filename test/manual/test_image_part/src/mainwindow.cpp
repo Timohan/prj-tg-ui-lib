@@ -13,11 +13,11 @@ MainWindow::MainWindow(int width, int height) :
     m_imageCropPosition(false),
     m_imageAreaPosition(false)
 {
-    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeTexture.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTextureClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeCropPosition.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeCropPositionClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeAreaPosition.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeAreaPositionClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeAreaType.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTypePositionClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeTexture.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTextureClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeCropPosition.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeCropPositionClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeAreaPosition.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeAreaPositionClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeAreaType.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTypePositionClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 }
 
 MainWindow::~MainWindow()
@@ -29,13 +29,13 @@ MainWindow::~MainWindow()
  *
  * callback when button close is clicked
  */
-void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const void *id)
 {
     std::cout << "Closing the application\n";
     exit();
 }
 
-void MainWindow::onButtonChangeTextureClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonChangeTextureClick(TgMouseType type, float x, float y, const void *id)
 {
     std::cout << "Change texture\n";
     m_imageIndex = !m_imageIndex;
@@ -46,7 +46,7 @@ void MainWindow::onButtonChangeTextureClick(TgMouseType type, float x, float y)
     }
 }
 
-void MainWindow::onButtonChangeCropPositionClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonChangeCropPositionClick(TgMouseType type, float x, float y, const void *id)
 {
     std::cout << "Change texture\n";
     m_imageCropPosition = !m_imageCropPosition;
@@ -76,7 +76,7 @@ void MainWindow::onButtonChangeCropPositionClick(TgMouseType type, float x, floa
     }
 }
 
-void MainWindow::onButtonChangeAreaPositionClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonChangeAreaPositionClick(TgMouseType type, float x, float y, const void *id)
 {
     std::cout << "Change area position\n";
     m_imageAreaPosition = !m_imageAreaPosition;
@@ -106,7 +106,7 @@ void MainWindow::onButtonChangeAreaPositionClick(TgMouseType type, float x, floa
     }
 }
 
-void MainWindow::onButtonChangeTypePositionClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonChangeTypePositionClick(TgMouseType type, float x, float y, const void *id)
 {
     std::cout << "Change area type\n";
     if (m_imagePart.getType() == TgImagePartType::TgImagePartType_Part9) {

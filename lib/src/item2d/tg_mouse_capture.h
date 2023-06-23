@@ -53,7 +53,7 @@ public:
     void disconnectOnMousePressed();
     void connectOnMouseReleased(std::function<void(TgMouseType button, bool inArea, float x, float y)> mouseReleased);
     void disconnectOnMouseReleased();
-    void connectOnMouseClicked(std::function<void(TgMouseType button, float x, float y)> mouseClicked);
+    void connectOnMouseClicked(std::function<void(TgMouseType button, float x, float y, const void *id)> mouseClicked, const void *id = nullptr);
     void disconnectOnMouseClicked();
 
     void connectOnMouseMove(std::function<void(float x, float y)> mouseMove);

@@ -23,9 +23,9 @@ private:
     TgTextfield m_textFieldForTestBottomRight;
     TgTextfield m_textFieldForTestTopLeft;
 
-    void onButtonClickPage1(TgMouseType type, float x, float y);
-    void onButtonClickPage2(TgMouseType type, float x, float y);
-    void onButtonCloseClick(TgMouseType type, float x, float y);
+    void onButtonClickPage1(TgMouseType type, float x, float y, const void *);
+    void onButtonClickPage2(TgMouseType type, float x, float y, const void *);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *);
     void onPageVisibleChanged(bool visible);
     void onButtonCloseVisibleChanged(bool visible);
 

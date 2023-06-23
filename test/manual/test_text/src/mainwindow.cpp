@@ -10,8 +10,8 @@ MainWindow::MainWindow(int width, int height) :
     m_textFieldForTestCenter(this, "Center text", "", 21, 255, 255, 255),
     m_textEmptyText(this, "", "", 21, 255, 255, 255)
 {
-    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeText.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTextClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeText.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTextClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 
     m_textFieldForTestBottomRight.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignRight);
     m_textFieldForTestBottomRight.setVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
@@ -37,7 +37,7 @@ MainWindow::~MainWindow()
  *
  * callback when button close is clicked
  */
-void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Closing the application\n";
     exit();
@@ -48,7 +48,7 @@ void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
  *
  * callback when button added is clicked
  */
-void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Change text button clicked\n";
     m_centerTextIndex++;

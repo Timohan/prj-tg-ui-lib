@@ -42,7 +42,7 @@ void TgMouseCaptureClick::setMouseReleased(TgMouseType type, bool inArea, float 
     if (inArea && !releaseWoCallback) {
         if (f_mouseClicked) {
             m_mutex.unlock();
-            f_mouseClicked(type, x, y);
+            f_mouseClicked(type, x, y, m_id);
             m_currentMouseCapture->onMouseClicked(type, x, y);
             if (m_mouseCaptureInternalCallback) {
                 m_mouseCaptureInternalCallback->onClickedCallback(m_currentMouseCapture);
@@ -66,11 +66,12 @@ void TgMouseCaptureClick::setMouseReleased(TgMouseType type, bool inArea, float 
  * connects callback to function for on mouse clicked
  * \param mouseClicked
  */
-void TgMouseCaptureClick::connectOnMouseClicked(std::function<void(TgMouseType, float, float)> mouseClicked)
+void TgMouseCaptureClick::connectOnMouseClicked(std::function<void(TgMouseType, float, float, const void *)> mouseClicked, const void *id)
 {
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
     f_mouseClicked = mouseClicked;
+    m_id = id;
     m_mutex.unlock();
     TG_FUNCTION_END();
 }
@@ -95,7 +96,7 @@ void TgMouseCaptureClick::sendMouseClickedNoButton()
     m_mutex.lock();
     if (f_mouseClicked) {
         m_mutex.unlock();
-        f_mouseClicked(TgMouseType::NoButton, -1, -1);
+        f_mouseClicked(TgMouseType::NoButton, -1, -1, m_id);
         if (m_mouseCaptureInternalCallback) {
             m_mouseCaptureInternalCallback->onClickedCallback(m_currentMouseCapture);
         }

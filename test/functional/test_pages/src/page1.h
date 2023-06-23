@@ -20,10 +20,10 @@ private:
     TgButton m_buttonChangeSwitchTime;
     TgButton m_buttonChangeSwitchTimeToSecond;
 
-    void onButtonClickPage0(TgMouseType type, float x, float y);
+    void onButtonClickPage0(TgMouseType type, float x, float y, const void *);
 
-    void onButtonPageChangeTimeToDefault(TgMouseType type, float x, float y);
-    void onButtonPageChangeTimeToSecond(TgMouseType type, float x, float y);
+    void onButtonPageChangeTimeToDefault(TgMouseType type, float x, float y, const void *);
+    void onButtonPageChangeTimeToSecond(TgMouseType type, float x, float y, const void *);
     void onPageVisibleChanged(bool visible);
 
     void onButtonChangeSelectedChanged(bool selected);

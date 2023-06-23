@@ -222,11 +222,12 @@ void TgMouseCapture::disconnectOnMouseReleased()
  *
  * connects callback to function for on mouse clicked
  * \param mouseClicked
+ * \param id pointer to id, which is sent at the mouse clicked callback
  */
-void TgMouseCapture::connectOnMouseClicked(std::function<void(TgMouseType, float, float)> mouseClicked)
+void TgMouseCapture::connectOnMouseClicked(std::function<void(TgMouseType, float, float, const void *id)> mouseClicked, const void *id)
 {
     TG_FUNCTION_BEGIN();
-    m_private->connectOnMouseClicked(mouseClicked);
+    m_private->connectOnMouseClicked(mouseClicked, id);
     TG_FUNCTION_END();
 }
 

@@ -19,16 +19,16 @@ private:
     TgMenuItem *m_newItem;
     TgMenuItem *m_newBottomRightSub;
 
-    void onButtonCloseClick(TgMouseType type, float x, float y);
-    void onMenuItemClicked(TgMouseType type, float x, float y);
-    void onNewMenuItemClicked(TgMouseType type, float x, float y);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *);
+    void onMenuItemClicked(TgMouseType type, float x, float y, const void *);
+    void onNewMenuItemClicked(TgMouseType type, float x, float y, const void *);
 
-    void onNewTopRightItemClicked(TgMouseType type, float x, float y);
-    void onNewBottomLeftItemClicked(TgMouseType type, float x, float y);
-    void onNewBottomRightItemClicked(TgMouseType type, float x, float y);
-    void onNewBottomRight1ItemClicked(TgMouseType type, float x, float y);
-    void onNewBottomRightSub5ItemClicked(TgMouseType type, float x, float y);
-    void onNewBottomRightSub5sItemClicked(TgMouseType type, float x, float y);
+    void onNewTopRightItemClicked(TgMouseType type, float x, float y, const void *);
+    void onNewBottomLeftItemClicked(TgMouseType type, float x, float y, const void *);
+    void onNewBottomRightItemClicked(TgMouseType type, float x, float y, const void *);
+    void onNewBottomRight1ItemClicked(TgMouseType type, float x, float y, const void *);
+    void onNewBottomRightSub5ItemClicked(TgMouseType type, float x, float y, const void *);
+    void onNewBottomRightSub5sItemClicked(TgMouseType type, float x, float y, const void *);
 };
 
 #endif

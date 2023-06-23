@@ -8,7 +8,7 @@ MainWindow::MainWindow(int width, int height) :
     m_buttonRemoveComboBoxItem(this, 20, 300, 200, 50, "Remove item"),
     m_combobox(this, 20, 100, 100, 50)
 {
-    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     m_combobox.addItemText("Text 0");
     m_combobox.addItemText("Text 2");
     m_combobox.addItemText("Text 3");
@@ -16,8 +16,8 @@ MainWindow::MainWindow(int width, int height) :
     m_combobox.addItemText("Text 5");
     m_combobox.addItemText("Text 1", 1);
     m_combobox.connectOnSelectedIndexChanged(std::bind(&MainWindow::onComboBoxItemChanged, this, std::placeholders::_1));
-    m_buttonAddComboBoxItem.connectOnMouseClicked( std::bind(&MainWindow::onButtonAddClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonRemoveComboBoxItem.connectOnMouseClicked( std::bind(&MainWindow::onButtonRemoveClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonAddComboBoxItem.connectOnMouseClicked( std::bind(&MainWindow::onButtonAddClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonRemoveComboBoxItem.connectOnMouseClicked( std::bind(&MainWindow::onButtonRemoveClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 }
 
 MainWindow::~MainWindow()
@@ -33,7 +33,7 @@ MainWindow::~MainWindow()
  *
  * callback when button close is clicked
  */
-void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const void *id)
 {
     std::cout << "Closing the application\n";
     exit();
@@ -50,7 +50,7 @@ void MainWindow::onComboBoxItemChanged(size_t index)
     std::cout << "on Menu Item changed " << index << "\n";
 }
 
-void MainWindow::onButtonAddClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonAddClick(TgMouseType type, float x, float y, const void *id)
 {
     std::string tmp = std::string("Added ") + std::to_string(m_currentItemIndex);
     m_combobox.addItemText(tmp.c_str());
@@ -63,7 +63,7 @@ void MainWindow::onButtonAddClick(TgMouseType type, float x, float y)
     }
 }
 
-void MainWindow::onButtonRemoveClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonRemoveClick(TgMouseType type, float x, float y, const void *id)
 {
     if (m_combobox.getItemCount() > 7) {
         m_combobox.removeItemText(5);

@@ -74,19 +74,19 @@ private:
 
 
     std::vector<MouseStateChange> m_listMouseStateChange;
-    void onMenuNewClick(TgMouseType type, float x, float y);
-    void onMenuSaveClick(TgMouseType type, float x, float y);
-    void onMenuOpenClick(TgMouseType type, float x, float y);
-    void onMenuCopyClick(TgMouseType type, float x, float y);
-    void onMenuBottomRight2Click(TgMouseType type, float x, float y);
-    void onMenuBottomRight1Click(TgMouseType type, float x, float y);
-    void onMenu2ndBottomRight1Click(TgMouseType type, float x, float y);
-    void onMenu2ndBottomRight3Click(TgMouseType type, float x, float y);
-    void onMenuLargerClick(TgMouseType type, float x, float y);
-    void onMenuTopLeft2Click(TgMouseType type, float x, float y);
-    void onMenuTopLeft22Click(TgMouseType type, float x, float y);
+    void onMenuNewClick(TgMouseType type, float x, float y, const void *);
+    void onMenuSaveClick(TgMouseType type, float x, float y, const void *);
+    void onMenuOpenClick(TgMouseType type, float x, float y, const void *);
+    void onMenuCopyClick(TgMouseType type, float x, float y, const void *);
+    void onMenuBottomRight2Click(TgMouseType type, float x, float y, const void *);
+    void onMenuBottomRight1Click(TgMouseType type, float x, float y, const void *);
+    void onMenu2ndBottomRight1Click(TgMouseType type, float x, float y, const void *);
+    void onMenu2ndBottomRight3Click(TgMouseType type, float x, float y, const void *);
+    void onMenuLargerClick(TgMouseType type, float x, float y, const void *);
+    void onMenuTopLeft2Click(TgMouseType type, float x, float y, const void *);
+    void onMenuTopLeft22Click(TgMouseType type, float x, float y, const void *);
 
-    void addMenuClicked(size_t index, int x, int y);
+    void addMenuClicked(size_t index, int x, int y, const void *);
 
 };
 
