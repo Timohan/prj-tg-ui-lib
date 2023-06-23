@@ -210,6 +210,7 @@ clean:
 	rm -f src/font/cache/*.o
 	rm -f src/event/*.o
 	rm -f src/common/*.o
+	rm -f $(window_private_SRCDIR)/*.o
 	rm -f src/render/*.o
 	rm -f *.so
 
