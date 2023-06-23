@@ -32,6 +32,7 @@ private:
     size_t m_currentTimeMaxTimeOut = DEFAULT_RENDER_WAIT_MAX_TIMEOUT;
     size_t m_renderCount = 0;
     std::mutex m_mutex;
+    bool m_semLocked = false;
 };
 
 #endif // TG_GLOBAL_WAIT_RENDER_H
