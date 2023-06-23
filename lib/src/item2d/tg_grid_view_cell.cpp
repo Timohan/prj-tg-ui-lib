@@ -31,6 +31,11 @@ TgGridViewCell::~TgGridViewCell()
     }
 }
 
+TgMenuItem *TgGridViewCell::addMenu(const char *text, const TgShortCut *shortCut)
+{
+    return TgItem2d::m_private->addMenu(nullptr, text, shortCut);
+}
+
 /*! \brief TgGridViewCell::setText
  * \param text
  */
@@ -276,4 +281,37 @@ float TgGridViewCell::getTextMarginBottom()
 void TgGridViewCell::setTooltip(const char *text)
 {
     TgItem2d::setTooltip(text);
+}
+
+/*!
+ * \brief TgGridViewCell::getMenuCount
+ *
+ * \return count of menu items
+*/
+size_t TgGridViewCell::getMenuCount()
+{
+    return TgItem2d::getMenuCount();
+}
+
+/*!
+ * \brief TgGridViewCell::getMenu
+ *
+ * \param index
+ * \return pointer of menu item
+ * if index >= list of menu items, then return nullptr
+ */
+TgMenuItem *TgGridViewCell::getMenu(size_t index)
+{
+    return TgItem2d::getMenu(index);
+}
+
+/*!
+ * \brief TgGridViewCell::removeMenu
+ *
+ * \param i index of sub menu
+ * \return true if sub menu was removed
+ */
+bool TgGridViewCell::removeMenu(size_t i)
+{
+    return TgItem2d::removeMenu(i);
 }
