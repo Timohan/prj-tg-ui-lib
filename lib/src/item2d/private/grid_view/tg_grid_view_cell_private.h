@@ -16,6 +16,7 @@ class TgGridViewCell;
 class TgGridView;
 #include "../../tg_textfield.h"
 #include "../../tg_rectangle.h"
+#include "../../tg_grid_view_cell.h"
 #include <string>
 
 class TgGridViewCellPrivate
@@ -23,6 +24,7 @@ class TgGridViewCellPrivate
 public:
     TgGridViewCellPrivate(TgGridViewCell *currentItem, TgGridView *parentItem);
 
+    void setWidthType(TgGridViewCellSizeType type, bool useCallback = true);
     void setText(const char *text);
     void setText(const std::vector<TgTextFieldText> &listText);
     std::string getText() const;
@@ -43,12 +45,14 @@ public:
     float getTextMarginTop();
     float getTextMarginRight();
     float getTextMarginBottom();
+    float getCellRequiredWidth();
 
 private:
     TgGridViewCell *m_currentItem;
     TgGridView *m_parentItem;
     TgRectangle m_background;
     TgTextfield m_text;
+    TgGridViewCellSizeType m_widthType = TgGridViewCellSizeType::TgGridViewCellSize_FixedSize;
 };
 
 #endif // TG_GRID_VIEW_CELL_PRIVATE_H

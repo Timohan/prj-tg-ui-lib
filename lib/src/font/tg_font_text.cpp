@@ -37,41 +37,7 @@ TgFontText::TgFontText() :
  */
 void TgFontText::setFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames)
 {
-    getFontFileNames(mainFontFile, listFontFileNames, m_listFontFileNames);
-}
-
-/*!
- * \brief TgFontText::getFontFileNames
- *
- * sets and re-generates the font list, sets main font file
- * as first font file on the list
- *
- * \param mainFontFile [in]
- * \param listFontFiles [in] sets mainFontFile as first to this list
- * \param listFontFileNamesOut [out] sets mainFontFile as first to this list
- */
-void TgFontText::getFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames,
-                                  std::vector<std::string> &listFontFileNamesOut)
-{
-    std::vector<std::string>::iterator it;
-    listFontFileNamesOut = std::move(listFontFileNames);
-    if (mainFontFile.empty()
-        || (!listFontFileNamesOut.empty() && listFontFileNamesOut.at(0) == mainFontFile)) {
-        for (it=listFontFileNamesOut.begin();it!=listFontFileNamesOut.end();it++) {
-            TgGlobalApplication::getInstance()->getFontCharactersCache()->addFont(*it);
-        }
-        return;
-    }
-
-
-    for (it=listFontFileNamesOut.begin();it!=listFontFileNamesOut.end();it++) {
-        if ((*it) == mainFontFile) {
-            listFontFileNamesOut.erase(it);
-        }
-        TgGlobalApplication::getInstance()->getFontCharactersCache()->addFont(*it);
-    }
-
-    listFontFileNamesOut.insert(listFontFileNamesOut.begin(), mainFontFile);
+    TgFontDefault::getFontFileNames(mainFontFile, listFontFileNames, m_listFontFileNames);
 }
 
 /*!
@@ -87,21 +53,38 @@ void TgFontText::getFontFileNames(const std::string &mainFontFile, const std::ve
  */
 void TgFontText::addCharacter(uint32_t character, uint8_t r, uint8_t g, uint8_t b)
 {
+    addCharacter(m_listCharacter, character, r, g, b, m_listFontFileNames);
+}
+
+/*!
+ * \brief TgFontText::addCharacter
+ *
+ * add character to list
+ * setFontFileNames must be called first before this function
+ *
+ * \param listCharacter [in/out] fill character into list
+ * \param character [in] character to add into m_listCharacter
+ * \param r text red color
+ * \param g text green color
+ * \param b text blue color
+ */
+void TgFontText::addCharacter(std::vector<TgFontTextCharacterInfo>&listCharacter, uint32_t character, uint8_t r, uint8_t g, uint8_t b, const std::vector<std::string> &listFontFileNames)
+{
     TgFontTextCharacterInfo charInfo;
     std::string fontFileName;
 
-    if (!m_listCharacter.empty()
-        && m_listCharacter.back().m_fontFileNameIndex != -1) {
-        fontFileName = m_listFontFileNames.at( m_listCharacter.back().m_fontFileNameIndex );
+    if (!listCharacter.empty()
+        && listCharacter.back().m_fontFileNameIndex != -1) {
+        fontFileName = listFontFileNames.at( listCharacter.back().m_fontFileNameIndex );
     }
 
-    charInfo.m_fontFileNameIndex = TgGlobalApplication::getInstance()->getFontCharactersCache()->getFontIndexForCharacter(character, fontFileName, m_listFontFileNames);
+    charInfo.m_fontFileNameIndex = TgGlobalApplication::getInstance()->getFontCharactersCache()->getFontIndexForCharacter(character, fontFileName, listFontFileNames);
     charInfo.m_character = character;
     charInfo.m_textColorR = r;
     charInfo.m_textColorG = g;
     charInfo.m_textColorB = b;
 
-    m_listCharacter.push_back(charInfo);
+    listCharacter.push_back(charInfo);
 }
 
 /*!
@@ -135,11 +118,11 @@ TgFontTextCharacterInfo *TgFontText::getCharacter(size_t i)
  * \return list of characters that are belonging to this fontFileNameIndex
  * each character is only there for once
  */
-std::vector<uint32_t> TgFontText::getCharactersByFontFileNameIndex(int32_t fontFileNameIndex)
+std::vector<uint32_t> TgFontText::getCharactersByFontFileNameIndex(int32_t fontFileNameIndex, const std::vector<TgFontTextCharacterInfo>&listCharacter)
 {
     std::vector<uint32_t> ret;
     std::vector<TgFontTextCharacterInfo>::const_iterator it;
-    for (it=m_listCharacter.begin();it!=m_listCharacter.end();it++) {
+    for (it=listCharacter.begin();it!=listCharacter.end();it++) {
         if (it->m_fontFileNameIndex == fontFileNameIndex) {
             if (std::find(ret.begin(), ret.end(), it->m_character) == ret.end()) {
                 ret.push_back(it->m_character);
@@ -162,36 +145,94 @@ void TgFontText::generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculat
 {
     TgFontInfo *fontInfo;
     size_t i, indexToUse;
-    std::vector<bool>m_characterUsed;
-    m_characterUsed.resize(getCharacterCount(), false);
+    std::vector<bool> characterUsed;
+    characterUsed.resize(getCharacterCount(), false);
     clearCacheValues();
     m_listFontInfo.resize(getCharacterCount(), nullptr);
     bool added;
 
     while (1) {
-        indexToUse = m_characterUsed.size();
-        for (i=0;i<m_characterUsed.size();i++) {
-            if (!m_characterUsed[i]) {
+        indexToUse = characterUsed.size();
+        for (i=0;i<characterUsed.size();i++) {
+            if (!characterUsed[i]) {
                 indexToUse = i;
                 break;
             }
         }
-        if (indexToUse == m_characterUsed.size()) {
+        if (indexToUse == characterUsed.size()) {
             break;
         }
 
         fontInfo = nullptr;
-        if (getCharacter(indexToUse)->m_fontFileNameIndex != -1) {
-            std::vector<uint32_t> listCharacters = getCharactersByFontFileNameIndex(m_listCharacter[indexToUse].m_fontFileNameIndex);
+        if (m_listCharacter[indexToUse].m_fontFileNameIndex != -1) {
+            std::vector<uint32_t> listCharacters = getCharactersByFontFileNameIndex(m_listCharacter[indexToUse].m_fontFileNameIndex, m_listCharacter);
             fontInfo = TgGlobalApplication::getInstance()->getFontGlyphCache()->generateCacheForText(listCharacters,
-                                        m_listFontFileNames.at( getCharacter(indexToUse)->m_fontFileNameIndex ).c_str(), fontSize, onlyForCalculation);
+                                        m_listFontFileNames.at( getCharacter(indexToUse)->m_fontFileNameIndex ).c_str(),
+                                        fontSize, onlyForCalculation);
         }
 
         added = false;
-        for (i=0;i<m_characterUsed.size();i++) {
+        for (i=0;i<characterUsed.size();i++) {
             if (getCharacter(i)->m_fontFileNameIndex == getCharacter(indexToUse)->m_fontFileNameIndex) {
-                m_characterUsed[i] = true;
+                characterUsed[i] = true;
                 m_listFontInfo[i] = fontInfo;
+                added = true;
+            }
+        }
+        if (!added) {
+            if (fontInfo->m_data) {
+                prj_ttf_reader_clear_data(&fontInfo->m_data);
+            }
+            delete fontInfo;
+        }
+    }
+}
+
+/*!
+ * \brief TgFontText::generateFontTextInfoGlyphsData
+ *
+ * generates m_listFontInfo for this text
+ * which font textures contains these glyphs in the text
+ * this is for data cache only
+ *
+ * \param fontSize
+ */
+void TgFontText::generateFontTextInfoGlyphsData(float fontSize, std::vector<TgFontTextCharacterInfo>&listCharacter,
+                                                std::vector<TgFontInfoData *>&listFontInfo,
+                                                std::vector<std::string> &listFontFiles)
+{
+    TgFontInfoData *fontInfo;
+    size_t i, indexToUse;
+    std::vector<bool> characterUsed;
+    characterUsed.resize(listCharacter.size(), false);
+    listFontInfo.resize(listCharacter.size(), nullptr);
+    bool added;
+
+    while (1) {
+        indexToUse = characterUsed.size();
+        for (i=0;i<characterUsed.size();i++) {
+            if (!characterUsed[i]) {
+                indexToUse = i;
+                break;
+            }
+        }
+        if (indexToUse == characterUsed.size()) {
+            break;
+        }
+
+        fontInfo = nullptr;
+        if (listCharacter[indexToUse].m_fontFileNameIndex != -1) {
+            std::vector<uint32_t> listCharacters = getCharactersByFontFileNameIndex(listCharacter[indexToUse].m_fontFileNameIndex, listCharacter);
+            fontInfo = TgGlobalApplication::getInstance()->getFontGlyphCacheData()->generateCacheForText(listCharacters,
+                                        listFontFiles.at( listCharacter[indexToUse].m_fontFileNameIndex ).c_str(),
+                                        fontSize);
+        }
+
+        added = false;
+        for (i=0;i<characterUsed.size();i++) {
+            if (listCharacter[i].m_fontFileNameIndex == listCharacter[indexToUse].m_fontFileNameIndex) {
+                characterUsed[i] = true;
+                listFontInfo[i] = fontInfo;
                 added = true;
             }
         }
@@ -369,15 +410,28 @@ void TgFontText::clearListLinesWidth()
  */
 void TgFontText::setListLinesWidth(size_t lineNumber, float lineWidth)
 {
-    if (m_listLineWidth.size() > lineNumber) {
-        m_listLineWidth[lineNumber] = lineWidth;
-    } else if (m_listLineWidth.size() == lineNumber) {
-        m_listLineWidth.push_back(lineWidth);
+    setListLinesWidth(m_listLineWidth, lineNumber, lineWidth);
+}
+
+/*!
+ * \brief TgFontText::setListLinesWidth
+ *
+ * sets width (pixels) of the line
+ * \param listLineWidth [in/out]
+ * \param lineNumber [in] line number, 0 == first line
+ * \param lineWidth [in] width of line
+ */
+void TgFontText::setListLinesWidth(std::vector<float> &listLineWidth, size_t lineNumber, float lineWidth)
+{
+    if (listLineWidth.size() > lineNumber) {
+        listLineWidth[lineNumber] = lineWidth;
+    } else if (listLineWidth.size() == lineNumber) {
+        listLineWidth.push_back(lineWidth);
     } else {
         while (1) {
-            m_listLineWidth.push_back(0);
-            if (m_listLineWidth.size() == lineNumber) {
-                m_listLineWidth.push_back(lineWidth);
+            listLineWidth.push_back(0);
+            if (listLineWidth.size() == lineNumber) {
+                listLineWidth.push_back(lineWidth);
                 break;
             }
         }

@@ -18,6 +18,7 @@
 
 #include "tg_character_positions.h"
 #include "../item2d/tg_textfield.h"
+#include "tg_font_text.h"
 
 struct TgTextCharacter
 {
@@ -35,6 +36,8 @@ public:
     static TgFontText *generateFontTextInfo(const std::vector<TgTextFieldText> &listText, const std::string &mainFontFile);
     static bool changeTextColor(const std::vector<TgTextFieldText> &listText, TgFontText *fontText);
     static std::string generateSingleLineText(const std::vector<TgTextFieldText> &listText);
+    static std::vector<TgFontTextCharacterInfo> generateCharacterList(const std::vector<TgTextFieldText> &listText, const std::vector<std::string> &listFontFiles);
+;
 };
 
 #endif // TG_FONT_TEXT_GENERATOR_H

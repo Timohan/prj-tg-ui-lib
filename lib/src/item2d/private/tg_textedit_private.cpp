@@ -453,7 +453,7 @@ TgEventResult TgTexteditPrivate::handleEvent(TgEventData *eventData)
             && eventData->m_event.m_keyEvent.m_key != 0) {
             std::vector<std::string> listFontFileNames;
             std::string fontFile = m_textField.m_private->getFontFile();
-            TgFontText::getFontFileNames(fontFile,
+            TgFontDefault::getFontFileNames(fontFile,
                                          TgGlobalApplication::getInstance()->getFontDefault()->getListFont(),
                                          listFontFileNames);
             if (TgGlobalApplication::getInstance()->getFontCharactersCache()->getFontIndexForCharacter(eventData->m_event.m_keyEvent.m_key,

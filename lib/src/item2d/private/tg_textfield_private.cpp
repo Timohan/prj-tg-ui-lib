@@ -495,7 +495,7 @@ float TgTextfieldPrivate::getTextWidth()
     } else {
         float textHeight;
         float allDrawTextHeight;
-        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, ret, textHeight, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+        TgFontMath::getFontWidthHeightCacheWithoutRender(m_listText, m_fontSize, m_fontFile, ret, textHeight, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
     }
     m_mutex.unlock();
     TG_FUNCTION_END();
@@ -519,7 +519,7 @@ float TgTextfieldPrivate::getTextHeight()
     } else {
         float textWidth;
         float allDrawTextHeight;
-        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, textWidth, ret, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+        TgFontMath::getFontWidthHeightCacheWithoutRender(m_listText, m_fontSize, m_fontFile, textWidth, ret, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
     }
     m_mutex.unlock();
     TG_FUNCTION_END();
@@ -543,7 +543,7 @@ float TgTextfieldPrivate::getAllDrawTextHeight()
     } else {
         float textWidth;
         float textHeight;
-        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, textWidth, textHeight, ret, m_maxLineCount,
+        TgFontMath::getFontWidthHeightCacheWithoutRender(m_listText, m_fontSize, m_fontFile, textWidth, textHeight, ret, m_maxLineCount,
                                        m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
     }
     m_mutex.unlock();

@@ -38,6 +38,7 @@ bool TgFontMath::getFontWidthHeight(const std::vector<TgTextFieldText> &listText
 {
     textWidth = 0;
     textHeight = 0;
+    allDrawTextHeight = 0;
     if (listText.empty()) {
         return true;
     }
@@ -57,3 +58,31 @@ bool TgFontMath::getFontWidthHeight(const std::vector<TgTextFieldText> &listText
     return true;
 }
 
+
+bool TgFontMath::getFontWidthHeightCacheWithoutRender(const std::vector<TgTextFieldText> &listText, float fontSize, const std::string &mainFontFile,
+                                    float &textWidth, float &textHeight, float &allDrawTextHeight, const uint32_t maxLineCount, const float maxLineWidth,
+                                    const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine)
+{
+    textWidth = 0;
+    textHeight = 0;
+    allDrawTextHeight = 0;
+    if (listText.empty()) {
+        return true;
+    }
+
+    std::vector<std::string> listFontFiles = TgFontDefault::getFontFiles(mainFontFile);
+    std::vector<TgFontTextCharacterInfo> listCharacter = TgFontTextGenerator::generateCharacterList(listText, listFontFiles);
+    if (listCharacter.empty()) {
+        return true;
+    }
+
+    std::vector<TgFontInfoData *> listFontInfo;
+    TgFontText::generateFontTextInfoGlyphsData(fontSize, listCharacter, listFontInfo, listFontFiles);
+
+    if (TgCharacterPositions::calculateTextWidthHeight(listFontInfo, listCharacter, maxLineCount, maxLineWidth, wordWrap, allowBreakLineGoOverMaxLine, textWidth, textHeight, allDrawTextHeight)) {
+        for (size_t i=0;i<listFontInfo.size();i++) {
+            TgGlobalApplication::getInstance()->getFontGlyphCacheData()->addCache(listFontInfo[i]);
+        }
+    }
+    return true;
+}

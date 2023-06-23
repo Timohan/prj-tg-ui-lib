@@ -16,6 +16,7 @@
 #include "../../../global/private/tg_global_deleter.h"
 #include "../../../global/private/tg_global_wait_renderer.h"
 #include "../item2d/tg_item2d_private.h"
+#include "tg_grid_view_cell_private.h"
 
 #define DEFAULT_GRID_CELL_WIDTH     100
 #define DEFAULT_GRID_CELL_HEIGHT    25
@@ -406,6 +407,44 @@ void TgGridViewPrivate::setColumCount(size_t column)
     setGridCellsPositions();
     setSliderVisibilityAndPosition();
     static_cast<TgItem2d *>(m_currentItem)->setPositionChanged(true);
+    TG_FUNCTION_END();
+}
+
+/*! \brief TgGridViewPrivate::cellWidthTypeChanged
+ * when cell type is changed, this is called
+ * \param type new widtht of the cell
+ * \param cell
+ */
+void TgGridViewPrivate::cellWidthTypeChanged(TgGridViewCellSizeType type, TgGridViewCell *cell)
+{
+    TG_FUNCTION_BEGIN();
+    size_t x, y, y2;
+    float fRequiredWidth, w;
+    for (y=0;y<m_rowCount;y++) {
+        for (x=0;x<m_columnCount;x++) {
+            if (getCell(x, y) == cell) {
+                fRequiredWidth = cell->m_private->getCellRequiredWidth();
+                if (type == TgGridViewCellSizeType::TgGridViewCellSize_SizeFollowTextSize) {
+                    for (y2=0;y2<m_rowCount;y2++) {
+                        if (y != y2) {
+                            w = getCell(x, y2)->m_private->getCellRequiredWidth();
+                            if (w > fRequiredWidth) {
+                                fRequiredWidth = w;
+                            }
+                        }
+                    }
+                }
+                for (y2=0;y2<m_rowCount;y2++) {
+                    reinterpret_cast<TgItem2d *>(getCell(x, y2))->m_private->setWidth(fRequiredWidth, false);
+                    getCell(x, y2)->m_private->setWidthType(type, false);
+                }
+                setGridCellsPositions();
+                m_currentItem->setPositionChanged(true);
+                TG_FUNCTION_END();
+                return;
+            }
+        }
+    }
     TG_FUNCTION_END();
 }
 
