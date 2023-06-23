@@ -19,10 +19,10 @@ private:
     Page1 m_page1;
     Page2 m_page2;
 
-    void onButtonAddClick(TgMouseType type, float x, float y);
-    void onButtonCloseClick(TgMouseType type, float x, float y);
-    void onButtonAddedClick(TgMouseType type, float x, float y);
-    void onButtonRemoveClick(TgMouseType type, float x, float y);
+    void onButtonAddClick(TgMouseType type, float x, float y, const void *);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *);
+    void onButtonAddedClick(TgMouseType type, float x, float y, const void *);
+    void onButtonRemoveClick(TgMouseType type, float x, float y, const void *);
 };
 
 #endif

@@ -17,8 +17,8 @@ private:
     TgButton m_buttonStep;
     TgGridView m_gridview;
 
-    void onButtonCloseClick(TgMouseType type, float x, float y);
-    void onButtonStepClick(TgMouseType type, float x, float y);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *);
+    void onButtonStepClick(TgMouseType type, float x, float y, const void *);
 };
 
 #endif

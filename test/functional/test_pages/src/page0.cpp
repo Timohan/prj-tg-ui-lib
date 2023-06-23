@@ -16,10 +16,10 @@ Page0::Page0(TgPages *parent, MainWindow *mainWindow) :
     m_openingTextWidth = m_textField.getTextWidth();
     m_openingTextHeight = m_textField.getTextHeight();
 
-    m_buttonChangeToPage1.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage1, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeToPage2.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage2, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeToPage3.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage3, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonClose.connectOnMouseClicked( std::bind(&Page0::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonChangeToPage1.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage1, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeToPage2.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage2, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeToPage3.connectOnMouseClicked( std::bind(&Page0::onButtonClickPage3, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonClose.connectOnMouseClicked( std::bind(&Page0::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     this->connectOnVisibleChanged( std::bind(&Page0::onPageVisibleChanged, this, std::placeholders::_1) );
     m_buttonClose.connectOnVisibleChanged( std::bind(&Page0::onButtonCloseVisibleChanged, this, std::placeholders::_1) );
 
@@ -38,7 +38,7 @@ Page0::~Page0()
 {
 }
 
-void Page0::onButtonClickPage1(TgMouseType type, float x, float y)
+void Page0::onButtonClickPage1(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -47,7 +47,7 @@ void Page0::onButtonClickPage1(TgMouseType type, float x, float y)
     m_pages->setPage(1);
 }
 
-void Page0::onButtonClickPage2(TgMouseType type, float x, float y)
+void Page0::onButtonClickPage2(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -56,7 +56,7 @@ void Page0::onButtonClickPage2(TgMouseType type, float x, float y)
     m_pages->setPage(2);
 }
 
-void Page0::onButtonClickPage3(TgMouseType type, float x, float y)
+void Page0::onButtonClickPage3(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -70,7 +70,7 @@ void Page0::onButtonClickPage3(TgMouseType type, float x, float y)
  *
  * callback when button close is clicked
  */
-void Page0::onButtonCloseClick(TgMouseType type, float x, float y)
+void Page0::onButtonCloseClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Closing the application\n";
     m_mainWindow->exit();

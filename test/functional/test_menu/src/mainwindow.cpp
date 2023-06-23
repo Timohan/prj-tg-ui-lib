@@ -18,14 +18,14 @@ MainWindow::MainWindow(int width, int height) :
     shortCut.m_ctrl = true;
     shortCut.m_key = 'N';
     TgMenuItem *newFile = m_fileItem->addMenu("New", &shortCut);
-    newFile->connectOnMouseClicked( std::bind(&MainWindow::onMenuNewClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    newFile->connectOnMouseClicked( std::bind(&MainWindow::onMenuNewClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     shortCut.m_alt = true;
     TgMenuItem *saveFile = m_fileItem->addMenu("Save", &shortCut);
-    saveFile->connectOnMouseClicked( std::bind(&MainWindow::onMenuSaveClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    saveFile->connectOnMouseClicked( std::bind(&MainWindow::onMenuSaveClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     shortCut.m_shift = true;
     shortCut.m_alt = false;
     TgMenuItem *openFile = m_fileItem->addMenu("Open", &shortCut);
-    openFile->connectOnMouseClicked( std::bind(&MainWindow::onMenuOpenClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    openFile->connectOnMouseClicked( std::bind(&MainWindow::onMenuOpenClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     m_fileItem->addMenu("Open recent", nullptr);
 
     m_editItem->addMenu("Undo", nullptr);
@@ -34,7 +34,7 @@ MainWindow::MainWindow(int width, int height) :
     shortCut.m_shift = false;
     shortCut.m_key = 'c';
     TgMenuItem *copyFile = m_editItem->addMenu("Copy", &shortCut);
-    copyFile->connectOnMouseClicked( std::bind(&MainWindow::onMenuCopyClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    copyFile->connectOnMouseClicked( std::bind(&MainWindow::onMenuCopyClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     m_editItem->addMenu("Paste", nullptr);
 
     m_selectionItem->addMenu("Select all", nullptr);
@@ -45,7 +45,7 @@ MainWindow::MainWindow(int width, int height) :
     shortCut.m_alt = false;
     shortCut.m_key = 'e';
     m_larger = m_expandMenu->addMenu("Larger", &shortCut);
-    m_larger->connectOnMouseClicked( std::bind(&MainWindow::onMenuLargerClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_larger->connectOnMouseClicked( std::bind(&MainWindow::onMenuLargerClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     m_smaller = m_expandMenu->addMenu("Smaller", nullptr);
     m_somethingElse = m_expandMenu->addMenu("Something else", nullptr);
 
@@ -58,7 +58,7 @@ MainWindow::MainWindow(int width, int height) :
     m_topLeft0 = m_button0.addMenu("top left menu", nullptr);
     m_topLeft1 = m_button0.addMenu("Top left Menu 1", nullptr);
     m_topLeft2 = m_button0.addMenu("Top left Menu 2", nullptr);
-    m_topLeft2->connectOnMouseClicked( std::bind(&MainWindow::onMenuTopLeft2Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_topLeft2->connectOnMouseClicked( std::bind(&MainWindow::onMenuTopLeft2Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 
     m_topLeft20 = m_topLeft2->addMenu("top left menu", nullptr);
     m_topLeft21 = m_topLeft2->addMenu("Top left Menu 1", nullptr);
@@ -67,7 +67,7 @@ MainWindow::MainWindow(int width, int height) :
     shortCut.m_alt = false;
     shortCut.m_key = 'f';
     m_topLeft22 = m_topLeft2->addMenu("Top left Menu 2", &shortCut);
-    m_topLeft22->connectOnMouseClicked( std::bind(&MainWindow::onMenuTopLeft22Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_topLeft22->connectOnMouseClicked( std::bind(&MainWindow::onMenuTopLeft22Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 }
 
 MainWindow::~MainWindow()
@@ -98,7 +98,7 @@ void MainWindow::addEnabledChange(size_t index, bool enabled)
     m_mutex.unlock();
 }
 
-void MainWindow::addMenuClicked(size_t index, int x, int y)
+void MainWindow::addMenuClicked(size_t index, int x, int y, const void *)
 {
     m_mutex.lock();
     std::cout << "MainWindow::addMenuClicked " << index <<  " " << x << "/" << y << "\n";
@@ -241,70 +241,70 @@ MouseStateChange::MouseStateChange(size_t index, HoverVisibleChangeState state)
     m_state = state;
 }
 
-void MainWindow::onMenuNewClick(TgMouseType type, float x, float y)
+void MainWindow::onMenuNewClick(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(0, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(0, static_cast<int>(x), static_cast<int>(y), nullptr);
 }
 
-void MainWindow::onMenuSaveClick(TgMouseType type, float x, float y)
+void MainWindow::onMenuSaveClick(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(1, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(1, static_cast<int>(x), static_cast<int>(y), nullptr);
 }
 
-void MainWindow::onMenuOpenClick(TgMouseType type, float x, float y)
+void MainWindow::onMenuOpenClick(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(2, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(2, static_cast<int>(x), static_cast<int>(y), nullptr);
 }
 
-void MainWindow::onMenuBottomRight2Click(TgMouseType type, float x, float y)
+void MainWindow::onMenuBottomRight2Click(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(4, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(4, static_cast<int>(x), static_cast<int>(y), nullptr);
 }
 
-void MainWindow::onMenu2ndBottomRight1Click(TgMouseType type, float x, float y)
+void MainWindow::onMenu2ndBottomRight1Click(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(6, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(6, static_cast<int>(x), static_cast<int>(y), nullptr);
     m_bottomRightMenu->addMenu("2nd bottom right menu new line", nullptr);
 }
 
-void MainWindow::onMenu2ndBottomRight3Click(TgMouseType type, float x, float y)
+void MainWindow::onMenu2ndBottomRight3Click(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(5, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(5, static_cast<int>(x), static_cast<int>(y), nullptr);
 }
 
-void MainWindow::onMenuLargerClick(TgMouseType type, float x, float y)
+void MainWindow::onMenuLargerClick(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(7, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(7, static_cast<int>(x), static_cast<int>(y), nullptr);
 }
 
-void MainWindow::onMenuTopLeft22Click(TgMouseType type, float x, float y)
+void MainWindow::onMenuTopLeft22Click(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(8, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(8, static_cast<int>(x), static_cast<int>(y), nullptr);
 }
 
-void MainWindow::onMenuTopLeft2Click(TgMouseType type, float x, float y)
+void MainWindow::onMenuTopLeft2Click(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(9, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(9, static_cast<int>(x), static_cast<int>(y), nullptr);
 }
 
-void MainWindow::onMenuBottomRight1Click(TgMouseType type, float x, float y)
+void MainWindow::onMenuBottomRight1Click(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(5, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(5, static_cast<int>(x), static_cast<int>(y), nullptr);
     if (m_bottomRightMenu
         && m_bottomRightMenu->getMenuCount() == 0) {
         m_bottomRightMenu->addMenu("2nd bottom right menu 0", nullptr);
         TgMenuItem *tmp1 = m_bottomRightMenu->addMenu("2nd bottom right menu 1", nullptr);
-        tmp1->connectOnMouseClicked( std::bind(&MainWindow::onMenu2ndBottomRight1Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+        tmp1->connectOnMouseClicked( std::bind(&MainWindow::onMenu2ndBottomRight1Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
         m_bottomRightMenu->addMenu("2nd bottom right menu 2", nullptr);
         TgShortCut shortCut;
         shortCut.m_ctrl = true;
@@ -312,24 +312,24 @@ void MainWindow::onMenuBottomRight1Click(TgMouseType type, float x, float y)
         shortCut.m_shift = false;
         shortCut.m_key = 'b';
         TgMenuItem *tmp3 = m_bottomRightMenu->addMenu("2nd bottom right menu 3", &shortCut);
-        tmp3->connectOnMouseClicked( std::bind(&MainWindow::onMenu2ndBottomRight3Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+        tmp3->connectOnMouseClicked( std::bind(&MainWindow::onMenu2ndBottomRight3Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     }
 }
 
-void MainWindow::onMenuCopyClick(TgMouseType type, float x, float y)
+void MainWindow::onMenuCopyClick(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
-    addMenuClicked(3, static_cast<int>(x), static_cast<int>(y));
+    addMenuClicked(3, static_cast<int>(x), static_cast<int>(y), nullptr);
     if (m_button3.getMenuCount() == 0) {
         TgShortCut shortCut;
         m_bottomRightMenu = m_button3.addMenu("bottom right menu", nullptr);
         TgMenuItem *tmp1 = m_button3.addMenu("bottom right Menu 1", nullptr);
-        tmp1->connectOnMouseClicked( std::bind(&MainWindow::onMenuBottomRight1Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+        tmp1->connectOnMouseClicked( std::bind(&MainWindow::onMenuBottomRight1Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
         shortCut.m_ctrl = true;
         shortCut.m_alt = true;
         shortCut.m_shift = true;
         shortCut.m_key = 'b';
         TgMenuItem *tmp = m_button3.addMenu("bottom right Menu 2", &shortCut);
-        tmp->connectOnMouseClicked( std::bind(&MainWindow::onMenuBottomRight2Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+        tmp->connectOnMouseClicked( std::bind(&MainWindow::onMenuBottomRight2Click, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     }
 }

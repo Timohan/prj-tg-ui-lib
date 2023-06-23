@@ -8,8 +8,8 @@ MainWindow::MainWindow(int width, int height) :
     m_buttonStep(this, 250, 20, 100, 50, "Step"),
     m_gridview(this, 20, 80, 500, 400, 40, 40)
 {
-    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonStep.connectOnMouseClicked( std::bind(&MainWindow::onButtonStepClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonStep.connectOnMouseClicked( std::bind(&MainWindow::onButtonStepClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     size_t x, y;
     for (x=0;x<40;x++) {
         for (y=0;y<40;y++) {
@@ -27,14 +27,15 @@ MainWindow::~MainWindow()
  *
  * callback when button close is clicked
  */
-void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Closing the application\n";
     exit();
 }
 
-void MainWindow::onButtonStepClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonStepClick(TgMouseType type, float x, float y, const void *)
 {
+    std::cout << "onButtonStepClick\n";
     switch (m_stepButtonIndex) {
         case 0:
             m_gridview.setRowCount(35);

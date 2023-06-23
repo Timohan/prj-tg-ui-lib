@@ -18,8 +18,8 @@ private:
     TgTextfield m_textFieldForTestCenter;
     TgTextfield m_textEmptyText;
 
-    void onButtonCloseClick(TgMouseType type, float x, float y);
-    void onButtonChangeTextClick(TgMouseType type, float x, float y);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *);
+    void onButtonChangeTextClick(TgMouseType type, float x, float y, const void *);
 };
 
 #endif

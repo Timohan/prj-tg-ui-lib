@@ -18,9 +18,9 @@ private:
     TgComboBox *m_comboboxSecondary = nullptr;
     int m_currentItemIndex = 0;
 
-    void onButtonCloseClick(TgMouseType type, float x, float y);
-    void onButtonAddClick(TgMouseType type, float x, float y);
-    void onButtonRemoveClick(TgMouseType type, float x, float y);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonAddClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonRemoveClick(TgMouseType type, float x, float y, const void *id);
     void onComboBoxItemChanged(size_t index);
 };
 

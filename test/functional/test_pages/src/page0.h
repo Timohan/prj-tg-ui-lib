@@ -31,10 +31,10 @@ private:
     float m_openingTextWidth;
     float m_openingTextHeight;
 
-    void onButtonClickPage1(TgMouseType type, float x, float y);
-    void onButtonClickPage2(TgMouseType type, float x, float y);
-    void onButtonClickPage3(TgMouseType type, float x, float y);
-    void onButtonCloseClick(TgMouseType type, float x, float y);
+    void onButtonClickPage1(TgMouseType type, float x, float y, const void *);
+    void onButtonClickPage2(TgMouseType type, float x, float y, const void *);
+    void onButtonClickPage3(TgMouseType type, float x, float y, const void *);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *);
     void onPageVisibleChanged(bool visible);
     void onButtonCloseVisibleChanged(bool visible);
 

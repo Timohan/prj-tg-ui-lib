@@ -18,9 +18,9 @@ private:
     TgButton m_buttonAddHorizontalMaxPosition;
     TgButton m_buttonReduceHorizontalMaxPosition;
 
-    void onButtonCloseClick(TgMouseType type, float x, float y);
-    void onButtonAddHorizontalClick(TgMouseType type, float x, float y);
-    void onButtonReduceHorizontalClick(TgMouseType type, float x, float y);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *);
+    void onButtonAddHorizontalClick(TgMouseType type, float x, float y, const void *);
+    void onButtonReduceHorizontalClick(TgMouseType type, float x, float y, const void *);
 
     void onSliderHorizontalPositionChanged(uint64_t position);
     void onSliderVerticalPositionChanged(uint64_t position);

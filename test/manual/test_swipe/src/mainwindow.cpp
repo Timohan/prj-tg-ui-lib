@@ -15,12 +15,12 @@ MainWindow::MainWindow(int width, int height) :
     m_swipeAvailableRight(true)
 {
     m_mouseCaptureForSwipe.connectOnMouseSwipe( std::bind(&MainWindow::onSwipe, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonUp.connectOnMouseClicked( std::bind(&MainWindow::onButtonUpClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonDown.connectOnMouseClicked( std::bind(&MainWindow::onButtonDownClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonLeft.connectOnMouseClicked( std::bind(&MainWindow::onButtonLeftClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonRight.connectOnMouseClicked( std::bind(&MainWindow::onButtonRightClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_mouseCaptureForSwipe.connectOnMouseClicked( std::bind(&MainWindow::onButtonClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonUp.connectOnMouseClicked( std::bind(&MainWindow::onButtonUpClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonDown.connectOnMouseClicked( std::bind(&MainWindow::onButtonDownClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonLeft.connectOnMouseClicked( std::bind(&MainWindow::onButtonLeftClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonRight.connectOnMouseClicked( std::bind(&MainWindow::onButtonRightClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_mouseCaptureForSwipe.connectOnMouseClicked( std::bind(&MainWindow::onButtonClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 }
 
 MainWindow::~MainWindow()
@@ -88,7 +88,7 @@ void MainWindow::onSwipe(TgMouseType type, SwipeType swipeType, double time)
  *
  * callback when button up is clicked
  */
-void MainWindow::onButtonUpClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonUpClick(TgMouseType type, float x, float y, const void *)
 {
     m_swipeAvailableUp = !m_swipeAvailableUp;
     setSwipeType();
@@ -100,7 +100,7 @@ void MainWindow::onButtonUpClick(TgMouseType type, float x, float y)
  *
  * callback when button down is clicked
  */
-void MainWindow::onButtonDownClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonDownClick(TgMouseType type, float x, float y, const void *)
 {
     m_swipeAvailableDown = !m_swipeAvailableDown;
     setSwipeType();
@@ -112,7 +112,7 @@ void MainWindow::onButtonDownClick(TgMouseType type, float x, float y)
  *
  * callback when button left is clicked
  */
-void MainWindow::onButtonLeftClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonLeftClick(TgMouseType type, float x, float y, const void *)
 {
     m_swipeAvailableLeft = !m_swipeAvailableLeft;
     setSwipeType();
@@ -124,7 +124,7 @@ void MainWindow::onButtonLeftClick(TgMouseType type, float x, float y)
  *
  * callback when button right is clicked
  */
-void MainWindow::onButtonRightClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonRightClick(TgMouseType type, float x, float y, const void *)
 {
     m_swipeAvailableRight = !m_swipeAvailableRight;
     setSwipeType();
@@ -136,7 +136,7 @@ void MainWindow::onButtonRightClick(TgMouseType type, float x, float y)
  *
  * callback when button close is clicked
  */
-void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Closing the application\n";
     exit();
@@ -147,7 +147,7 @@ void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
  *
  * callback when button close is clicked
  */
-void MainWindow::onButtonClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Mouse click\n";
 }

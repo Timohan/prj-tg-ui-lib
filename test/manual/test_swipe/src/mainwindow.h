@@ -25,12 +25,12 @@ private:
     std::string generateSwipeTypeToString();
 
     void onSwipe(TgMouseType type, SwipeType swipeType, double time);
-    void onButtonCloseClick(TgMouseType type, float x, float y);
-    void onButtonUpClick(TgMouseType type, float x, float y);
-    void onButtonDownClick(TgMouseType type, float x, float y);
-    void onButtonLeftClick(TgMouseType type, float x, float y);
-    void onButtonRightClick(TgMouseType type, float x, float y);
-    void onButtonClick(TgMouseType type, float x, float y);
+    void onButtonCloseClick(TgMouseType type, float x, float y, const void *);
+    void onButtonUpClick(TgMouseType type, float x, float y, const void *);
+    void onButtonDownClick(TgMouseType type, float x, float y, const void *);
+    void onButtonLeftClick(TgMouseType type, float x, float y, const void *);
+    void onButtonRightClick(TgMouseType type, float x, float y, const void *);
+    void onButtonClick(TgMouseType type, float x, float y, const void *);
 };
 
 #endif

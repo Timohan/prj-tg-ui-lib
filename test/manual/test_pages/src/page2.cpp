@@ -12,12 +12,12 @@ Page2::Page2(TgPages *parent) :
     m_buttonChangeSwitchTypeFromLeft(this, 20, 320, 300, 50, "Change Switch to From left"),
     m_buttonChangeSwitchTypeFromRight(this, 20, 390, 300, 50, "Change Switch to From right")
 {
-    m_buttonChange.connectOnMouseClicked( std::bind(&Page2::onButtonClickPage0, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeSwitchTypeDirect.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromDirect, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeSwitchTypeFromTop.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromTop, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeSwitchTypeFromBottom.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromBottom, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeSwitchTypeFromLeft.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromLeft, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonChangeSwitchTypeFromRight.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromRight, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonChange.connectOnMouseClicked( std::bind(&Page2::onButtonClickPage0, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeSwitchTypeDirect.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromDirect, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeSwitchTypeFromTop.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromTop, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeSwitchTypeFromBottom.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromBottom, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeSwitchTypeFromLeft.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromLeft, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonChangeSwitchTypeFromRight.connectOnMouseClicked( std::bind(&Page2::onButtonClickFromRight, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
     this->connectOnVisibleChanged( std::bind(&Page2::onPageVisibleChanged, this, std::placeholders::_1) );
 
     m_buttonChange.connectOnSelectedChanged( std::bind(&Page2::onButtonChangeSelectedChanged, this, std::placeholders::_1) );
@@ -32,7 +32,7 @@ Page2::~Page2()
 {
 }
 
-void Page2::onButtonClickPage0(TgMouseType type, float x, float y)
+void Page2::onButtonClickPage0(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -41,7 +41,7 @@ void Page2::onButtonClickPage0(TgMouseType type, float x, float y)
     m_pages->setPage(0);
 }
 
-void Page2::onButtonClickFromDirect(TgMouseType type, float x, float y)
+void Page2::onButtonClickFromDirect(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -50,7 +50,7 @@ void Page2::onButtonClickFromDirect(TgMouseType type, float x, float y)
     m_pages->setPageSwitchType(TgPagesPageSwitchType::PageSwitchType_Direct);
 }
 
-void Page2::onButtonClickFromTop(TgMouseType type, float x, float y)
+void Page2::onButtonClickFromTop(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -59,7 +59,7 @@ void Page2::onButtonClickFromTop(TgMouseType type, float x, float y)
     m_pages->setPageSwitchType(TgPagesPageSwitchType::PageSwitchType_SlideFromTop);
 }
 
-void Page2::onButtonClickFromBottom(TgMouseType type, float x, float y)
+void Page2::onButtonClickFromBottom(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -68,7 +68,7 @@ void Page2::onButtonClickFromBottom(TgMouseType type, float x, float y)
     m_pages->setPageSwitchType(TgPagesPageSwitchType::PageSwitchType_SlideFromBottom);
 }
 
-void Page2::onButtonClickFromLeft(TgMouseType type, float x, float y)
+void Page2::onButtonClickFromLeft(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;
@@ -77,7 +77,7 @@ void Page2::onButtonClickFromLeft(TgMouseType type, float x, float y)
     m_pages->setPageSwitchType(TgPagesPageSwitchType::PageSwitchType_SlideFromLeft);
 }
 
-void Page2::onButtonClickFromRight(TgMouseType type, float x, float y)
+void Page2::onButtonClickFromRight(TgMouseType type, float x, float y, const void *)
 {
     (void)type;
     (void)x;

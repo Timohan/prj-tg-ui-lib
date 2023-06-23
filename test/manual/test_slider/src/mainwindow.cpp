@@ -9,10 +9,10 @@ MainWindow::MainWindow(int width, int height) :
     m_buttonAddHorizontalMaxPosition(this, 240, 20, 100, 50, "Add"),
     m_buttonReduceHorizontalMaxPosition(this, 380, 20, 100, 50, "Reduce")
 {
-    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonClose.connectOnMouseClicked( std::bind(&MainWindow::onButtonCloseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 
-    m_buttonAddHorizontalMaxPosition.connectOnMouseClicked( std::bind(&MainWindow::onButtonAddHorizontalClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
-    m_buttonReduceHorizontalMaxPosition.connectOnMouseClicked( std::bind(&MainWindow::onButtonReduceHorizontalClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) );
+    m_buttonAddHorizontalMaxPosition.connectOnMouseClicked( std::bind(&MainWindow::onButtonAddHorizontalClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
+    m_buttonReduceHorizontalMaxPosition.connectOnMouseClicked( std::bind(&MainWindow::onButtonReduceHorizontalClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) );
 
     m_sliderHorizontal.connectOnSliderPositionChanged( std::bind(&MainWindow::onSliderHorizontalPositionChanged, this, std::placeholders::_1) );
     m_sliderVertical.connectOnSliderPositionChanged( std::bind(&MainWindow::onSliderVerticalPositionChanged, this, std::placeholders::_1) );
@@ -29,18 +29,18 @@ MainWindow::~MainWindow()
  *
  * callback when button close is clicked
  */
-void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const void *)
 {
     std::cout << "Closing the application\n";
     exit();
 }
 
-void MainWindow::onButtonAddHorizontalClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonAddHorizontalClick(TgMouseType type, float x, float y, const void *)
 {
     m_sliderHorizontal.setSliderMaxPosition(m_sliderHorizontal.getSliderMaxPosition()+1);
 }
 
-void MainWindow::onButtonReduceHorizontalClick(TgMouseType type, float x, float y)
+void MainWindow::onButtonReduceHorizontalClick(TgMouseType type, float x, float y, const void *)
 {
     if (m_sliderHorizontal.getSliderMaxPosition()) {
         m_sliderHorizontal.setSliderMaxPosition(m_sliderHorizontal.getSliderMaxPosition()-1);
