@@ -28,6 +28,10 @@ public:
     size_t setFont(const std::string &fullFilePathFont, size_t position = UINT64_MAX);
     std::string getFont(size_t i);
     std::vector<std::string> getListFont();
+
+    static std::vector<std::string> getFontFiles(const std::string &mainFontFile);
+    static void getFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames,
+                                  std::vector<std::string> &listFontFileNamesOut);
 private:
     std::string m_defaultFont;
     std::mutex m_fontMutex;

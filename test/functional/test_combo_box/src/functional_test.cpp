@@ -173,6 +173,7 @@ void FunctionalTest::start()
                     std::this_thread::sleep_for(std::chrono::milliseconds(m_testOrders.getTestOrder(i)->m_listNumber.at(0)));
                     break;
                 case TestOrderType::isImage:
+                    std::this_thread::sleep_for(std::chrono::milliseconds(200));
                     if (!FunctionalTestImage::isImageToEqual(m_mainWindow,
                         m_testOrders.getTestOrder(i)->m_listString[0].c_str(), 800, 600)) {
                         TG_ERROR_LOG("Image is not correct, index: ", m_testOrders.getTestOrder(i)->m_lineNumber, "/", m_testOrders.getTestOrder(i)->m_listString[0]);

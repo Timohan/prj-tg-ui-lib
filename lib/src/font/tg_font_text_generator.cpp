@@ -120,6 +120,7 @@ TgFontText *TgFontTextGenerator::generateFontTextInfo(const std::vector<TgTextFi
         }
         if (prj_ttf_reader_get_characters(listText.at(i).m_text.c_str(), &list_characters, &list_characters_size)) {
             TG_ERROR_LOG("Invalid UTF-8 text: ", generateSingleLineText(listText).c_str());
+            delete ret;
             return nullptr;
         }
 
@@ -137,6 +138,38 @@ TgFontText *TgFontTextGenerator::generateFontTextInfo(const std::vector<TgTextFi
 
     return ret;
 }
+
+std::vector<TgFontTextCharacterInfo> TgFontTextGenerator::generateCharacterList(const std::vector<TgTextFieldText> &listText, const std::vector<std::string> &listFontFiles)
+{
+    std::vector<TgFontTextCharacterInfo> ret;
+    uint32_t *list_characters = nullptr, list_characters_size;
+    uint32_t characterIndex;
+
+    for (size_t i=0;i<listText.size();i++) {
+        if (listText.at(i).m_text.empty()) {
+            continue;
+        }
+        if (prj_ttf_reader_get_characters(listText.at(i).m_text.c_str(), &list_characters, &list_characters_size)) {
+            TG_ERROR_LOG("Invalid UTF-8 text: ", generateSingleLineText(listText).c_str());
+            ret.clear();
+            return ret;
+        }
+
+        for (characterIndex=0;characterIndex<list_characters_size;characterIndex++) {
+            TgFontText::addCharacter(ret, list_characters[characterIndex],
+                                listText.at(i).m_textColorR,
+                                listText.at(i).m_textColorG,
+                                listText.at(i).m_textColorB,
+                                listFontFiles);
+        }
+
+        if (list_characters) {
+            free(list_characters);
+        }
+    }
+    return ret;
+}
+
 
 /*!
  * \brief TgFontTextGenerator::generateSingleLineText

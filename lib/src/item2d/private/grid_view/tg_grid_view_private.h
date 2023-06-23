@@ -15,8 +15,8 @@
 #include <cstddef>
 #include "../../tg_rectangle.h"
 #include "../../tg_slider.h"
+#include "../../tg_grid_view_cell.h"
 class TgGridView;
-class TgGridViewCell;
 
 class TgGridViewPrivate
 {
@@ -28,6 +28,7 @@ public:
     void setRowCount(size_t row);
     void setColumCount(size_t column);
     TgGridViewCell *getCell(size_t column, size_t row);
+    void cellWidthTypeChanged(TgGridViewCellSizeType type, TgGridViewCell *cell);
     void widthCellChanged(float width, TgGridViewCell *cell);
     void heightCellChanged(float height, TgGridViewCell *cell);
 

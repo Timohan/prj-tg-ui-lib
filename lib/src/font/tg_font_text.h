@@ -17,6 +17,7 @@
 #include <string>
 
 struct TgFontInfo;
+struct TgFontInfoData;
 
 struct TgFontTextCharacterInfo
 {
@@ -40,16 +41,16 @@ public:
     TgFontText();
 
     void setFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames);
-    static void getFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames,
-                                 std::vector<std::string> &listFontFileNamesOut);
     void addCharacter(uint32_t character, uint8_t r, uint8_t g, uint8_t b);
+    static void addCharacter(std::vector<TgFontTextCharacterInfo>&listCharacter, uint32_t character, uint8_t r, uint8_t g, uint8_t b, const std::vector<std::string> &listFontFileNames);
     void generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculation);
+    static void generateFontTextInfoGlyphsData(float fontSize, std::vector<TgFontTextCharacterInfo>&listCharacter, std::vector<TgFontInfoData *>&listFontInfo, std::vector<std::string> &listFontFiles);
 
     size_t getCharacterCount();
     TgFontTextCharacterInfo *getCharacter(size_t i);
     TgFontInfo *getFontInfo(size_t i);
 
-    std::vector<uint32_t> getCharactersByFontFileNameIndex(int32_t fontFileNameIndex);
+    static std::vector<uint32_t> getCharactersByFontFileNameIndex(int32_t fontFileNameIndex, const std::vector<TgFontTextCharacterInfo>&listCharacter);
 
     float getTextWidth();
     float getVisibleTopY();
@@ -66,9 +67,11 @@ public:
     void setAllLineCount(uint32_t lineCount);
     void clearListLinesWidth();
     void setListLinesWidth(size_t lineNumber, float lineWidth);
+    static void setListLinesWidth(std::vector<float> &listLineWidth, size_t lineNumber, float lineWidth);
     float getTextLineWidth(size_t lineNumber);
 
     void clearCacheValues();
+
 private:
     float m_textWidth;
     float m_visibleTopY;

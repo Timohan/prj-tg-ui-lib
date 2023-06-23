@@ -10,10 +10,11 @@
  */
 
 #include "tg_grid_view_cell_private.h"
+#include <cmath>
 #include "../../../global/tg_global_log.h"
-#include "../../tg_grid_view_cell.h"
 #include "../../tg_grid_view.h"
 #include "tg_grid_view_private.h"
+#include "../../../global/private/tg_global_wait_renderer.h"
 
 TgGridViewCellPrivate::TgGridViewCellPrivate(TgGridViewCell *currentItem, TgGridView *parentItem) : m_currentItem(currentItem),
                                                                                                     m_parentItem(parentItem),
@@ -26,12 +27,50 @@ TgGridViewCellPrivate::TgGridViewCellPrivate(TgGridViewCell *currentItem, TgGrid
     TG_FUNCTION_END();
 }
 
+/*!
+ * \brief TgGridViewCellPrivate::setWidth
+ *
+ * set width type for item
+ * \param type
+ * \param useCallback if true, sends callback to parent item's items
+ */
+void TgGridViewCellPrivate::setWidthType(TgGridViewCellSizeType type, bool useCallback)
+{
+    TG_FUNCTION_BEGIN();
+    if (m_widthType == type) {
+        TG_FUNCTION_END();
+        return;
+    }
+    m_widthType = type;
+    if (useCallback) {
+        m_parentItem->m_private->cellWidthTypeChanged(type, m_currentItem);
+        TgGlobalWaitRenderer::getInstance()->release();
+    }
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgGridViewCellPrivate::getCellRequiredWidth
+ *
+ * \return cell required width, margin left + margin right + text required width + 1
+ */
+float TgGridViewCellPrivate::getCellRequiredWidth()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return std::roundf(getTextMarginLeft() + getTextMarginRight() + m_text.getTextWidth())+1;
+}
+
 /*! \brief TgGridViewCellPrivate::setText
  * \param text
  */
 void TgGridViewCellPrivate::setText(const char *text)
 {
     m_text.setText(text);
+    if (m_widthType == TgGridViewCellSizeType::TgGridViewCellSize_SizeFollowTextSize) {
+        m_parentItem->m_private->cellWidthTypeChanged(m_widthType, m_currentItem);
+        TgGlobalWaitRenderer::getInstance()->release();
+    }
 }
 
 /*!

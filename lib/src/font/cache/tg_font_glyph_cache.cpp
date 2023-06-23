@@ -96,7 +96,7 @@ TgFontInfo *TgFontGlyphCache::generateCacheForText(const std::vector<uint32_t> &
         return ret;
     }
 
-    std::string additionalCharactersToGlyph = "ABCQWERTYUIOPÅSDFGHJKLÖÄZXVNMqwertyuiopasdfgjhklöäzxcvbnm<>|;:,.-_€'*~^1234567890+'!\"#¤%&/()=?½@£$‰‚{[]} ";
+    std::string additionalCharactersToGlyph = "ABCQWERTYUIOPÅSDFGHJKLÖÄZXVNMqwertyuiopasdfgjhklöäzxcvbnm<>|;:,.-_€'*~^1234567890+'!\"#¤%&/()=?½@£$‰‚{[]}— ";
     uint32_t *list_additonal_characters = nullptr, list_additonal_characters_size;
     if (prj_ttf_reader_get_characters(additionalCharactersToGlyph.c_str(), &list_additonal_characters, &list_additonal_characters_size)
             || !list_additonal_characters_size) {

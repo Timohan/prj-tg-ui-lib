@@ -83,6 +83,21 @@ TgFontGlyphCache *TgGlobalApplication::getFontGlyphCache()
 }
 
 /*!
+ * \brief TgGlobalApplication::getFontGlyphCacheData
+ *
+ * get font glyph cache (data)
+ *
+ * \return global font glyph cache (data)
+ */
+TgFontGlyphCacheData *TgGlobalApplication::getFontGlyphCacheData()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return &m_fontGlyphCacheData;
+}
+
+
+/*!
  * \brief TgGlobalApplication::getFontCharactersCache
  *
  * get font characters cache

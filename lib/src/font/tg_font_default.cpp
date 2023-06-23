@@ -11,6 +11,7 @@
 
 #include "tg_font_default.h"
 #include <algorithm>
+#include "../global/tg_global_application.h"
 
 #ifndef TG_FONT_DEFAULT_FILENAME
 #define TG_FONT_DEFAULT_FILENAME "/usr/share/fonts/truetype/freefont/FreeSans.ttf"
@@ -172,3 +173,52 @@ std::string TgFontDefault::getFont(size_t i)
     return ret;
 }
 
+/*!
+ * \brief TgFontDefault::getFontFiles
+ *
+ * get list of font files
+ *
+ * \param mainFontFile [in]
+ * \return list of font files, that main font is first
+ */
+std::vector<std::string> TgFontDefault::getFontFiles(const std::string &mainFontFile)
+{
+    std::vector<std::string> listFontFiles = TgGlobalApplication::getInstance()->getFontDefault()->getListFont();
+    std::vector<std::string> ret;
+    TgFontDefault::getFontFileNames(mainFontFile, listFontFiles, ret);
+    return ret;
+}
+
+/*!
+ * \brief TgFontDefault::getFontFileNames
+ *
+ * sets and re-generates the font list, sets main font file
+ * as first font file on the list
+ *
+ * \param mainFontFile [in]
+ * \param listFontFiles [in] sets mainFontFile as first to this list
+ * \param listFontFileNamesOut [out] sets mainFontFile as first to this list
+ */
+void TgFontDefault::getFontFileNames(const std::string &mainFontFile, const std::vector<std::string> &listFontFileNames,
+                                  std::vector<std::string> &listFontFileNamesOut)
+{
+    std::vector<std::string>::iterator it;
+    listFontFileNamesOut = std::move(listFontFileNames);
+    if (mainFontFile.empty()
+        || (!listFontFileNamesOut.empty() && listFontFileNamesOut.at(0) == mainFontFile)) {
+        for (it=listFontFileNamesOut.begin();it!=listFontFileNamesOut.end();it++) {
+            TgGlobalApplication::getInstance()->getFontCharactersCache()->addFont(*it);
+        }
+        return;
+    }
+
+
+    for (it=listFontFileNamesOut.begin();it!=listFontFileNamesOut.end();it++) {
+        if ((*it) == mainFontFile) {
+            listFontFileNamesOut.erase(it);
+        }
+        TgGlobalApplication::getInstance()->getFontCharactersCache()->addFont(*it);
+    }
+
+    listFontFileNamesOut.insert(listFontFileNamesOut.begin(), mainFontFile);
+}

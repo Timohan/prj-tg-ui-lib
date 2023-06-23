@@ -74,6 +74,19 @@ void TgGridViewCell::setBackground(const unsigned char r, const unsigned char g,
 /*!
  * \brief TgGridViewCell::setWidth
  *
+ * set width type for item
+ * \param type
+ */
+void TgGridViewCell::setWidthType(TgGridViewCellSizeType type)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setWidthType(type);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgGridViewCell::setWidth
+ *
  * set width for item
  * \param width
  */

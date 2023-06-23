@@ -24,6 +24,11 @@
 class TgGridViewCellPrivate;
 class TgGridView;
 
+enum TgGridViewCellSizeType {
+    TgGridViewCellSize_FixedSize = 0,       /*!< fixed cell size, default */
+    TgGridViewCellSize_SizeFollowTextSize,  /*!< cell size follow the text width */
+};
+
 /*!
  * \brief TgGridViewCell
  * gridview cell class
@@ -37,6 +42,7 @@ public:
     void setText(const std::vector<TgTextFieldText> &listText);
     std::string getText() const;
     void setBackground(const unsigned char r = 255, const unsigned char g = 255, const unsigned char b = 255, const unsigned char a = 255);
+    void setWidthType(TgGridViewCellSizeType type);
     void setWidth(float width);
     void setHeight(float height);
     void setFontSize(float fontSize);
