@@ -46,6 +46,7 @@ void TgGlobalWaitRenderer::waitForRender()
                 waitTime = static_cast<size_t>(msTooltipWait);
             }
             m_nextTimeMaxTimeOut = m_currentTimeMaxTimeOut;
+            m_semLocked = true;
             m_mutex.unlock();
             m_semHandler.try_lock_until(std::chrono::steady_clock::now() + std::chrono::milliseconds(waitTime));
         } else {
@@ -74,8 +75,13 @@ void TgGlobalWaitRenderer::release(size_t maxTimeout)
     if (maxTimeout != UINT64_MAX) {
         m_currentTimeMaxTimeOut = maxTimeout;
     }
-    m_mutex.unlock();
-    m_semHandler.unlock();
+    if (m_semLocked) {
+        m_semLocked = false;
+        m_mutex.unlock();
+        m_semHandler.unlock();
+    } else {
+        m_mutex.unlock();
+    }
 #else
     (void)maxTimeout;
 #endif
