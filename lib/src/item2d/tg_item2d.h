@@ -110,7 +110,7 @@ public:
     void setPrevTabItem(TgItem2d *prevTabItem);
 
     virtual size_t getMenuCount();
-    TgMenuItem *getMenu(size_t index);
+    virtual TgMenuItem *getMenu(size_t index);
     virtual bool removeMenu(size_t i);
 
     void setTooltip(const char *text);

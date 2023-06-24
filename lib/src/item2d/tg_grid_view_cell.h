@@ -37,6 +37,10 @@ class TG_MAINWINDOW_EXPORT TgGridViewCell : private TgItem2d
 {
 public:
     ~TgGridViewCell();
+    virtual TgMenuItem *addMenu(const char *text, const TgShortCut *shortCut) override;
+    virtual size_t getMenuCount() override;
+    virtual TgMenuItem *getMenu(size_t index) override;
+    virtual bool removeMenu(size_t i) override;
 
     void setText(const char *text);
     void setText(const std::vector<TgTextFieldText> &listText);

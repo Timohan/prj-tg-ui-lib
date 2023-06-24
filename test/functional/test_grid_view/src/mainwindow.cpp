@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include <iostream>
 #include <thread>
+#include <cstring>
+#include <item2d/tg_menu_item.h>
 
 MainWindow::MainWindow(int width, int height) : TgMainWindow(width, height, "Test gridview", width - 200, height - 200, width + 200, height + 200),
                                                 m_background(this, 200, 200, 200),
@@ -74,6 +76,8 @@ std::string MainWindow::getString(HoverVisibleChangeState state)
         return "MouseRelease";
     case HoverVisibleChangeState::MouseClicked:
         return "MouseClicked";
+    case HoverVisibleChangeState::MenuClicked:
+        return "MenuClicked";
     default:
         return "";
     }
@@ -92,6 +96,7 @@ MouseStateChange::MouseStateChange(size_t index, HoverVisibleChangeState state)
 
 bool MainWindow::setMakeStep(int index)
 {
+    TgShortCut shortCut;
     switch (index) {
     case 1:
         for (size_t x = 0; x < m_gridview.getColumCount(); x++) {
@@ -234,9 +239,73 @@ bool MainWindow::setMakeStep(int index)
             return false;
         }
         break;
+    case 24:
+        m_gridview.getCell(0, 0)->setText("This and that");
+        m_gridview.getCell(0, 1)->setText("T");
+        m_gridview.getCell(1, 0)->setText("This and that");
+        m_gridview.getCell(1, 1)->setText("T");
+        m_gridview.getCell(1, 1)->setWidthType(TgGridViewCellSizeType::TgGridViewCellSize_SizeFollowTextSize);
+        break;
+    case 25: {
+            m_gridview.getCell(1, 1)->addMenu("Menu Item0", nullptr);
+            m_gridview.getCell(1, 1)->addMenu("Menu Item on cell again", nullptr);
+            shortCut.m_ctrl = true;
+            shortCut.m_key = 'a';
+            m_gridview.getCell(1, 1)->addMenu("Menu Item on cell again 2", &shortCut);
+        }
+        break;
+    case 26:
+        if (m_gridview.getCell(1, 1)->getMenuCount() != 3) {
+            std::cout << "Case 26, menu count is incorrect " << m_gridview.getCell(1, 1)->getMenuCount() << "\n";
+            return false;
+        }
+        break;
+    case 27:
+        m_gridview.getCell(1, 1)->getMenu(0)->connectOnMouseClicked(
+                std::bind(&MainWindow::onMenuItem0Clicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), "Item0"
+        );
+        m_gridview.getCell(1, 1)->getMenu(2)->connectOnMouseClicked(
+                std::bind(&MainWindow::onMenuItem2Clicked, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), "Item2"
+        );
+        break;
+    case 28:
+        m_gridview.getCell(1, 1)->removeMenu(1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        break;
+    case 29:
+        std::this_thread::sleep_for(std::chrono::milliseconds(1250));
+        if (m_gridview.getCell(1, 1)->getMenuCount() != 2) {
+            std::cout << "Case 29, menu count is incorrect " << m_gridview.getCell(1, 1)->getMenuCount() << "\n";
+            std::this_thread::sleep_for(std::chrono::seconds(100));
+            return false;
+        }
+        break;
     default:
         break;
     }
     return true;
 }
 
+void MainWindow::onMenuItem0Clicked(TgMouseType, float, float, const void *id)
+{
+    m_mutex.lock();
+    if (strcmp(reinterpret_cast<const char *>(id), "Item0") == 0) {
+        m_listMouseStateChange.push_back(MouseStateChange(0, HoverVisibleChangeState::MenuClicked));
+        std::cout << "onMenuItem0Clicked correct ID\n";
+    } else {
+        std::cout << "onMenuItem0Clicked Incorrect ID\n";
+    }
+    m_mutex.unlock();
+}
+
+void MainWindow::onMenuItem2Clicked(TgMouseType, float, float, const void *id)
+{
+    m_mutex.lock();
+    if (strcmp(reinterpret_cast<const char *>(id), "Item2") == 0) {
+        m_listMouseStateChange.push_back(MouseStateChange(2, HoverVisibleChangeState::MenuClicked));
+        std::cout << "onMenuItem2Clicked correct ID\n";
+    } else {
+        std::cout << "onMenuItem2Clicked Incorrect ID\n";
+    }
+    m_mutex.unlock();
+}

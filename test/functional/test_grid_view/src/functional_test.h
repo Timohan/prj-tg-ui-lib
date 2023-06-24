@@ -24,6 +24,7 @@ private:
 
     void sendButtonClick(uint32_t timeBetweenPressRelease, int x, int y, uint32_t waitAfterRelease);
     void sendButtonMoveClick(uint32_t timeBetweenPressRelease, int pressX, int pressY, int releaseX, int releaseY, uint32_t waitAfterRelease, bool sendPress = true, bool sendRelease = true);
+    void sendButtonMoveRightClick(uint32_t timeBetweenPressRelease, int pressX, int pressY, int releaseX, int releaseY, uint32_t waitAfterRelease, bool sendPress, bool sendRelease);
     void sendKeyPress(uint32_t key, uint32_t waitAfterRelease, bool keyPress = true, bool keyRelease = true);
 
     static int moveValueToDirection(int currentValue, int directionValue);
@@ -36,6 +37,7 @@ private:
     bool checkIsMousePressed(int index, int x, int y);
     bool checkIsMouseReleased(int index, int x, int y, bool inArea);
     bool checkIsMouseClicked(int index, int x, int y);
+    bool checkIsMenuClicked(int index);
 
 };
 

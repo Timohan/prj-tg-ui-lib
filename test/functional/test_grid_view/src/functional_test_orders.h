@@ -25,6 +25,9 @@ enum TestOrderType {
     setSelected,
     MakeStep,
     isImage,
+    MouseMoveRightClick,
+    isMenuClicked,
+    SendKeyPress,
 };
 
 struct TestOrder

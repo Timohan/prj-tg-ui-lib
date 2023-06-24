@@ -87,4 +87,27 @@ MakeStep 21
 MakeStep 22
 isImage grid_view_fill_6_6_different_hor_ver_fontsize.png
 MakeStep 23
-
+msg grid column follow the width
+MakeStep 16
+MakeStep 18
+isImage grid_view_empty.png
+MakeStep 17
+MakeStep 19
+isImage grid_view_0_0_4_3.png
+MakeStep 24
+isImage grid_view_0_0_4_3_text_follow_1_1.png
+msg menu item at grid view cell
+MakeStep 25
+MakeStep 26
+isImage grid_view_0_0_4_3_text_follow_1_1.png
+MakeStep 27
+MMR 1 220 90 220 90 0 1 1
+MMC 1 321 107 321 107 0 1 1
+isMenuClicked 0
+KEYPRESS XK_Control_R 100 1 0
+KEYPRESS 97 100 1 1
+KEYPRESS XK_Control_R 100 0 1
+isMenuClicked 2
+MakeStep 28
+MMC 1 321 107 321 107 0 1 1
+MakeStep 29

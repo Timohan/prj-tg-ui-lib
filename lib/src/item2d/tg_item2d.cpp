@@ -190,7 +190,10 @@ TgEventResult TgItem2d::handleEvent(TgEventData *eventData, const TgWindowInfo *
 {
     TG_FUNCTION_BEGIN();
     m_private->handleEventToolTip(eventData, windowInfo);
-
+    if (m_private->handleEventItem2dMenu(eventData, windowInfo) == TgEventResult::EventResultCompleted) {
+        TG_FUNCTION_END();
+        return TgEventResult::EventResultCompleted;
+    }
     if (((eventData->m_type == TgEventType::EventTypeCharacterCallback 
         && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey)
         || eventData->m_type == TgEventType::EventTypeSelectNextItem

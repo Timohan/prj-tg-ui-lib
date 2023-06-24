@@ -23,6 +23,7 @@ enum HoverVisibleChangeState
     MousePress,
     MouseRelease,
     MouseClicked,
+    MenuClicked,
 };
 
 struct MouseStateChange {
@@ -56,6 +57,8 @@ private:
     TgGridView m_gridview;
 
     std::vector<MouseStateChange> m_listMouseStateChange;
+    void onMenuItem0Clicked(TgMouseType button, float x, float y, const void *id);
+    void onMenuItem2Clicked(TgMouseType button, float x, float y, const void *id);
 
 };
 

@@ -1,6 +1,7 @@
 #include "functional_test_orders.h"
 #include <fstream>
 #include <string>
+#include <X11/Xutil.h>
 #include "../../../../lib/src/global/tg_global_log.h"
 
 #ifndef ORDERS_FILE
@@ -44,10 +45,36 @@ bool FunctionalTestOrders::loadOrders()
                     textPos += text.size() + 1;
                 }
                 m_listOrder.push_back(orders);
+            } else if (line.compare(0, 4, "MMR ") == 0) {
+                orders.m_type = TestOrderType::MouseMoveRightClick;
+                textPos = 0;
+                for (i=0;i<8;i++) {
+                    std::string text = getNextText(line.c_str()+4+textPos);
+                    if (text.size() == 0) {
+                        TG_ERROR_LOG("Line is incorrect ", lineIndex );
+                        return false;
+                    }
+                    orders.m_listNumber.push_back(std::atoi(text.c_str()));
+                    textPos += text.size() + 1;
+                }
+                m_listOrder.push_back(orders);
             } else if (getNextText(line) == "isHover") {
                 orders.m_type = TestOrderType::IsCorrectHover;
                 textPos = getNextText(line).size()+1;
                 for (i=0;i<2;i++) {
+                    std::string text = getNextText(line.c_str()+textPos);
+                    if (text.size() == 0) {
+                        TG_ERROR_LOG("Line is incorrect ", lineIndex );
+                        return false;
+                    }
+                    orders.m_listNumber.push_back(std::atoi(text.c_str()));
+                    textPos += text.size() + 1;
+                }
+                m_listOrder.push_back(orders);
+            } else if (getNextText(line) == "isMenuClicked") {
+                orders.m_type = TestOrderType::isMenuClicked;
+                textPos = getNextText(line).size()+1;
+                for (i=0;i<1;i++) {
                     std::string text = getNextText(line.c_str()+textPos);
                     if (text.size() == 0) {
                         TG_ERROR_LOG("Line is incorrect ", lineIndex );
@@ -252,6 +279,33 @@ bool FunctionalTestOrders::loadOrders()
                         return false;
                     }
                     orders.m_listNumber.push_back(std::atoi(text.c_str()));
+                    textPos += text.size() + 1;
+                }
+                m_listOrder.push_back(orders);
+            } else if (getNextText(line) == "KEYPRESS") {
+                orders.m_type = TestOrderType::SendKeyPress;
+                textPos = getNextText(line).size()+1;
+                for (i=0;i<4;i++) {
+                    std::string text = getNextText(line.c_str()+textPos);
+                    if (text.size() == 0) {
+                        TG_ERROR_LOG("Line is incorrect ", lineIndex );
+                        return false;
+                    }
+                    if (text == "XK_Control_R") {
+                        orders.m_listNumber.push_back(XK_Control_R);
+                    } else if (text == "XK_Control_L") {
+                        orders.m_listNumber.push_back(XK_Control_L);
+                    } else if (text == "XK_Alt_L") {
+                        orders.m_listNumber.push_back(XK_Alt_L);
+                    } else if (text == "XK_Alt_R") {
+                        orders.m_listNumber.push_back(XK_Alt_R);
+                    } else if (text == "XK_Shift_L") {
+                        orders.m_listNumber.push_back(XK_Shift_L);
+                    } else if (text == "XK_Shift_R") {
+                        orders.m_listNumber.push_back(XK_Shift_R);
+                    } else {
+                        orders.m_listNumber.push_back(std::atoi(text.c_str()));
+                    }
                     textPos += text.size() + 1;
                 }
                 m_listOrder.push_back(orders);

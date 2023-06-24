@@ -6,6 +6,7 @@
 #include <math.h>
 #include <X11/Xutil.h>
 #include <string.h>
+#include <item2d/tg_menu_item.h>
 #include "mainwindow.h"
 #include "functional_test_image.h"
 
@@ -42,6 +43,16 @@ void FunctionalTest::start()
             switch (m_testOrders.getTestOrder(i)->m_type) {
                 case TestOrderType::MouseMoveClick:
                     sendButtonMoveClick(m_testOrders.getTestOrder(i)->m_listNumber.at(0),
+                                        m_testOrders.getTestOrder(i)->m_listNumber.at(1),
+                                        m_testOrders.getTestOrder(i)->m_listNumber.at(2),
+                                        m_testOrders.getTestOrder(i)->m_listNumber.at(3),
+                                        m_testOrders.getTestOrder(i)->m_listNumber.at(4),
+                                        m_testOrders.getTestOrder(i)->m_listNumber.at(5),
+                                        m_testOrders.getTestOrder(i)->m_listNumber.at(6),
+                                        m_testOrders.getTestOrder(i)->m_listNumber.at(7));
+                    break;
+                case TestOrderType::MouseMoveRightClick:
+                    sendButtonMoveRightClick(m_testOrders.getTestOrder(i)->m_listNumber.at(0),
                                         m_testOrders.getTestOrder(i)->m_listNumber.at(1),
                                         m_testOrders.getTestOrder(i)->m_listNumber.at(2),
                                         m_testOrders.getTestOrder(i)->m_listNumber.at(3),
@@ -90,6 +101,15 @@ void FunctionalTest::start()
                                         m_testOrders.getTestOrder(i)->m_listNumber.at(0),
                                         m_testOrders.getTestOrder(i)->m_listNumber.at(1))) {
                         TG_ERROR_LOG("Enabled change is incorrect, index: ", m_testOrders.getTestOrder(i)->m_lineNumber);
+                        m_returnIndex = 1;
+                        m_mainWindow->exit();
+                        return;
+                    }
+                    break;
+                case isMenuClicked:
+                    if (!checkIsMenuClicked(
+                                        m_testOrders.getTestOrder(i)->m_listNumber.at(0))) {
+                        TG_ERROR_LOG("Menu Clicked change is incorrect, index: ", m_testOrders.getTestOrder(i)->m_lineNumber);
                         m_returnIndex = 1;
                         m_mainWindow->exit();
                         return;
@@ -160,10 +180,16 @@ void FunctionalTest::start()
                         m_testOrders.getTestOrder(i)->m_listString[0].c_str(), 800, 600)) {
                         TG_ERROR_LOG("Image is not correct, index: ", m_testOrders.getTestOrder(i)->m_lineNumber, "/", m_testOrders.getTestOrder(i)->m_listString[0]);
                         m_returnIndex = 1;
-                        sleep(100);
+                        sleep(10);
                         m_mainWindow->exit();
                         return;
                     }
+                    break;
+                case TestOrderType::SendKeyPress:
+                    sendKeyPress(m_testOrders.getTestOrder(i)->m_listNumber.at(0),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(1),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(2),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(3));
                     break;
                 default:
                     TG_ERROR_LOG("Test case is incorrect");
@@ -342,6 +368,29 @@ bool FunctionalTest::isCorrectEnabled(size_t index, bool enabled)
     return true;
 }
 
+bool FunctionalTest::checkIsMenuClicked(int index)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    if (m_mainWindow->getMouseStateChangeCount() == m_latestHoverIndex)
+    {
+        TG_ERROR_LOG("State change count ", m_mainWindow->getMouseStateChangeCount() , " Should be: ", m_latestHoverIndex);
+        return false;
+    }
+    HoverVisibleChangeState wantedState = HoverVisibleChangeState::MenuClicked;
+    if (m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index != static_cast<size_t>(index) || m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state != wantedState)
+    {
+        TG_ERROR_LOG("MenuClicked change is incorrect ", m_latestHoverIndex, index,
+                     m_mainWindow->getString(wantedState),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_index,
+                     m_mainWindow->getString(m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_state),
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_x,
+                     m_mainWindow->getMouseStateChange(m_latestHoverIndex)->m_y);
+        return false;
+    }
+    m_latestHoverIndex++;
+    return true;
+}
+
 void FunctionalTest::changeResolution(uint32_t waitBefore, int width, int height, uint32_t waitAfter)
 {
     sleep(waitBefore);
@@ -421,6 +470,54 @@ void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int p
     XFlush(display);
     if (waitAfterRelease)
     {
+        sleep(waitAfterRelease);
+    }
+}
+
+void FunctionalTest::sendButtonMoveRightClick(uint32_t timeBetweenPressRelease, int pressX, int pressY, int releaseX, int releaseY, uint32_t waitAfterRelease, bool sendPress, bool sendRelease)
+{
+    int button = Button3;
+    Display *display = m_mainWindow->getDisplay();
+
+    XEvent event;
+    XEvent eventMove;
+    memset(&event, 0x00, sizeof(event));
+    memset(&eventMove, 0x00, sizeof(event));
+    event.type = ButtonPress;
+    event.xbutton.button = button;
+    event.xbutton.same_screen = True;
+    event.xbutton.x = pressX;
+    event.xbutton.y = pressY;
+    if (sendPress) {
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+    }
+    XFlush(display);
+    if (timeBetweenPressRelease) {
+        sleep(timeBetweenPressRelease);
+    }
+
+    eventMove.xmotion.x = pressX;
+    eventMove.xmotion.y = pressY;
+    while (1) {
+        eventMove.type = MotionNotify;
+        eventMove.xmotion.x = moveValueToDirection(eventMove.xmotion.x, releaseX);
+        eventMove.xmotion.y = moveValueToDirection(eventMove.xmotion.y, releaseY);
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &eventMove);
+        XFlush(display);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        if (eventMove.xmotion.x == releaseX && eventMove.xmotion.y == releaseY) {
+            break;
+        }
+    }
+    event.type = ButtonRelease;
+    event.xbutton.x = releaseX;
+    event.xbutton.y = releaseY;
+    event.xbutton.state = 0x100;
+    if (sendRelease) {
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+    }
+    XFlush(display);
+    if (waitAfterRelease) {
         sleep(waitAfterRelease);
     }
 }
