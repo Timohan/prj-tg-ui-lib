@@ -56,3 +56,5 @@ make DISABLE_CPU_OPTIMIZE=on
 sudo make install  
 
 This will make that rendering is continuous without semaphore locks, and makes CPU usage to 100%.
+
+Using USE_GLFW=on have DISABLE_CPU_OPTIMIZE by default
