@@ -33,6 +33,9 @@ public:
     void heightCellChanged(float height, TgGridViewCell *cell);
 
     void setSliderVisibilityAndPosition();
+    void setMouseScrollMove(int64_t x, int64_t y);
+    void setMouseScrollMultiplier(uint32_t multiplier);
+    uint32_t getMouseScrollMultiplier();
 private:
     TgGridView *m_currentItem;
     TgRectangle m_background;
@@ -48,6 +51,7 @@ private:
     size_t m_maxInnerAreaHeight = 0;
     uint64_t m_previousVerticalSliderPosition = 0;
     uint64_t m_previousHorizontalSliderPosition = 0;
+    uint32_t m_multiplier = 1;
 
     void setGridCellsPositions();
     void onVerticalSliderPositionChanged(uint64_t position);
@@ -56,6 +60,7 @@ private:
     bool setSliderVisibilityAndPositionHor();
     bool setSliderVisibilityAndPositionVer();
     void clear();
+    static void setMouseScrollMove(int64_t value, TgSlider &slider);
 };
 
 #endif // TG_GRID_VIEW_PRIVATE_H

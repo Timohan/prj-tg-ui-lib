@@ -90,3 +90,53 @@ void TgGridView::checkPositionValues()
     TgItem2d::checkPositionValues();
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgGridView::handleEvent
+ *
+ * handles the event
+ *
+ * \param eventData
+ * \param windowInfo
+ * \return if event result is completed
+ */
+TgEventResult TgGridView::handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo)
+{
+    if (eventData->m_type == TgEventType::EventTypeMouseScrollMove
+        && getVisible()
+        && TgItem2d::m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)) {
+        if (getEnabled()) {
+            m_private->setMouseScrollMove(static_cast<int64_t>(eventData->m_event.m_mouseEvent.m_scroll_move_x),
+                                          static_cast<int64_t>(eventData->m_event.m_mouseEvent.m_scroll_move_y));
+        }
+        TG_FUNCTION_END();
+        return TgEventResult::EventResultCompleted;
+    }
+    TG_FUNCTION_END();
+    return TgItem2d::handleEvent(eventData, windowInfo);
+}
+
+/*!
+ * \brief TgGridView::setMouseScrollMultiplier
+ *
+ * set scroll move multiplier
+ * default: 1
+ * if scroll move is 1, and multiplier is 2, then scroll move is 2
+ * \param multiplier
+ */
+void TgGridView::setMouseScrollMultiplier(uint32_t multiplier)
+{
+    return m_private->setMouseScrollMultiplier(multiplier);
+}
+
+/*!
+ * \brief TgGridView::getMouseScrollMultiplier
+ *
+ * get scroll move multiplier
+ *
+ * \return multiplier
+ */
+uint32_t TgGridView::getMouseScrollMultiplier()
+{
+    return m_private->getMouseScrollMultiplier();
+}

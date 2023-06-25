@@ -21,6 +21,8 @@
 #define GLX_CONTEXT_MINOR_VERSION_ARB       0x2092
 typedef GLXContext (*glXCreateContextAttribsARBProc)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
 
+const long TgMainWindowX11::m_event_mask = StructureNotifyMask | PointerMotionMask | ButtonPressMask | Button1MotionMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask;
+
 TgMainWindowX11::TgMainWindowX11(TgMainWindowPrivate *mainWindowPrivate) :
     m_mainWindowPrivate(mainWindowPrivate),
     m_display(nullptr)
@@ -114,7 +116,7 @@ int TgMainWindowX11::initWindow(const char *windowTitle, const TgWindowInfo *inf
                                            visualInfo->visual, AllocNone);
     setWindowAttrb.background_pixmap = None;
     setWindowAttrb.border_pixel = 0;
-    setWindowAttrb.event_mask = StructureNotifyMask | PointerMotionMask | ButtonPressMask | Button1MotionMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask;
+    setWindowAttrb.event_mask = m_event_mask;
 
     m_window = XCreateWindow(m_display, RootWindow( m_display, visualInfo->screen),
                              0, 0, info->m_windowWidth, info->m_windowHeight, 0,
@@ -269,7 +271,7 @@ void TgMainWindowX11::inputListener()
         }
         m_mutex.unlock();
         waitForMsg(ConnectionNumber(m_display));
-        if (XCheckMaskEvent(m_display, StructureNotifyMask | PointerMotionMask | ButtonPressMask | Button1MotionMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | ResizeRedirectMask, &xevent)) {
+        if (XCheckMaskEvent(m_display, m_event_mask, &xevent)) {
         m_mutex.lock();
         switch (xevent.type) {
             case MotionNotify:
@@ -281,6 +283,14 @@ void TgMainWindowX11::inputListener()
                 m_mainWindowPrivate->addEvent(&eventData);
                 break;
             case ButtonPress:
+                if (xevent.xbutton.button == Button4 || xevent.xbutton.button == Button5) {
+                    eventData.m_type = TgEventType::EventTypeMouseScrollMove;
+                    eventData.m_event.m_mouseEvent.m_scroll_move_x = 0;
+                    eventData.m_event.m_mouseEvent.m_scroll_move_y = xevent.xbutton.button == Button4 ? 1 : -1;
+                    eventData.m_event.m_mouseEvent.m_time = m_startTime.elapsedTimeFromBegin();
+                    m_mainWindowPrivate->addEvent(&eventData);
+                    break;
+                }
                 eventData.m_event.m_mouseEvent.m_mouseType = getButtonType(xevent.xbutton.button);
                 if (eventData.m_event.m_mouseEvent.m_mouseType == TgMouseType::NoButton) {
                     break;
@@ -341,9 +351,9 @@ void TgMainWindowX11::inputListener()
 TgMouseType TgMainWindowX11::getButtonType(unsigned int button)
 {
     switch (button) {
-        case 1: return TgMouseType::ButtonLeft;
-        case 2: return TgMouseType::ButtonMiddle;
-        case 3: return TgMouseType::ButtonRight;
+        case Button1: return TgMouseType::ButtonLeft;
+        case Button2: return TgMouseType::ButtonMiddle;
+        case Button3: return TgMouseType::ButtonRight;
         default: break;
     }
     return TgMouseType::NoButton;

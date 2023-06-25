@@ -62,6 +62,8 @@ private:
     static TgMouseType getButtonType(unsigned int button);
     void sendEndMsg();
     int waitForMsg(int fd);
+
+    static const long m_event_mask;
 };
 
 #endif // TG_MAIN_WINDOW_X11_H

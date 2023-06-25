@@ -34,9 +34,13 @@ public:
     void setRowCount(size_t row);
     void setColumCount(size_t column);
     TgGridViewCell *getCell(size_t column, size_t row);
+    void setMouseScrollMultiplier(uint32_t multiplier);
+    uint32_t getMouseScrollMultiplier();
 
 protected:
     virtual void checkPositionValues() override;
+    virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo) override;
+
 private:
     TgGridViewPrivate *m_private;
 

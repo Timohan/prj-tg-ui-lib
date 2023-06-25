@@ -501,3 +501,73 @@ void TgGridViewPrivate::heightCellChanged(float height, TgGridViewCell *cell)
     }
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgGridViewPrivate::setMouseScrollMove
+ *
+ * when mouse scroll move happens on grid view, this is called
+ *
+ * \return x mouse scroll position move (x)
+ * \return y mouse scroll position move (y)
+ */
+void TgGridViewPrivate::setMouseScrollMove(int64_t x, int64_t y)
+{
+    TG_FUNCTION_BEGIN();
+    setMouseScrollMove(x*static_cast<int64_t>(m_multiplier), m_horizontalSlider);
+    setMouseScrollMove(y*static_cast<int64_t>(m_multiplier), m_verticalSlider);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgGridViewPrivate::setMouseScrollMove
+ *
+ * when mouse scroll move happens on grid view, this is called
+ *
+ * \return value mouse scroll position move (x or y)
+ */
+void TgGridViewPrivate::setMouseScrollMove(int64_t value, TgSlider &slider)
+{
+    TG_FUNCTION_BEGIN();
+    if (value && slider.getVisible()) {
+        if (value > 0) {
+            if (slider.getSliderCurrentPosition() <= static_cast<uint64_t>(value)) {
+                slider.setSliderCurrentPosition(0);
+            } else {
+                slider.setSliderCurrentPosition(slider.getSliderCurrentPosition() - static_cast<uint64_t>(value));
+            }
+        } else {
+            value = -1*value;
+            uint64_t newValue = slider.getSliderCurrentPosition() + static_cast<uint64_t>(value);
+            if (slider.getSliderMaxPosition() < newValue) {
+                newValue = slider.getSliderMaxPosition();
+            }
+            slider.setSliderCurrentPosition(newValue);;
+        }
+    }
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgGridViewPrivate::setMouseScrollMultiplier
+ *
+ * set scroll move multiplier
+ * default: 1
+ * if scroll move is 1, and multiplier is 2, then scroll move is 2
+ * \param multiplier
+ */
+void TgGridViewPrivate::setMouseScrollMultiplier(uint32_t multiplier)
+{
+    m_multiplier = multiplier;
+}
+
+/*!
+ * \brief TgGridViewPrivate::getMouseScrollMultiplier
+ *
+ * get scroll move multiplier
+ *
+ * \return multiplier
+ */
+uint32_t TgGridViewPrivate::getMouseScrollMultiplier()
+{
+    return m_multiplier;
+}
