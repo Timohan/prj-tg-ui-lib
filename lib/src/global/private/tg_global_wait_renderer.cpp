@@ -14,6 +14,8 @@
 #include "../tg_global_log.h"
 #include "tg_global_tooltip.h"
 
+#define MIN_COUNT_REQUIRED_TO_WAIT_FOR_RELEASE  3
+
 TgGlobalWaitRenderer *TgGlobalWaitRenderer::m_globalWaitRender = nullptr;
 
 TgGlobalWaitRenderer *TgGlobalWaitRenderer::getInstance()
@@ -37,8 +39,8 @@ void TgGlobalWaitRenderer::waitForRender()
 {
     TG_FUNCTION_BEGIN();
 #if DEFAULT_RENDER_WAIT_MAX_TIMEOUT != 0
-    if (m_renderCount > 3) {
-        m_mutex.lock();
+    m_mutex.lock();
+    if (m_renderCount > MIN_COUNT_REQUIRED_TO_WAIT_FOR_RELEASE) {
         if (m_nextTimeMaxTimeOut > 0) {
             size_t waitTime = m_nextTimeMaxTimeOut;
             int msTooltipWait = TgGlobalTooltip::getInstance()->getMsToWaitRendering();
@@ -59,6 +61,7 @@ void TgGlobalWaitRenderer::waitForRender()
          }
     } else {
         m_renderCount++;
+        m_mutex.unlock();
     }
 #endif
     TG_FUNCTION_END();
@@ -84,6 +87,9 @@ void TgGlobalWaitRenderer::release(size_t maxTimeout)
         m_mutex.unlock();
         m_cv.notify_one();
     } else {
+        if (m_renderCount > MIN_COUNT_REQUIRED_TO_WAIT_FOR_RELEASE) {
+            m_renderCount = MIN_COUNT_REQUIRED_TO_WAIT_FOR_RELEASE;
+        }
         m_mutex.unlock();
     }
 #else
@@ -91,3 +97,24 @@ void TgGlobalWaitRenderer::release(size_t maxTimeout)
 #endif
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgGlobalWaitRenderer::renderUnlock
+ *
+ * lock render lock
+ */
+void TgGlobalWaitRenderer::renderLock()
+{
+    m_renderMutex.lock();
+}
+
+/*!
+ * \brief TgGlobalWaitRenderer::renderUnlock
+ *
+ * unlock render lock
+ */
+void TgGlobalWaitRenderer::renderUnlock()
+{
+    m_renderMutex.unlock();
+}
+

@@ -99,7 +99,7 @@ void TgPagesPrivate::setPage(size_t pageIndex)
         TG_FUNCTION_END();
         return;
     }
-
+    TgGlobalWaitRenderer::getInstance()->renderLock();
     for (size_t i=0;i<m_listPage.size();i++) {
         if (m_pageSwitchType == TgPagesPageSwitchType::PageSwitchType_Direct) {
             if (i == pageIndex) {
@@ -120,6 +120,7 @@ void TgPagesPrivate::setPage(size_t pageIndex)
     }
     m_currentPageIndex = pageIndex;
     m_pageSwitchStartTime.resetTimer();
+    TgGlobalWaitRenderer::getInstance()->renderUnlock();
     TG_FUNCTION_END();
 }
 

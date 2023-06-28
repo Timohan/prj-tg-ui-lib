@@ -85,8 +85,10 @@ bool TgMainWindow::render(const TgWindowInfo *)
         m_firstTimeRender = false;
     }
 
+    m_mainwindowPrivate->setupViewForRender();
     m_mainwindowPrivate->startHandleEvents();
     m_mainwindowPrivate->handleEvents();
+    TgGlobalWaitRenderer::getInstance()->renderLock();
     m_mainwindowPrivate->startRendering(m_mainwindowPrivate->getWindowInfo());
     if (TgGlobalDeleter::getInstance()->removeItems()) {
         m_mainwindowPrivate->hideList();
@@ -95,13 +97,13 @@ bool TgMainWindow::render(const TgWindowInfo *)
     m_mainwindowPrivate->checkPositionValuesChildrenWindowMenu(m_mainwindowPrivate->getWindowInfo());
     checkPositionValuesChildren(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->checkPositionValuesTooltip(m_mainwindowPrivate->getWindowInfo());
-    m_mainwindowPrivate->setupViewForRender();
     customRender();
     m_mainwindowPrivate->setup2DShaderToUniforms();
     renderChildren(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderChildrenMenu(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderTooltip(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderEnd();
+    TgGlobalWaitRenderer::getInstance()->renderUnlock();
     checkOnResizeChangedOnChildren();
     TG_FUNCTION_END();
     return true;
