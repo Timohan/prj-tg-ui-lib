@@ -13,6 +13,7 @@
 #define TG_GLOBAL_WAIT_RENDER_H
 
 #include <mutex>
+#include <condition_variable>
 
 #ifndef DEFAULT_RENDER_WAIT_MAX_TIMEOUT
 #define DEFAULT_RENDER_WAIT_MAX_TIMEOUT 1000
@@ -27,7 +28,8 @@ public:
 
 private:
     static TgGlobalWaitRenderer *m_globalWaitRender;
-    std::timed_mutex m_semHandler;
+    std::mutex m_mutexCv;
+    std::condition_variable m_cv;
     size_t m_nextTimeMaxTimeOut = 0;
     size_t m_currentTimeMaxTimeOut = DEFAULT_RENDER_WAIT_MAX_TIMEOUT;
     size_t m_renderCount = 0;

@@ -48,7 +48,11 @@ void TgGlobalWaitRenderer::waitForRender()
             m_nextTimeMaxTimeOut = m_currentTimeMaxTimeOut;
             m_semLocked = true;
             m_mutex.unlock();
-            m_semHandler.try_lock_until(std::chrono::steady_clock::now() + std::chrono::milliseconds(waitTime));
+            std::unique_lock lk(m_mutexCv);
+            m_cv.wait_until(lk, std::chrono::steady_clock::now() + std::chrono::milliseconds(waitTime));
+            m_mutex.lock();
+            m_semLocked = false;
+            m_mutex.unlock();
         } else {
             m_nextTimeMaxTimeOut = m_currentTimeMaxTimeOut;
             m_mutex.unlock();
@@ -78,7 +82,7 @@ void TgGlobalWaitRenderer::release(size_t maxTimeout)
     if (m_semLocked) {
         m_semLocked = false;
         m_mutex.unlock();
-        m_semHandler.unlock();
+        m_cv.notify_one();
     } else {
         m_mutex.unlock();
     }
