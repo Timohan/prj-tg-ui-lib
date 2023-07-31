@@ -27,6 +27,7 @@ public:
     void release(size_t maxTimeout = UINT64_MAX);
     void renderLock();
     void renderUnlock();
+    void exit();
 
 private:
     static TgGlobalWaitRenderer *m_globalWaitRender;
@@ -38,6 +39,7 @@ private:
     std::mutex m_mutex;
     std::mutex m_renderMutex;
     bool m_semLocked = false;
+    bool m_exitDone = false;
 };
 
 #endif // TG_GLOBAL_WAIT_RENDER_H

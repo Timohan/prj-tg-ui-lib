@@ -217,6 +217,7 @@ void TgGlobalApplication::exit()
 {
 #ifndef USE_GLFW
     std::thread([this]() {
+        TgGlobalWaitRenderer::getInstance()->exit();
         TgGlobalWaitRenderer::getInstance()->release(1);
         waitForEnd();
         m_exit = true;
