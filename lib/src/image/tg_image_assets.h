@@ -22,6 +22,7 @@ enum TgImageType
     ImageTypeNA = 0,
     PlainImage,
     LoadedImage,
+    GeneratedImage,
 };
 
 struct TgImageAsset
@@ -41,6 +42,11 @@ struct TgImageAsset
             int m_width;
             int m_height;
         } m_loadedImage;
+        struct {
+            uint8_t *m_imageData;
+            int m_width;
+            int m_height;
+        } m_generatedImage;
     } m_imageData;
 };
 
@@ -51,6 +57,7 @@ public:
     ~TgImageAssets();
 
     GLuint generateImage(TgImageAsset &asset);
+    bool deleteImage(TgImageAsset &asset);
 
 private:
     std::vector<TgImageAsset>m_listImages;
@@ -58,6 +65,7 @@ private:
     GLuint generatePlainImage(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
     GLuint loadImage(TgImageAsset &asset);
     GLuint setImageDataToTexture(const unsigned char *imageData, int width, int height, TgImageAsset &asset);
+    GLuint setImageGenerated(TgImageAsset &asset);
 };
 
 #endif // TG_IMAGE_ASSETS_H

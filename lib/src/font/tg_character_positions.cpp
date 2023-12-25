@@ -50,6 +50,38 @@ size_t TgCharacterPositions::getCharacterIndex(const TgFontInfo *newInfo, uint32
 }
 
 /*!
+ * \brief TgCharacterPositions::calculateAdvance
+ *
+ * calculate advance between two glyphs
+ *
+ * \param left_glyph [in] left glyph
+ * \param right_glyph [in] right glyph
+ * \param right_data [in] right glyph data
+ * \return advance
+ */
+float TgCharacterPositions::calculateAdvance(const prj_ttf_reader_glyph_data_t *left_glyph, const prj_ttf_reader_glyph_data_t *right_glyph, const prj_ttf_reader_data_t *right_data)
+{
+    int32_t left_advance_x, left_bearing, right_bearing;
+    left_advance_x = static_cast<int32_t>(left_glyph->image_pixel_advance_x + 0.5f);
+    left_bearing = static_cast<int32_t>(left_glyph->image_pixel_bearing);
+    if (left_glyph->image_pixel_bearing < 0 && left_glyph->image_pixel_bearing > -1) {
+        left_bearing = -1;
+    }
+    left_advance_x -= left_bearing;
+    left_advance_x -= left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x;
+    right_bearing = static_cast<int32_t>(right_glyph->image_pixel_bearing);
+    if (right_glyph->image_pixel_bearing < 0 && right_glyph->image_pixel_bearing > -1) {
+        right_bearing = -1;
+    }
+
+    float kerning = prj_ttf_reader_get_kerning(left_glyph->character, right_glyph->character, right_data) + static_cast<float>(right_bearing + left_advance_x);
+
+    float ret = static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+    ret += kerning;
+    return ret;
+}
+
+/*!
  * \brief TgCharacterPositions::generateTextCharacterPositioning
  *
  * generate text vertices for the text
@@ -74,8 +106,6 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
     const prj_ttf_reader_glyph_data_t *left_glyph = nullptr;
     float positionLeftX = 0;
     size_t infoCharacterIndex = 0;
-    float kerning = 0;
-    int32_t left_advance_x, left_bearing, right_bearing;
     uint32_t currentLine = 1;
     bool firstCharacterAdded = false;
     float textLinesWidth = 0;
@@ -127,22 +157,7 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
 
         if (i && left_glyph) {
             left_glyph = prj_ttf_reader_get_character_glyph_data(leftCharacterInfo->m_character, leftFontInfo->m_data);
-            left_advance_x = static_cast<int32_t>(left_glyph->image_pixel_advance_x + 0.5f);
-            left_bearing = static_cast<int32_t>(left_glyph->image_pixel_bearing);
-            if (left_glyph->image_pixel_bearing < 0 && left_glyph->image_pixel_bearing > -1) {
-                left_bearing = -1;
-            }
-            left_advance_x -= left_bearing;
-            left_advance_x -= left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x;
-            right_bearing = static_cast<int32_t>(glyph->image_pixel_bearing);
-            if (glyph->image_pixel_bearing < 0 && glyph->image_pixel_bearing > -1) {
-                right_bearing = -1;
-            }
-
-            kerning = prj_ttf_reader_get_kerning(leftCharacterInfo->m_character, characterInfo->m_character, fontInfo->m_data) + static_cast<float>(right_bearing + left_advance_x);
-
-            positionLeftX += static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
-            positionLeftX += kerning;
+            positionLeftX += calculateAdvance(left_glyph, glyph, fontInfo->m_data);
         }
         if (wordWrap == TgTextFieldWordWrap::WordWrapOn
             && isOverTheLine(currentLine, positionLeftX, glyph, maxLineCount, maxLineWidth)) {
@@ -253,8 +268,6 @@ bool TgCharacterPositions::calculateTextWidthHeight(std::vector<TgFontInfoData *
     const prj_ttf_reader_glyph_data_t *left_glyph = nullptr;
     float positionLeftX = 0;
     size_t infoCharacterIndex = 0;
-    float kerning = 0;
-    int32_t left_advance_x, left_bearing, right_bearing;
     uint32_t currentLine = 1;
     bool firstCharacterAdded = false;
     float textLinesWidth = 0;
@@ -307,22 +320,7 @@ bool TgCharacterPositions::calculateTextWidthHeight(std::vector<TgFontInfoData *
 
         if (i && left_glyph) {
             left_glyph = prj_ttf_reader_get_character_glyph_data(leftCharacterInfo->m_character, leftFontInfo->m_data);
-            left_advance_x = static_cast<int32_t>(left_glyph->image_pixel_advance_x + 0.5f);
-            left_bearing = static_cast<int32_t>(left_glyph->image_pixel_bearing);
-            if (left_glyph->image_pixel_bearing < 0 && left_glyph->image_pixel_bearing > -1) {
-                left_bearing = -1;
-            }
-            left_advance_x -= left_bearing;
-            left_advance_x -= left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x;
-            right_bearing = static_cast<int32_t>(glyph->image_pixel_bearing);
-            if (glyph->image_pixel_bearing < 0 && glyph->image_pixel_bearing > -1) {
-                right_bearing = -1;
-            }
-
-            kerning = prj_ttf_reader_get_kerning(leftCharacterInfo->m_character, characterInfo->m_character, fontInfo->m_data) + static_cast<float>(right_bearing + left_advance_x);
-
-            positionLeftX += static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
-            positionLeftX += kerning;
+            positionLeftX += calculateAdvance(left_glyph, glyph, fontInfo->m_data);
         }
         if (wordWrap == TgTextFieldWordWrap::WordWrapOn
             && isOverTheLine(currentLine, positionLeftX, glyph, maxLineCount, maxLineWidth)) {
@@ -388,6 +386,37 @@ bool TgCharacterPositions::calculateTextWidthHeight(std::vector<TgFontInfoData *
     allDrawTextHeight = TgFontGlyphCacheData::getAllDrawTextHeight(currentLine, listFontInfo);
     TG_FUNCTION_END();
     return true;
+}
+
+/*!
+ * \brief TgCharacterPositions::calculateTextWidth
+ *
+ * calculate the text width
+ *
+ * \param fontText [in] font text
+ * \return width
+ */
+float TgCharacterPositions::calculateTextWidth(TgFontText *fontText)
+{
+    size_t i, c = fontText->getCharacterCount();
+    float advanceX;
+    float ret = 0;
+    const prj_ttf_reader_glyph_data_t *right_glyph, *left_glyph;
+    for (i=0;i<c;i++) {
+        TgFontTextCharacterInfo *characterInfo = fontText->getCharacter(i);
+        TgFontInfo *fontInfo = fontText->getFontInfo(i);
+        right_glyph = prj_ttf_reader_get_character_glyph_data(characterInfo->m_character, fontInfo->m_data);
+
+        if (i > 0) {
+            advanceX = TgCharacterPositions::calculateAdvance(left_glyph, right_glyph, fontInfo->m_data);
+            ret += advanceX;
+        }
+        if (i+1 == c) {
+            ret += static_cast<float>(right_glyph->image_pixel_right_x - right_glyph->image_pixel_left_x);
+        }
+        left_glyph = right_glyph;
+    }
+    return ret;
 }
 
 /*!

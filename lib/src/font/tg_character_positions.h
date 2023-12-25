@@ -34,6 +34,8 @@ public:
                                                             const uint32_t maxLineCount, const float maxLineWidth,
                                                             const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine,
                                                             float &mostTextWidth, float &mostTextHeight, float &allDrawTextHeight);
+    static float calculateAdvance(const prj_ttf_reader_glyph_data_t *left_glyph, const prj_ttf_reader_glyph_data_t *right_glyph, const prj_ttf_reader_data_t *right_data);
+    static float calculateTextWidth(TgFontText *fontText);
 private:
     static size_t getCharacterIndex(const TgFontInfo *newInfo, uint32_t character);
     static size_t getCharacterIndex(const TgFontInfoData *newInfo, uint32_t character);

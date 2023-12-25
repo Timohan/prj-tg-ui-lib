@@ -32,6 +32,19 @@ TgImageAssets::~TgImageAssets()
     TG_FUNCTION_END();
 }
 
+bool TgImageAssets::deleteImage(TgImageAsset &asset)
+{
+    std::vector<TgImageAsset>::const_iterator it;
+    for (it=m_listImages.begin();it!=m_listImages.end();it++) {
+        if (it->m_textureIndex == asset.m_textureIndex) {
+            glDeleteTextures(1, &it->m_textureIndex);
+            m_listImages.erase(it);
+        }
+        return true;
+    }
+    return false;
+}
+
 /*!
  * \brief TgImageAssets::generatePlainImage
  *
@@ -50,6 +63,8 @@ GLuint TgImageAssets::generateImage(TgImageAsset &asset)
                                       asset.m_imageData.m_plainImage.a);
         case TgImageType::LoadedImage:
             return loadImage(asset);
+        case TgImageType::GeneratedImage:
+            return TgImageAssets::setImageGenerated(asset);
         case TgImageType::ImageTypeNA:
         default:
             return 0;
@@ -157,6 +172,34 @@ GLuint TgImageAssets::loadImage(TgImageAsset &asset)
     TG_FUNCTION_END();
     return asset.m_textureIndex;
 }
+
+/*!
+ * \brief TgImageAssets::setImageGenerated
+ *
+ * set image generated data and sets it as texture
+ *
+ * \param asset image assets
+ * \return texture index
+ */
+GLuint TgImageAssets::setImageGenerated(TgImageAsset &asset)
+{
+    TgImageAsset newAsset;
+    newAsset.m_textureIndex = 0;
+    newAsset.m_type = TgImageType::GeneratedImage;
+    newAsset.m_imageData.m_generatedImage.m_imageData = asset.m_imageData.m_generatedImage.m_imageData;
+    newAsset.m_textureIndex = setImageDataToTexture(asset.m_imageData.m_generatedImage.m_imageData, asset.m_imageData.m_generatedImage.m_width, asset.m_imageData.m_generatedImage.m_height, asset);
+    newAsset.m_imageData.m_generatedImage.m_width = asset.m_imageData.m_generatedImage.m_width;
+    newAsset.m_imageData.m_generatedImage.m_height = asset.m_imageData.m_generatedImage.m_height;
+
+    if (!newAsset.m_textureIndex) {
+        return newAsset.m_textureIndex;
+    }
+    m_listImages.push_back(newAsset);
+
+    TG_FUNCTION_END();
+    return asset.m_textureIndex;
+}
+
 
 /*!
  * \brief TgImageAssets::setImageDataToTexture

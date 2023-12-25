@@ -171,6 +171,7 @@ private:
     friend class TgSlider;
     friend class TgSliderPrivate;
     friend class TgPagesPrivate;
+    friend class TgChart;
 
 };
 
