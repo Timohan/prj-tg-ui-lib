@@ -346,3 +346,107 @@ void TgChart::setRightGridMargin(uint32_t gridRightMargin)
     m_private->setRightGridMargin(gridRightMargin);
     TG_FUNCTION_END();
 }
+
+/*!
+ * \brief TgChart::setChartResolution
+ * set new chart resolution
+ * \param width
+ * \param height
+ */
+void TgChart::setChartResolution(int width, int height)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setChartResolution(width, height);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgChart::getChartResolutionWidth
+ *
+ * \return chart resolution width
+ */
+int TgChart::getChartResolutionWidth()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getChartResolutionWidth();
+}
+
+/*!
+ * \brief TgChart::getChartResolutionHeight
+ *
+ * \return chart resolution height
+ */
+int TgChart::getChartResolutionHeight()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getChartResolutionHeight();
+}
+
+/*!
+ * \brief TgChart::setDrawText
+ * draw text or not?
+ * \param draw
+ */
+void TgChart::setDrawText(bool draw)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setDrawText(draw);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgChart::getDrawText
+ *
+ * \return draw text
+ */
+bool TgChart::getDrawText()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getDrawText();
+}
+
+/*!
+ * \brief TgChart::setLineWidth
+ *
+ * set line width
+ * \param lineWidth
+ */
+void TgChart::setLineWidth(uint32_t lineWidth)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setLineWidth(lineWidth);
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgChart::getLineWidth
+ *
+ * \return line width
+ */
+uint32_t TgChart::getLineWidth()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getLineWidth();
+}
+
+/*! TgChart::setChartLineAA
+ * \param aa anti-aliasing method to set for chart
+ */
+void TgChart::setChartLineAA(TgChartLineAA aa)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setChartLineAA(aa);
+    TG_FUNCTION_END();
+}
+
+/*! TgChart::getChartLineAA
+ * \return get anti-aliasing of chart method
+ */
+TgChartLineAA TgChart::getChartLineAA()
+{
+    return m_private->getChartLineAA();
+}

@@ -11,10 +11,16 @@ MainWindow::MainWindow(int width, int height) :
     m_buttonChangeLineColor(this, 460, 90, 200, 50, "Change line color"),
     m_buttonChangeTextColor(this, 240, 230, 200, 50, "Change text color"),
     m_buttonChangeDrawStyle(this, 460, 230, 200, 50, "Change draw style"),
+    m_buttonChangeFontSize(this, 460, 290, 200, 50, "Change font size"),
     m_buttonTopMarginAdd(this, 20, 160, 170, 50, "Add top margin"),
     m_buttonBottomMarginAdd(this, 200, 160, 180, 50, "Add bottom margin"),
     m_buttonLeftMarginAdd(this, 390, 160, 170, 50, "Add left margin"),
     m_buttonRightMarginAdd(this, 570, 160, 170, 50, "Add right margin"),
+    m_buttonChangeChartSize(this, 460, 350, 170, 50, "Change Chart size"),
+    m_buttonChangeDrawText(this, 460, 410, 170, 50, "Change draw text"),
+    m_buttonLineWidthIncrease(this, 240, 480, 190, 50, "Increase line width"),
+    m_buttonLineWidthDecrease(this, 460, 480, 190, 50, "Decrease line width"),
+    m_buttonChangeAA(this, 20, 480, 190, 50, "Change line AA"),
     m_chart(this, 10, 300, 200, 100, 255, 0)
 {
     m_chart.setTextColor(255, 255, 255, 255);
@@ -26,11 +32,20 @@ MainWindow::MainWindow(int width, int height) :
     m_buttonChangeLineColor.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeLineColorClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
     m_buttonChangeTextColor.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeTextColorClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
     m_buttonChangeDrawStyle.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeDrawStyleClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
+    m_buttonChangeFontSize.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeFontSize, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
 
     m_buttonTopMarginAdd.connectOnMouseClicked( std::bind(&MainWindow::onButtonTopMarginAddClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
     m_buttonBottomMarginAdd.connectOnMouseClicked( std::bind(&MainWindow::onButtonBottomMarginAddClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
     m_buttonLeftMarginAdd.connectOnMouseClicked( std::bind(&MainWindow::onButtonLeftMarginAddClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
     m_buttonRightMarginAdd.connectOnMouseClicked( std::bind(&MainWindow::onButtonRightMarginAddClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
+
+    m_buttonChangeChartSize.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeChartSizeClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
+    m_buttonChangeDrawText.connectOnMouseClicked( std::bind(&MainWindow::onButtonChangeDrawTextClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
+
+    m_buttonLineWidthIncrease.connectOnMouseClicked( std::bind(&MainWindow::onButtonLineWidthIncreaseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
+    m_buttonLineWidthDecrease.connectOnMouseClicked( std::bind(&MainWindow::onButtonLineWidthDecreaseClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
+
+    m_buttonChangeAA.connectOnMouseClicked( std::bind(&MainWindow::onButtonLineAAClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), nullptr );
 }
 
 MainWindow::~MainWindow()
@@ -49,8 +64,8 @@ void MainWindow::onButtonAddClick(TgMouseType type, float x, float y, const void
     switch (m_chartIndex) {
         case 0: position.x = 0; position.y = 0; break;
         case 1: position.x = 5; position.y = 5; break;
-        case 2: position.x = 6; position.y = 12; break;
-        case 3: position.x = 25; position.y = 5; break;
+        case 2: position.x = 12; position.y = 12; break;
+        case 3: position.x = 15; position.y = 5; break;
         case 4: position.x = 30; position.y = -5; break;
         case 5: position.x = 31; position.y = 10; break;
         default:
@@ -186,6 +201,17 @@ void MainWindow::onButtonChangeTextColorClick(TgMouseType type, float x, float y
 }
 
 /*!
+ * \brief MainWindow::onButtonChangeFontSize
+ *
+ * change font size
+ */
+void MainWindow::onButtonChangeFontSize(TgMouseType type, float x, float y, const void *id)
+{
+    std::cout << "Change font size\n";
+    m_chart.setFontSize(m_chart.getFontSize()+1);
+}
+
+/*!
  * \brief MainWindow::onButtonChangeDrawStyleClick
  *
  * callback when xy draw style button is clicked
@@ -215,4 +241,41 @@ void MainWindow::onButtonRightMarginAddClick(TgMouseType type, float x, float y,
 {
     std::cout << "Right margin change\n";
     m_chart.setRightGridMargin(m_chart.getRightGridMargin()+1);
+}
+
+void MainWindow::onButtonChangeChartSizeClick(TgMouseType type, float x, float y, const void *id)
+{
+    std::cout << "Change size\n";
+    m_chart.setWidth(m_chart.getWidth()+1);
+    m_chart.setHeight(m_chart.getHeight()+1);
+    m_chart.setChartResolution(static_cast<int>(m_chart.getWidth()), static_cast<int>(m_chart.getHeight()));
+}
+
+void MainWindow::onButtonChangeDrawTextClick(TgMouseType type, float x, float y, const void *id)
+{
+    std::cout << "Draw text\n";
+    m_chart.setDrawText(!m_chart.getDrawText());
+}
+
+void MainWindow::onButtonLineWidthIncreaseClick(TgMouseType type, float x, float y, const void *id)
+{
+    m_chart.setLineWidth(m_chart.getLineWidth()+1);
+}
+
+void MainWindow::onButtonLineWidthDecreaseClick(TgMouseType type, float x, float y, const void *id)
+{
+    if (m_chart.getLineWidth() > 1) {
+        m_chart.setLineWidth(m_chart.getLineWidth()-1);
+    }
+}
+
+void MainWindow::onButtonLineAAClick(TgMouseType type, float x, float y, const void *id)
+{
+    if (m_chart.getChartLineAA() == TgChartLineAA::TgChartLineAA_4) {
+        std::cout << "Change to AA 8\n";
+        m_chart.setChartLineAA(TgChartLineAA::TgChartLineAA_8);
+    } else {
+        std::cout << "Change to AA 4\n";
+        m_chart.setChartLineAA(TgChartLineAA::TgChartLineAA_4);
+    }
 }

@@ -36,6 +36,8 @@ TgChartPrivate::TgChartPrivate(TgItem2d *parent, const unsigned char r, const un
     m_imageAsset.m_type = TgImageType::GeneratedImage;
     m_imageAsset.m_imageData.m_generatedImage.m_width = static_cast<int>(m_parent->getWidth());
     m_imageAsset.m_imageData.m_generatedImage.m_height = static_cast<int>(m_parent->getHeight());
+    m_chartResolutionWidth = static_cast<int>(m_parent->getWidth());
+    m_chartResolutionHeight = static_cast<int>(m_parent->getHeight());
     m_imageAsset.m_imageData.m_generatedImage.m_imageData = nullptr;
     m_fontFile = TgGlobalApplication::getInstance()->getFontDefault()->getDefaultFont();
     TG_FUNCTION_END();
@@ -45,7 +47,7 @@ TgChartPrivate::~TgChartPrivate()
 {
     TG_FUNCTION_BEGIN();
     if (m_imageAsset.m_imageData.m_generatedImage.m_imageData) {
-        delete m_imageAsset.m_imageData.m_generatedImage.m_imageData;
+        delete[] m_imageAsset.m_imageData.m_generatedImage.m_imageData;
     }
     TgGlobalApplication::getInstance()->getImageAssets()->deleteImage(m_imageAsset);
     TG_FUNCTION_END();
@@ -228,13 +230,31 @@ void TgChartPrivate::setTranform(TgItem2d *currentItem)
 void TgChartPrivate::checkPositionValues(TgItem2d *currentItem)
 {
     TG_FUNCTION_BEGIN();
-    if (m_imageAsset.m_imageData.m_generatedImage.m_width <= 0 ||
-        m_imageAsset.m_imageData.m_generatedImage.m_height <= 0) {
+    m_mutex.lock();
+    if ((m_chartResolutionWidth <= 0 || m_chartResolutionHeight <= 0)
+        && !m_textureRequiresReset) {
+        m_mutex.unlock();
         return;
     }
     if (m_textureRequiresReset) {
+        m_drawingTextOnImage = m_newDrawText;
         if (m_imageAsset.m_imageData.m_generatedImage.m_imageData) {
             TgGlobalApplication::getInstance()->getImageAssets()->deleteImage(m_imageAsset);
+        }
+
+        if (m_chartResolutionWidth != m_imageAsset.m_imageData.m_generatedImage.m_width
+            || m_chartResolutionHeight != m_imageAsset.m_imageData.m_generatedImage.m_height) {
+            if (m_imageAsset.m_imageData.m_generatedImage.m_imageData) {
+                delete[] m_imageAsset.m_imageData.m_generatedImage.m_imageData;
+                m_imageAsset.m_imageData.m_generatedImage.m_imageData = nullptr;
+            }
+            m_imageAsset.m_imageData.m_generatedImage.m_width = m_chartResolutionWidth;
+            m_imageAsset.m_imageData.m_generatedImage.m_height = m_chartResolutionHeight;
+            if (m_imageAsset.m_imageData.m_generatedImage.m_width <= 0
+                || m_imageAsset.m_imageData.m_generatedImage.m_height <= 0) {
+                m_mutex.unlock();
+                return;
+            }
         }
 
         if (!m_imageAsset.m_imageData.m_generatedImage.m_imageData) {
@@ -258,6 +278,7 @@ void TgChartPrivate::checkPositionValues(TgItem2d *currentItem)
         m_initVerticesDone = true;
     }
     setTranform(currentItem);
+    m_mutex.unlock();
     TG_FUNCTION_END();
 }
 
@@ -290,6 +311,38 @@ bool TgChartPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentIte
     TG_FUNCTION_END();
     return true;
 }
+
+/*!
+ * \brief TgChartPrivate::setLineWidth
+ *
+ * set line width
+ * \param lineWidth
+ */
+void TgChartPrivate::setLineWidth(uint32_t lineWidth)
+{
+    m_mutex.lock();
+    if (lineWidth == m_lineWidth) {
+        m_mutex.unlock();
+        return;
+    }
+    m_textureRequiresReset = true;
+    m_lineWidth = lineWidth;
+    m_mutex.unlock();
+}
+
+/*!
+ * \brief TgChartPrivate::getLineWidth
+ *
+ * \return line width
+ */
+uint32_t TgChartPrivate::getLineWidth()
+{
+    m_mutex.lock();
+    uint32_t ret = m_lineWidth;
+    m_mutex.unlock();
+    return ret;
+}
+
 
 /*!
  * \brief TgChartPrivate::addChartPosition
@@ -403,6 +456,115 @@ uint32_t TgChartPrivate::getLeftGridMargin() const
 uint32_t TgChartPrivate::getRightGridMargin() const
 {
     return m_gridRightMargin;
+}
+
+/*!
+ * \brief TgChartPrivate::setChartResolution
+ * set new chart resolution
+ * \param width
+ * \param height
+ */
+void TgChartPrivate::setChartResolution(int width, int height)
+{
+    m_mutex.lock();
+    if (m_chartResolutionWidth == width
+        && m_chartResolutionHeight == height) {
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return;
+    }
+    m_chartResolutionWidth = width;
+    m_chartResolutionHeight = height;
+    m_textureRequiresReset = true;
+    m_mutex.unlock();
+}
+
+/*!
+ * \brief TgChartPrivate::getChartResolutionWidth
+ *
+ * \return chart resolution width
+ */
+int TgChartPrivate::getChartResolutionWidth()
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    int ret = m_chartResolutionWidth;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgChartPrivate::setDrawText
+ * draw text or not?
+ * \param draw
+ */
+void TgChartPrivate::setDrawText(bool draw)
+{
+    m_mutex.lock();
+    if (m_newDrawText == draw) {
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return;
+    }
+    m_newDrawText = draw;
+    m_textureRequiresReset = true;
+    m_mutex.unlock();
+}
+
+/*!
+ * \brief TgChartPrivate::getDrawText
+ *
+ * \return draw text
+ */
+bool TgChartPrivate::getDrawText()
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    bool ret = m_newDrawText;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*! TgChartPrivate::setChartLineAA
+ * \param aa anti-aliasing method to set for chart
+ */
+void TgChartPrivate::setChartLineAA(TgChartLineAA aa)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    m_pathAA = aa;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+}
+
+/*! TgChart::getChartLineAA
+ * \return get anti-aliasing of chart method
+ */
+TgChartLineAA TgChartPrivate::getChartLineAA()
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    TgChartLineAA ret = m_pathAA;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/*!
+ * \brief TgChartPrivate::getChartResolutionHeight
+ *
+ * \return chart resolution height
+ */
+int TgChartPrivate::getChartResolutionHeight()
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    int ret = m_chartResolutionHeight;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
 }
 
 /*!
@@ -550,13 +712,13 @@ void TgChartPrivate::drawGrid()
                               m_imageAsset.m_imageData.m_generatedImage.m_height,
                               m_gridLeftMargin, m_gridTopMargin,
                               m_gridLeftMargin, m_imageAsset.m_imageData.m_generatedImage.m_height-m_gridBottomMargin,
-                              m_gridLinesR, m_gridLinesG, m_gridLinesB, m_gridLinesA);
+                              m_gridLinesR, m_gridLinesG, m_gridLinesB, m_gridLinesA, 1);
         TgImageDraw::drawLine(m_imageAsset.m_imageData.m_generatedImage.m_imageData,
                               m_imageAsset.m_imageData.m_generatedImage.m_width,
                               m_imageAsset.m_imageData.m_generatedImage.m_height,
                               m_gridLeftMargin, m_imageAsset.m_imageData.m_generatedImage.m_height-m_gridBottomMargin,
                               m_imageAsset.m_imageData.m_generatedImage.m_width-m_gridRightMargin, m_imageAsset.m_imageData.m_generatedImage.m_height-m_gridBottomMargin,
-                              m_gridLinesR, m_gridLinesG, m_gridLinesB, m_gridLinesA);
+                              m_gridLinesR, m_gridLinesG, m_gridLinesB, m_gridLinesA, 1);
     }
 }
 
@@ -566,6 +728,10 @@ void TgChartPrivate::drawGrid()
  */
 void TgChartPrivate::drawLines()
 {
+    if (m_listPosition.empty()) {
+        return;
+    }
+
     size_t i;
     double minX, minY, maxX, maxY;
     uint32_t chartAreaTopLeftX = m_gridLeftMargin;
@@ -581,22 +747,27 @@ void TgChartPrivate::drawLines()
                               m_imageAsset.m_imageData.m_generatedImage.m_height,
                               static_cast<uint32_t>(x0)+chartAreaTopLeftX, chartAreaBottomRightY-(static_cast<uint32_t>(y0)),
                               static_cast<uint32_t>(x0)+chartAreaTopLeftX, chartAreaBottomRightY-(static_cast<uint32_t>(y0)),
-                              m_lineR, m_lineG, m_lineB, m_lineA);
+                              m_lineR, m_lineG, m_lineB, m_lineA, m_lineWidth);
         return;
     }
 
-    for (i=1;i<m_listPosition.size();i++) {
-        double x0 = static_cast<double>(chartAreaBottomRightX - chartAreaTopLeftX)*(m_listPosition.at(i-1).x - minX) / (maxX - minX);
-        double y0 = static_cast<double>(chartAreaBottomRightY - chartAreaTopLeftY)*(m_listPosition.at(i-1).y - minY) / (maxY - minY);
-        double x1 = static_cast<double>(chartAreaBottomRightX - chartAreaTopLeftX)*(m_listPosition.at(i).x - minX) / (maxX - minX);
-        double y1 = static_cast<double>(chartAreaBottomRightY - chartAreaTopLeftY)*(m_listPosition.at(i).y - minY) / (maxY - minY);
-        TgImageDraw::drawLine(m_imageAsset.m_imageData.m_generatedImage.m_imageData,
+    if (m_listPosition.empty()) {
+        return;
+    }
+
+    clearPoints();
+
+    for (i=0;i<m_listPosition.size();i++) {
+        addPoint(
+            TgImageDrawPathPoint(static_cast<float>(chartAreaTopLeftX)+0.5f+
+                static_cast<float>(static_cast<double>(chartAreaBottomRightX - chartAreaTopLeftX)*(m_listPosition.at(i).x - minX) / (maxX - minX)),
+                static_cast<float>(chartAreaBottomRightY)-0.5f-
+                static_cast<float>(static_cast<double>(chartAreaBottomRightY - chartAreaTopLeftY)*(m_listPosition.at(i).y - minY) / (maxY - minY))));
+    }
+    TgImageDrawPath::draw(m_imageAsset.m_imageData.m_generatedImage.m_imageData,
                               m_imageAsset.m_imageData.m_generatedImage.m_width,
                               m_imageAsset.m_imageData.m_generatedImage.m_height,
-                              static_cast<uint32_t>(x0)+chartAreaTopLeftX, chartAreaBottomRightY-(static_cast<uint32_t>(y0)),
-                              static_cast<uint32_t>(x1)+chartAreaTopLeftX, chartAreaBottomRightY-(static_cast<uint32_t>(y1)),
-                              m_lineR, m_lineG, m_lineB, m_lineA);
-    }
+                            m_lineR, m_lineG, m_lineB, m_lineA, m_lineWidth);
 }
 
 /*!
@@ -646,7 +817,7 @@ void TgChartPrivate::getMinMaxPositionForChart(double &minX, double &minY, doubl
  */
 void TgChartPrivate::drawText()
 {
-    if (m_listPosition.empty()) {
+    if (m_listPosition.empty() || !m_drawingTextOnImage) {
         return;
     }
     double x, y;

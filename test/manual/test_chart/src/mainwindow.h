@@ -19,11 +19,19 @@ private:
     TgButton m_buttonChangeLineColor;
     TgButton m_buttonChangeTextColor;
     TgButton m_buttonChangeDrawStyle;
+    TgButton m_buttonChangeFontSize;
 
     TgButton m_buttonTopMarginAdd;
     TgButton m_buttonBottomMarginAdd;
     TgButton m_buttonLeftMarginAdd;
     TgButton m_buttonRightMarginAdd;
+
+    TgButton m_buttonChangeChartSize;
+    TgButton m_buttonChangeDrawText;
+
+    TgButton m_buttonLineWidthIncrease;
+    TgButton m_buttonLineWidthDecrease;
+    TgButton m_buttonChangeAA;
 
     TgChart m_chart;
 
@@ -41,11 +49,20 @@ private:
     void onButtonChangeLineColorClick(TgMouseType type, float x, float y, const void *id);
     void onButtonChangeTextColorClick(TgMouseType type, float x, float y, const void *id);
     void onButtonChangeDrawStyleClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonChangeFontSize(TgMouseType type, float x, float y, const void *id);
 
     void onButtonTopMarginAddClick(TgMouseType type, float x, float y, const void *id);
     void onButtonBottomMarginAddClick(TgMouseType type, float x, float y, const void *id);
     void onButtonLeftMarginAddClick(TgMouseType type, float x, float y, const void *id);
     void onButtonRightMarginAddClick(TgMouseType type, float x, float y, const void *id);
+
+    void onButtonChangeChartSizeClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonChangeDrawTextClick(TgMouseType type, float x, float y, const void *id);
+
+    void onButtonLineWidthIncreaseClick(TgMouseType type, float x, float y, const void *id);
+    void onButtonLineWidthDecreaseClick(TgMouseType type, float x, float y, const void *id);
+
+    void onButtonLineAAClick(TgMouseType type, float x, float y, const void *id);
 };
 
 #endif

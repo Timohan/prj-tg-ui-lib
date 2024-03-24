@@ -24,6 +24,14 @@ struct TgChartPosition
     double y;
 };
 
+/*! TgChartLineAA
+ * anti-aliasing method to draw the paths
+ */
+enum TgChartLineAA {
+    TgChartLineAA_4 = 0,    /*!< drawing similar as MSAA x4 */
+    TgChartLineAA_8,        /*!< drawing similar as MSAA x8 */
+};
+
 /*!
  * \brief TgChart
  * draws chart
@@ -58,6 +66,19 @@ public:
 
     void setFontSize(float fontSize);
     float getFontSize();
+
+    void setChartResolution(int width, int height);
+    int getChartResolutionWidth();
+    int getChartResolutionHeight();
+
+    void setDrawText(bool draw);
+    bool getDrawText();
+
+    void setLineWidth(uint32_t lineWidth);
+    uint32_t getLineWidth();
+
+    void setChartLineAA(TgChartLineAA aa);
+    TgChartLineAA getChartLineAA();
 protected:
     virtual bool render(const TgWindowInfo *windowInfo) override;
     virtual void checkPositionValues() override;

@@ -11,49 +11,173 @@
 #include "tg_image_draw.h"
 #include <cstddef>
 #include "../../global/tg_global_log.h"
+#include "../../math/tg_color.h"
+#include "../../global/tg_global_log.h"
 
 bool TgImageDraw::drawLine(uint8_t *imageData, const uint32_t imageWidth, const uint32_t imageHeight,
                            const uint32_t fromX, const uint32_t fromY,
                            const uint32_t toX, const uint32_t toY,
-                           const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a)
+                           const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a,
+                           const uint32_t lineWidth)
 {
     if (fromX > toX) {
-         return drawLine(imageData, imageWidth, imageHeight, toX, toY, fromX, fromY, r, g, b, a);
+         return drawLine(imageData, imageWidth, imageHeight, toX, toY, fromX, fromY, r, g, b, a, lineWidth);
     }
 
     if (fromX == toX && fromY == toY) {
-        return setColor(imageData, imageWidth, imageHeight, fromX, fromY, r, g, b, a);
+        return addColor(imageData, imageWidth, imageHeight, fromX, fromY, r, g, b, a);
     }
 
     if (fromX == toX) {
         if (fromY <= toY) {
-            for (uint32_t y=fromY;y<=toY;y++) {
-                if (!setColor(imageData, imageWidth, imageHeight, fromX, y, r, g, b, a)) {
+            if (lineWidth == 1) {
+                for (uint32_t y=fromY;y<=toY;y++) {
+                    if (!addColor(imageData, imageWidth, imageHeight, fromX, y, r, g, b, a)) {
+                        return false;
+                    }
+                }
+            } else if ((lineWidth % 2) == 1) {
+                int xTmpMin = static_cast<int>(fromX) - static_cast<int>((lineWidth-1)/2);
+                if (xTmpMin + static_cast<int>(lineWidth) < 0) {
                     return false;
+                }
+                uint32_t xMin = xTmpMin < 0 ? 0 : static_cast<uint32_t>(xTmpMin);
+                uint32_t xMax = static_cast<uint32_t>(xTmpMin + static_cast<int>(lineWidth));
+                uint32_t x;
+                if (xMin >= imageWidth) {
+                    return false;
+                }
+                if (xMax >= imageWidth) {
+                    xMax = imageWidth - 1;
+                }
+                for (uint32_t y=fromY;y<=toY;y++) {
+                    for (x=xMin;x<xMax;x++) {
+                        if (!addColor(imageData, imageWidth, imageHeight, x, y, r, g, b, a)) {
+                            return false;
+                        }
+                    }
+                }
+            } else {
+                int xTmpMin = static_cast<int>(fromX) - static_cast<int>((lineWidth-1)/2);
+                if (xTmpMin + static_cast<int>(lineWidth+1) < 0) {
+                    return false;
+                }
+                uint32_t xMin = xTmpMin < 0 ? 0 : static_cast<uint32_t>(xTmpMin);
+                uint32_t xMax = static_cast<uint32_t>(xTmpMin + static_cast<int>(lineWidth)-1);
+                uint32_t x;
+                if (xMin >= imageWidth) {
+                    return false;
+                }
+                bool ignoreLargerAlpha = false;
+                if (xMax >= imageWidth) {
+                    xMax = imageWidth - 1;
+                    ignoreLargerAlpha = true;
+                }
+                for (uint32_t y=fromY;y<=toY;y++) {
+                    for (x=xMin;x<xMax;x++) {
+                        if (!addColor(imageData, imageWidth, imageHeight, x, y, r, g, b, a)) {
+                            return false;
+                        }
+                    }
+                    if (xTmpMin - 1 >= 0) {
+                        if (!addColor(imageData, imageWidth, imageHeight, xTmpMin-1, y, r, g, b, a/2)) {
+                            return false;
+                        }
+                    }
+                    if (!ignoreLargerAlpha) {
+                        if (!addColor(imageData, imageWidth, imageHeight, x, y, r, g, b, a/2)) {
+                            return false;
+                        }
+                    }
                 }
             }
         } else {
-            for (uint32_t y=toY;y<=fromY;y++) {
-                if (!setColor(imageData, imageWidth, imageHeight, fromX, y, r, g, b, a)) {
-                    return false;
-                }
-            }
+             return drawLine(imageData, imageWidth, imageHeight, toX, toY, fromX, fromY, r, g, b, a, lineWidth);
         }
         return true;
     }
     if (fromY == toY) {
-        for (uint32_t x=fromX;x<=toX;x++) {
-            if (!setColor(imageData, imageWidth, imageHeight, x, fromY, r, g, b, a)) {
+        if (lineWidth == 1) {
+            for (uint32_t x=fromX;x<=toX;x++) {
+                if (!setColor(imageData, imageWidth, imageHeight, x, fromY, r, g, b, a)) {
+                    return false;
+                }
+            }
+        } else if ((lineWidth % 2) == 1) {
+            int yTmpMin = static_cast<int>(fromY) - static_cast<int>((lineWidth-1)/2);
+            if (yTmpMin + static_cast<int>(lineWidth) < 0) {
                 return false;
+            }
+            uint32_t yMin = yTmpMin < 0 ? 0 : static_cast<uint32_t>(yTmpMin);
+            uint32_t yMax = static_cast<uint32_t>(yTmpMin + static_cast<int>(lineWidth));
+            uint32_t y;
+            if (yMin >= imageWidth) {
+                return false;
+            }
+            if (yMax >= imageWidth) {
+                yMax = imageWidth - 1;
+            }
+            for (uint32_t x=fromX;x<=toX;x++) {
+                for (y=yMin;y<yMax;y++) {
+                    if (!addColor(imageData, imageWidth, imageHeight, x, y, r, g, b, a)) {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            int yTmpMin = static_cast<int>(fromY) - static_cast<int>((lineWidth-1)/2);
+            if (yTmpMin + static_cast<int>(lineWidth) < 0) {
+                return false;
+            }
+            uint32_t yMin = yTmpMin < 0 ? 0 : static_cast<uint32_t>(yTmpMin);
+            uint32_t yMax = static_cast<uint32_t>(yTmpMin + static_cast<int>(lineWidth)-1);
+            uint32_t y;
+            if (yMin >= imageWidth) {
+                return false;
+            }
+            bool ignoreLargerAlpha = false;
+            if (yMax >= imageWidth) {
+                yMax = imageWidth - 1;
+                ignoreLargerAlpha = true;
+            }
+            for (uint32_t x=fromX;x<=toX;x++) {
+                for (y=yMin;y<yMax;y++) {
+                    if (!addColor(imageData, imageWidth, imageHeight, x, y, r, g, b, a)) {
+                        return false;
+                    }
+                }
+                if (yTmpMin - 1 >= 0) {
+                    if (!addColor(imageData, imageWidth, imageHeight, x, yTmpMin-1, r, g, b, a/2)) {
+                        return false;
+                    }
+                }
+                if (!ignoreLargerAlpha) {
+                    if (!addColor(imageData, imageWidth, imageHeight, x, y, r, g, b, a/2)) {
+                        return false;
+                    }
+                }
             }
         }
         return true;
     }
 
     if (toY > fromY && toY-fromY == toX-fromX) {
-        for (uint32_t x=fromX;x<=toX;x++) {
-            if (!setColor(imageData, imageWidth, imageHeight, x, fromY+(x-fromX), r, g, b, a)) {
-                return false;
+        // PI/2 angle
+        if (lineWidth == 1) {
+            for (uint32_t x=fromX;x<=toX;x++) {
+                if (!setColor(imageData, imageWidth, imageHeight, x, fromY+(x-fromX), r, g, b, a)) {
+                    return false;
+                }
+                if (x==fromX) {
+                    continue;
+                }
+                if (!setColor(imageData, imageWidth, imageHeight, x-1, fromY+(x-fromX), r, g, b, a/2)) {
+                    return false;
+                }
+                if (!setColor(imageData, imageWidth, imageHeight, x, fromY+(x-fromX)+1, r, g, b, a/2)) {
+                    return false;
+                }
+
             }
         }
         return true;
@@ -124,7 +248,7 @@ bool TgImageDraw::addColor(uint8_t *imageData, const uint32_t imageWidth, const 
     size_t pos = (y*imageWidth+x)*4;
     uint8_t rNew, gNew, bNew, aNew;
 
-    addColor(imageData[pos], imageData[pos+1], imageData[pos+2], imageData[pos+3],
+    TgColor::addColor(imageData[pos], imageData[pos+1], imageData[pos+2], imageData[pos+3],
              r, g, b, a,
              rNew, gNew, bNew, aNew);
 
@@ -133,43 +257,4 @@ bool TgImageDraw::addColor(uint8_t *imageData, const uint32_t imageWidth, const 
     imageData[pos+2] = bNew;
     imageData[pos+3] = aNew;
     return true;
-}
-
-/*!
- * \brief TgImageDraw::addColor
- *
- * math to add new color on background
- *
- * \param rBackground current color r
- * \param gBackground current color g
- * \param bBackground current color b
- * \param aBackground current color a
- * \param rAdd r color to be on
- * \param gAdd r color to be on
- * \param bAdd g color to be on
- * \param aAdd b color to be on
- * \param r [out] new mixed color r
- * \param g [out] new mixed color g
- * \param b [out] new mixed color b
- * \param a [out] new mixed color a
- */
-void TgImageDraw::addColor(const uint8_t rBackground, const uint8_t gBackground, const uint8_t bBackground, const uint8_t aBackground,
-                           const uint8_t rAdd, const uint8_t gAdd, const uint8_t bAdd, const uint8_t aAdd,
-                           uint8_t &r, uint8_t &g, uint8_t &b, uint8_t &a)
-{
-    double ra = static_cast<double>(rAdd)/255;
-    double ga = static_cast<double>(gAdd)/255;
-    double ba = static_cast<double>(bAdd)/255;
-    double aa = static_cast<double>(aAdd)/255;
-
-    double rb = static_cast<double>(rBackground)/255;
-    double gb = static_cast<double>(gBackground)/255;
-    double bb = static_cast<double>(bBackground)/255;
-    double ab = static_cast<double>(aBackground)/255;
-
-    double aValue = (1 - aa)*ab + aa;
-    r = static_cast<uint8_t>(255.0*(((1 - aa)*ab*rb + aa*ra) / aValue));
-    g = static_cast<uint8_t>(255.0*(((1 - aa)*ab*gb + aa*ga) / aValue));
-    b = static_cast<uint8_t>(255.0*(((1 - aa)*ab*bb + aa*ba) / aValue));
-    a = static_cast<uint8_t>(255.0*aValue);
 }

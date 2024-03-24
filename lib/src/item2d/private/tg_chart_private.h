@@ -19,6 +19,7 @@
 #include "../../render/tg_render.h"
 #include "../tg_chart.h"
 #include "../../font/image/tg_font_to_image.h"
+#include "../../image/draw/tg_image_draw_path.h"
 
 #define TG_CHART_DEFAULT_FONT_SIZE  16
 
@@ -26,7 +27,7 @@ class TgItem2d;
 struct TgWindowInfo;
 class TgItem2dPosition;
 
-class TgChartPrivate : protected TgRender
+class TgChartPrivate : protected TgRender, private TgImageDrawPath
 {
 public:
     explicit TgChartPrivate(TgItem2d *parent, const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
@@ -59,6 +60,18 @@ public:
 
     void setFontSize(float fontSize);
     float getFontSize();
+    void setLineWidth(uint32_t lineWidth);
+    uint32_t getLineWidth();
+
+    void setChartResolution(int width, int height);
+    int getChartResolutionWidth();
+    int getChartResolutionHeight();
+
+    void setDrawText(bool draw);
+    bool getDrawText();
+
+    void setChartLineAA(TgChartLineAA aa);
+    TgChartLineAA getChartLineAA();
 private:
     TgItem2d *m_parent;
     TgImageAsset m_imageAsset;
@@ -72,12 +85,13 @@ private:
     bool m_initVerticesDone;
     bool m_initImageAssetDone;
     bool m_textureRequiresReset = true;
-    uint32_t m_gridBottomMargin = 10;
+    uint32_t m_gridBottomMargin = 20;
     uint32_t m_gridTopMargin = 10;
-    uint32_t m_gridLeftMargin = 10;
+    uint32_t m_gridLeftMargin = 20;
     uint32_t m_gridRightMargin = 10;
     uint32_t m_textToGridMarginX = 5;
     uint32_t m_textToGridMarginY = 5;
+    uint32_t m_lineWidth = 1;
 
     TgMatrix4x4 m_transform;
     bool m_xyDrawIsMaxedToSize = true;
@@ -86,6 +100,11 @@ private:
     unsigned char m_gridLinesR = 0, m_gridLinesG = 0, m_gridLinesB = 0, m_gridLinesA = 255;
     unsigned char m_lineR = 0, m_lineG = 0, m_lineB = 0, m_lineA = 255;
     unsigned char m_textR = 0, m_textG = 0, m_textB = 0, m_textA = 255;
+
+    int m_chartResolutionWidth;
+    int m_chartResolutionHeight;
+    bool m_newDrawText = true;
+    bool m_drawingTextOnImage = true;
 
     std::vector<TgChartPosition> m_listPosition;
     std::mutex m_mutex;
