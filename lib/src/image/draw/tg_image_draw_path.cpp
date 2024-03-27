@@ -35,7 +35,6 @@ bool TgImageDrawPath::draw(uint8_t *imageData, const uint32_t imageWidth, const 
             break;
     }
 
-
     for (i=1;i<m_listPoint.size();i++) {
         if (i == 1) {
             TgMath2d::rotateByAngle(m_listPoint[i-1].m_x, m_listPoint[i-1].m_y, m_listPoint[i].m_x, m_listPoint[i].m_y,
@@ -202,8 +201,33 @@ void TgImageDrawPath::generateImageData(uint8_t *imageData, const uint32_t image
     uint32_t i;
     uint32_t x, y;
     uint8_t value;
-    for (x=0;x<imageWidth;x++) {
-        for (y=0;y<imageHeight;y++) {
+    uint32_t minX = m_imageFiller.getMinX();
+    uint32_t minY = m_imageFiller.getMinY();
+    uint32_t maxX = m_imageFiller.getMaxX();
+    uint32_t maxY = m_imageFiller.getMaxY() + 1;
+    switch (m_pathAA) {
+        case TgChartLineAA::TgChartLineAA_4:
+        default:
+            minX /= 4;
+            maxX /= 4;
+            maxX++;
+            break;
+        case TgChartLineAA::TgChartLineAA_8:
+            minX /= 8;
+            maxX /= 8;
+            maxX++;
+            break;
+    }
+
+    if (maxX > imageWidth) {
+        maxX = imageWidth;
+    }
+    if (maxY > imageHeight) {
+        maxY = imageHeight;
+    }
+
+    for (x=minX;x<maxX;x++) {
+        for (y=minY;y<maxY;y++) {
             switch (m_pathAA) {
                 case TgChartLineAA::TgChartLineAA_4:
                 default:
