@@ -49,6 +49,19 @@ private:
 
     void generateImageData(uint8_t *imageData, const uint32_t imageWidth, const uint32_t imageHeight,
                            const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a);
+    void fillPixelsFromQuadrilateralAA4(const uint32_t imageWidth, const uint32_t imageHeight,
+                                        const float x0, const float y0,
+                                        const float x1, const float y1,
+                                        const float x2, const float y2,
+                                        const float x3, const float y3);
+    void fillPixelsFromQuadrilateralAA8(const uint32_t imageWidth, const uint32_t imageHeight,
+                                        const float x0, const float y0,
+                                        const float x1, const float y1,
+                                        const float x2, const float y2,
+                                        const float x3, const float y3);
+
+    static uint32_t getStartValueMin(float v0, float v1, float v2, float v3);
+    static uint32_t getStartValueMax(float v0, float v1, float v2, float v3, uint32_t maxValue);
 };
 
 #endif // TG_IMAGE_DRAW_PATH_H

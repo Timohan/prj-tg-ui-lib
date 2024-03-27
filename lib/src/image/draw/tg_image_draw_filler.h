@@ -25,8 +25,8 @@ public:
 private:
     uint8_t *m_imageData = nullptr;
     uint32_t m_imageDataSize = 0;
-    uint32_t m_imageWidth;
-    uint32_t m_imageHeight;
+    uint32_t m_imageWidth = 0;
+    uint32_t m_imageHeight = 0;
 };
 
 #endif // TG_IMAGE_DRAW_FILLER_H

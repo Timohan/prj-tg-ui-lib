@@ -19,13 +19,11 @@ bool TgImageDrawPath::draw(uint8_t *imageData, const uint32_t imageWidth, const 
               const uint32_t lineWidth)
 {
     size_t i;
-    uint32_t x, y, ip;
     float startPointPositionX[4];
     float startPointPositionY[4];
     float endPointPositionX[4];
     float endPointPositionY[4];
     float crossPointX[2], crossPointY[2];
-    bool result[8];
 
     switch (m_pathAA) {
         case TgChartLineAA::TgChartLineAA_4:
@@ -85,47 +83,110 @@ bool TgImageDrawPath::draw(uint8_t *imageData, const uint32_t imageWidth, const 
                 static_cast<float>(M_PI)/-2.0f, static_cast<float>(lineWidth)/2.0f,
                 &crossPointX[1], &crossPointY[1]);
         }
-
-        for (x=0;x<imageWidth;x++) {
-            for (y=0;y<imageHeight;y++) {
-                switch (m_pathAA) {
-                    case TgChartLineAA::TgChartLineAA_4:
-                    default:
-                        TgMath2d::isInQuadrilateralAA4(
-                            static_cast<float>(x), static_cast<float>(y),
+        switch (m_pathAA) {
+            case TgChartLineAA::TgChartLineAA_4:
+            default:
+                fillPixelsFromQuadrilateralAA4(imageWidth, imageHeight,
                             startPointPositionX[0], startPointPositionY[0],
                             crossPointX[0], crossPointY[0],
                             crossPointX[1], crossPointY[1],
-                            startPointPositionX[2], startPointPositionY[2],
-                            result);
-                        for (ip=0;ip<4;ip++) {
-                            if (result[ip]) {
-                                m_imageFiller.set(x*4+ip, y, 1);
-                            }
-                        }
-                        break;
-                    case TgChartLineAA::TgChartLineAA_8:
-                        TgMath2d::isInQuadrilateralAA8(
-                            static_cast<float>(x), static_cast<float>(y),
+                            startPointPositionX[2], startPointPositionY[2] );
+                break;
+            case TgChartLineAA::TgChartLineAA_8:
+                fillPixelsFromQuadrilateralAA8(imageWidth, imageHeight,
                             startPointPositionX[0], startPointPositionY[0],
                             crossPointX[0], crossPointY[0],
                             crossPointX[1], crossPointY[1],
-                            startPointPositionX[2], startPointPositionY[2],
-                            result);
-                        for (ip=0;ip<8;ip++) {
-                            if (result[ip]) {
-                                m_imageFiller.set(x*4+ip, y, 1);
-                            }
-                        }
-                        break;
-                }
-            }
+                            startPointPositionX[2], startPointPositionY[2] );
+                break;
         }
     }
 
     generateImageData(imageData, imageWidth, imageHeight, r, g, b, a);
 
     return false;
+}
+
+/*!
+ * \brief TgImageDrawPath::fillPixelsFromQuadrilateralAA4
+ * sets all pixels from the line (fillPixelsFromQuadrilateral)
+ * to m_imageFiller with AAx4
+ *
+ * x0/y0 -> next corner of quadrilateral to clock wise must be x1/y1
+ * x1/y1 -> next corner of quadrilateral to clock wise must be x2/y2
+ * x2/y2 -> next corner of quadrilateral to clock wise must be x3/y3
+ * x3/y3 -> next corner of quadrilateral to clock wise must be x0/y0
+ * \param imageWidth image width
+ * \param imageHeight image height
+ */
+void TgImageDrawPath::fillPixelsFromQuadrilateralAA4(
+    const uint32_t imageWidth, const uint32_t imageHeight,
+    const float x0, const float y0,
+    const float x1, const float y1,
+    const float x2, const float y2,
+    const float x3, const float y3)
+{
+    unsigned int x, y;
+    unsigned int i;
+    bool result[4];
+
+    const uint32_t minX = getStartValueMin(x0, x1, x2, x3);
+    const uint32_t minY = getStartValueMin(y0, y1, y2, y3);
+    const uint32_t maxX = getStartValueMax(x0, x1, x2, x3, imageWidth);
+    const uint32_t maxY = getStartValueMax(y0, y1, y2, y3, imageHeight);
+
+    for (x=minX;x<maxX;x++) {
+        for (y=minY;y<maxY;y++) {
+            TgMath2d::isInQuadrilateralAA4(static_cast<float>(x), static_cast<float>(y),
+                            x0, y0, x1, y1, x2, y2, x3, y3, result);
+            for (i=0;i<4;i++) {
+                if (result[i]) {
+                    m_imageFiller.set(x*4+i, y, 1);
+                }
+            }
+        }
+    }
+}
+
+/*!
+ * \brief TgImageDrawPath::fillPixelsFromQuadrilateralAA8
+ * sets all pixels from the line (fillPixelsFromQuadrilateral)
+ * to m_imageFiller with AAx8
+ *
+ * x0/y0 -> next corner of quadrilateral to clock wise must be x1/y1
+ * x1/y1 -> next corner of quadrilateral to clock wise must be x2/y2
+ * x2/y2 -> next corner of quadrilateral to clock wise must be x3/y3
+ * x3/y3 -> next corner of quadrilateral to clock wise must be x0/y0
+ * \param imageWidth image width
+ * \param imageHeight image height
+ */
+void TgImageDrawPath::fillPixelsFromQuadrilateralAA8(
+    const uint32_t imageWidth, const uint32_t imageHeight,
+    const float x0, const float y0,
+    const float x1, const float y1,
+    const float x2, const float y2,
+    const float x3, const float y3)
+{
+    unsigned int x, y;
+    unsigned int i;
+    bool result[8];
+
+    const uint32_t minX = getStartValueMin(x0, x1, x2, x3);
+    const uint32_t minY = getStartValueMin(y0, y1, y2, y3);
+    const uint32_t maxX = getStartValueMax(x0, x1, x2, x3, imageWidth);
+    const uint32_t maxY = getStartValueMax(y0, y1, y2, y3, imageHeight);
+
+    for (x=minX;x<maxX;x++) {
+        for (y=minY;y<maxY;y++) {
+            TgMath2d::isInQuadrilateralAA8(static_cast<float>(x), static_cast<float>(y),
+                            x0, y0, x1, y1, x2, y2, x3, y3, result);
+            for (i=0;i<8;i++) {
+                if (result[i]) {
+                    m_imageFiller.set(x*8+i, y, 1);
+                }
+            }
+        }
+    }
 }
 
 /*! \brief TgImageDrawPath::generateImageData
@@ -210,38 +271,30 @@ void TgImageDrawPath::generateImageData(uint8_t *imageData, const uint32_t image
     }
 }
 
-int32_t TgImageDrawPath::getMin(float startPointPosition[4],
-    float endPointPosition[4],
-    float crossPoint[2])
+uint32_t TgImageDrawPath::getStartValueMin(float v0, float v1, float v2, float v3)
 {
-    int32_t min = static_cast<int32_t>(startPointPosition[0]);
-    min = std::min(static_cast<int32_t>(startPointPosition[1]), min);
-    min = std::min(static_cast<int32_t>(startPointPosition[2]), min);
-    min = std::min(static_cast<int32_t>(startPointPosition[3]), min);
-    min = std::min(static_cast<int32_t>(crossPoint[0]), min);
-    min = std::min(static_cast<int32_t>(crossPoint[1]), min);
-    min = std::min(static_cast<int32_t>(endPointPosition[0]), min);
-    min = std::min(static_cast<int32_t>(endPointPosition[1]), min);
-    min = std::min(static_cast<int32_t>(endPointPosition[2]), min);
-    min = std::min(static_cast<int32_t>(endPointPosition[3]), min);
-    return min;
+    float value = v0;
+    value = std::min(value, v1);
+    value = std::min(value, v2);
+    value = std::min(value, v3) - 1;
+    if (value < 0) {
+        return 0;
+    }
+    return static_cast<uint32_t>(value);
 }
 
-int32_t TgImageDrawPath::getMax(float startPointPosition[4],
-    float endPointPosition[4],
-    float crossPoint[2])
+uint32_t TgImageDrawPath::getStartValueMax(float v0, float v1, float v2, float v3, uint32_t maxValue)
 {
-    int32_t max = static_cast<int32_t>(startPointPosition[0]);
-    max = std::max(static_cast<int32_t>(startPointPosition[1]), max);
-    max = std::max(static_cast<int32_t>(startPointPosition[2]), max);
-    max = std::max(static_cast<int32_t>(startPointPosition[3]), max);
-    max = std::max(static_cast<int32_t>(crossPoint[0]), max);
-    max = std::max(static_cast<int32_t>(crossPoint[1]), max);
-    max = std::max(static_cast<int32_t>(endPointPosition[0]), max);
-    max = std::max(static_cast<int32_t>(endPointPosition[1]), max);
-    max = std::max(static_cast<int32_t>(endPointPosition[2]), max);
-    max = std::max(static_cast<int32_t>(endPointPosition[3]), max);
-    return max;
+    float v = v0;
+    v = std::max(v, v1);
+    v = std::max(v, v2);
+    v = std::max(v, v3);
+
+    const uint32_t value = static_cast<uint32_t>(v + 1);
+    if (value >= maxValue) {
+        return maxValue;
+    }
+    return value;
 }
 
 /*! \brief TgImageDrawPath::init
