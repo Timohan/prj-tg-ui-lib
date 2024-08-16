@@ -134,3 +134,48 @@ void TgImage::checkPositionValues()
     m_private->checkPositionValues(this);
     TG_FUNCTION_END();
 }
+
+/**
+ * @brief TgImage::setPixel
+ *
+ * set pixel x/y RGBA
+ *
+ * @param x
+ * @param y
+ * @param r red color
+ * @param g green color
+ * @param b blue color
+ * @param a alpha color
+ * @return true if pixel was possible to set
+ * @return false
+ */
+bool TgImage::setPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->setPixel(x, y, r, g, b, a);
+}
+
+/**
+ * @brief TgImage::getImageWidth
+ *
+ * @return uint32_t image pixel width
+ */
+uint32_t TgImage::getImageWidth()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getImageWidth();
+}
+
+/**
+ * @brief TgImage::getImageHeight
+ *
+ * @return uint32_t image pixel height
+ */
+uint32_t TgImage::getImageHeight()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getImageHeight();
+}

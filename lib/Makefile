@@ -81,6 +81,10 @@ image_SRCDIR:=$(CURRENT_DIR)src/image
 image_SRCS:=$(wildcard $(image_SRCDIR)/*.cpp)
 image_OBJS:=$(image_SRCS:.cpp=.o)
 
+image_draw_SRCDIR:=$(CURRENT_DIR)src/image/draw
+image_draw_SRCS:=$(wildcard $(image_draw_SRCDIR)/*.cpp)
+image_draw_OBJS:=$(image_draw_SRCS:.cpp=.o)
+
 font_SRCDIR:=$(CURRENT_DIR)src/font
 font_SRCS:=$(wildcard $(font_SRCDIR)/*.cpp)
 font_OBJS:=$(font_SRCS:.cpp=.o)
@@ -134,8 +138,8 @@ CXXFLAGS+=-DPRINT_ALL_ITEMS=0
 
 all: default
 
-default: $(render_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
-	$(CCX) $(render_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
+default: $(render_OBJS) $(image_draw_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
+	$(CCX) $(render_OBJS) $(image_draw_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
 
 $(mainwindow_window_manager_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
@@ -144,6 +148,9 @@ $(application_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
 $(render_OBJS):%.o: %.cpp
+	$(CCX) $(CXXFLAGS) -c $< -o $@
+
+$(image_draw_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
 $(item2d_private_gridview_OBJS):%.o: %.cpp
@@ -215,6 +222,7 @@ clean:
 	rm -f src/event/*.o
 	rm -f src/common/*.o
 	rm -f $(window_private_SRCDIR)/*.o
+	rm -f $(image_draw_SRCDIR)/*.o
 	rm -f src/render/*.o
 	rm -f *.so
 

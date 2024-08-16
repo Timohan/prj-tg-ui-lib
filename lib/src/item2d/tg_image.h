@@ -33,6 +33,9 @@ public:
                       float bottomRightS, float bottomRightT,
                       float bottomLeftS, float bottomLeftT);
     void setImage(const char *filename);
+    bool setPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
+    uint32_t getImageWidth();
+    uint32_t getImageHeight();
 
 protected:
     virtual bool render(const TgWindowInfo *windowInfo) override;

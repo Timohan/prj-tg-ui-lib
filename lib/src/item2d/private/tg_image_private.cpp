@@ -17,6 +17,7 @@
 #include "../../window/tg_mainwindow_private.h"
 #include "../../global/private/tg_global_wait_renderer.h"
 #include "item2d/tg_item2d_position.h"
+#include "../../image/draw/tg_image_draw.h"
 
 TgImagePrivate::TgImagePrivate(const char *filename) :
     m_topLeftS(0), m_topLeftT(0),
@@ -209,6 +210,30 @@ void TgImagePrivate::checkPositionValues(TgItem2d *currentItem)
         setTranform(currentItem);
         m_initVerticesDone = true;
     }
+    m_mutex.lock();
+    if (!m_listPixelChange.empty()) {
+        if (m_imageAsset.m_type == TgImageType::LoadedImage) {
+            if (TgGlobalApplication::getInstance()->getImageAssets()->convertLoadedImageToGeneratedImage(m_imageAsset) == 0) {
+                m_mutex.unlock();
+                TG_FUNCTION_END();
+                return;
+            }
+        }
+        for (const TgImagePrivatePixelChange &pixel : m_listPixelChange) {
+            TgImageDraw::setColor(m_imageAsset.m_imageData.m_generatedImage.m_imageData,
+                           m_imageAsset.m_imageData.m_generatedImage.m_width,
+                           m_imageAsset.m_imageData.m_generatedImage.m_height,
+                           pixel.m_x, pixel.m_y,
+                           pixel.m_r, pixel.m_g, pixel.m_b, pixel.m_a);
+        }
+        TgGlobalApplication::getInstance()->getImageAssets()->modifyTexture(
+            m_imageAsset.m_imageData.m_generatedImage.m_imageData,
+            m_imageAsset.m_imageData.m_generatedImage.m_width,
+            m_imageAsset.m_imageData.m_generatedImage.m_height,
+            m_imageAsset.m_textureIndex);
+        m_listPixelChange.clear();
+    }
+    m_mutex.unlock();
     TG_FUNCTION_END();
 }
 
@@ -227,8 +252,121 @@ void TgImagePrivate::setImage(const char *filename)
         return;
     }
     m_imageAsset.m_textureIndex = 0;
+    m_imageAsset.m_type = TgImageType::LoadedImage;
     m_imageAsset.m_filename = filename;
     m_initImageAssetDone = false;
     TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
+}
+
+/**
+ * @brief TgImagePrivate::setPixel
+ *
+ * set pixel x/y RGBA
+ *
+ * @param x
+ * @param y
+ * @param r red color
+ * @param g green color
+ * @param b blue color
+ * @param a alpha color
+ * @return true if pixel was possible to set
+ * @return false
+ */
+bool TgImagePrivate::setPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    switch (m_imageAsset.m_type) {
+        case TgImageType::LoadedImage:
+            if (x >= static_cast<uint32_t>(m_imageAsset.m_imageData.m_loadedImage.m_width)
+                || y >= static_cast<uint32_t>(m_imageAsset.m_imageData.m_loadedImage.m_height)) {
+                TG_WARNING_LOG("Set pixel to position failed", x, "/", y,
+                    "max width/height is",
+                    m_imageAsset.m_imageData.m_loadedImage.m_width, "/",
+                    m_imageAsset.m_imageData.m_loadedImage.m_height);
+                m_mutex.unlock();
+                return false;
+            }
+            break;
+        case TgImageType::GeneratedImage:
+            if (x >= static_cast<uint32_t>(m_imageAsset.m_imageData.m_generatedImage.m_width)
+                || y >= static_cast<uint32_t>(m_imageAsset.m_imageData.m_generatedImage.m_height)) {
+                TG_WARNING_LOG("Set pixel to position failed", x, "/", y,
+                    "max width/height is",
+                    m_imageAsset.m_imageData.m_generatedImage.m_width, "/",
+                    m_imageAsset.m_imageData.m_generatedImage.m_height);
+                m_mutex.unlock();
+                return false;
+            }
+            break;
+        case TgImageType::PlainImage:
+        case TgImageType::ImageTypeNA:
+        default:
+            return false;
+    }
+    TgImagePrivatePixelChange pixel;
+    pixel.m_x = x;
+    pixel.m_y = y;
+    pixel.m_r = r;
+    pixel.m_g = g;
+    pixel.m_b = b;
+    pixel.m_a = a;
+    m_listPixelChange.push_back(pixel);
+    m_mutex.unlock();
+    TgGlobalWaitRenderer::getInstance()->release();
+    TG_FUNCTION_END();
+    return true;
+}
+
+/**
+ * @brief TgImagePrivate::getImageWidth
+ *
+ * @return uint32_t image width
+ */
+uint32_t TgImagePrivate::getImageWidth()
+{
+    TG_FUNCTION_BEGIN();
+    switch (m_imageAsset.m_type) {
+        case TgImageType::LoadedImage:
+            return m_imageAsset.m_imageData.m_loadedImage.m_width;
+            TG_FUNCTION_END();
+        case TgImageType::GeneratedImage:
+            return m_imageAsset.m_imageData.m_generatedImage.m_width;
+            TG_FUNCTION_END();
+        case TgImageType::PlainImage:
+            TG_FUNCTION_END();
+            return 1;
+        case TgImageType::ImageTypeNA:
+        default:
+            break;
+    }
+    TG_FUNCTION_END();
+    return 0;
+}
+
+/**
+ * @brief TgImagePrivate::getImageHeight
+ *
+ * @return uint32_t image height
+ */
+uint32_t TgImagePrivate::getImageHeight()
+{
+    TG_FUNCTION_BEGIN();
+    switch (m_imageAsset.m_type) {
+        case TgImageType::LoadedImage:
+            TG_FUNCTION_END();
+            return m_imageAsset.m_imageData.m_loadedImage.m_height;
+        case TgImageType::GeneratedImage:
+            TG_FUNCTION_END();
+            return m_imageAsset.m_imageData.m_generatedImage.m_height;
+        case TgImageType::PlainImage:
+            TG_FUNCTION_END();
+            return 1;
+        case TgImageType::ImageTypeNA:
+        default:
+            break;
+    }
+    TG_FUNCTION_END();
+    return 0;
 }

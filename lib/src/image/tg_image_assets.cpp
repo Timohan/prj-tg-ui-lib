@@ -22,14 +22,53 @@ TgImageAssets::TgImageAssets()
 TgImageAssets::~TgImageAssets()
 {
     TG_FUNCTION_BEGIN();
-    std::vector<TgImageAsset>::const_iterator it;
+    std::vector<TgImageAsset>::iterator it;
     for (it=m_listImages.begin();it!=m_listImages.end();it++) {
         if (it->m_textureIndex) {
             glDeleteTextures(1, &it->m_textureIndex);
         }
+        clear(&(*it));
     }
     m_listImages.clear();
     TG_FUNCTION_END();
+}
+
+bool TgImageAssets::deleteImage(TgImageAsset &asset)
+{
+    std::vector<TgImageAsset>::iterator it;
+    for (it=m_listImages.begin();it!=m_listImages.end();it++) {
+        if (it->m_textureIndex == asset.m_textureIndex) {
+            glDeleteTextures(1, &it->m_textureIndex);
+            clear(&(*it));
+            m_listImages.erase(it);
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
+ * @brief TgImageAssets::clear
+ *
+ * deletes (clears) all required pointers from asset
+ *
+ * @param asset
+ */
+void TgImageAssets::clear(TgImageAsset *asset)
+{
+    switch (asset->m_type) {
+        case TgImageType::GeneratedImage:
+            if (asset->m_imageData.m_generatedImage.m_imageData) {
+                delete[] asset->m_imageData.m_generatedImage.m_imageData;
+                asset->m_imageData.m_generatedImage.m_imageData = nullptr;
+            }
+            break;
+        case TgImageType::LoadedImage:
+        case TgImageType::PlainImage:
+        case TgImageType::ImageTypeNA:
+        default:
+            break;
+    }
 }
 
 /*!
@@ -50,6 +89,8 @@ GLuint TgImageAssets::generateImage(TgImageAsset &asset)
                                       asset.m_imageData.m_plainImage.a);
         case TgImageType::LoadedImage:
             return loadImage(asset);
+        case TgImageType::GeneratedImage:
+            return TgImageAssets::setImageGenerated(asset);
         case TgImageType::ImageTypeNA:
         default:
             return 0;
@@ -102,7 +143,7 @@ GLuint TgImageAssets::generatePlainImage(const unsigned char r, const unsigned c
         }
     }
 
-    asset.m_textureIndex = setImageDataToTexture(imageData, width, height, asset);
+    asset.m_textureIndex = setImageDataToTexture(imageData, width, height);
 
     delete[]imageData;
     if (!asset.m_textureIndex) {
@@ -129,6 +170,8 @@ GLuint TgImageAssets::loadImage(TgImageAsset &asset)
         if (it->m_type == TgImageType::LoadedImage
             && it->m_textureIndex > 0
             && asset.m_filename.compare(it->m_filename) == 0) {
+            asset.m_imageData.m_loadedImage.m_width = it->m_imageData.m_loadedImage.m_width;
+            asset.m_imageData.m_loadedImage.m_height = it->m_imageData.m_loadedImage.m_height;
             return it->m_textureIndex;
         }
     }
@@ -143,7 +186,8 @@ GLuint TgImageAssets::loadImage(TgImageAsset &asset)
     newAsset.m_textureIndex = 0;
     newAsset.m_type = TgImageType::LoadedImage;
     newAsset.m_filename = asset.m_filename;
-    newAsset.m_textureIndex = setImageDataToTexture(imageData, asset.m_imageData.m_loadedImage.m_width, asset.m_imageData.m_loadedImage.m_height, asset);
+    newAsset.m_textureIndex = setImageDataToTexture(imageData, asset.m_imageData.m_loadedImage.m_width, asset.m_imageData.m_loadedImage.m_height);
+    asset.m_textureIndex = newAsset.m_textureIndex;
     newAsset.m_imageData.m_loadedImage.m_width = asset.m_imageData.m_loadedImage.m_width;
     newAsset.m_imageData.m_loadedImage.m_height = asset.m_imageData.m_loadedImage.m_height;
 
@@ -159,6 +203,35 @@ GLuint TgImageAssets::loadImage(TgImageAsset &asset)
 }
 
 /*!
+ * \brief TgImageAssets::setImageGenerated
+ *
+ * set image generated data and sets it as texture
+ *
+ * \param asset image assets
+ * \return texture index
+ */
+GLuint TgImageAssets::setImageGenerated(TgImageAsset &asset)
+{
+    TgImageAsset newAsset;
+    newAsset.m_textureIndex = 0;
+    newAsset.m_type = TgImageType::GeneratedImage;
+    newAsset.m_imageData.m_generatedImage.m_imageData = asset.m_imageData.m_generatedImage.m_imageData;
+    newAsset.m_textureIndex = setImageDataToTexture(asset.m_imageData.m_generatedImage.m_imageData, asset.m_imageData.m_generatedImage.m_width, asset.m_imageData.m_generatedImage.m_height);
+    asset.m_textureIndex = newAsset.m_textureIndex;
+    newAsset.m_imageData.m_generatedImage.m_width = asset.m_imageData.m_generatedImage.m_width;
+    newAsset.m_imageData.m_generatedImage.m_height = asset.m_imageData.m_generatedImage.m_height;
+
+    if (!newAsset.m_textureIndex) {
+        return newAsset.m_textureIndex;
+    }
+    m_listImages.push_back(newAsset);
+
+    TG_FUNCTION_END();
+    return asset.m_textureIndex;
+}
+
+
+/*!
  * \brief TgImageAssets::setImageDataToTexture
  *
  * set's image data to texture
@@ -166,20 +239,20 @@ GLuint TgImageAssets::loadImage(TgImageAsset &asset)
  * \param imageData image data (RGBA)
  * \param width width of image (imageData)
  * \param height height of image (imageData)
- * \param asset image assets
  */
-GLuint TgImageAssets::setImageDataToTexture(const unsigned char *imageData, int width, int height, TgImageAsset &asset)
+GLuint TgImageAssets::setImageDataToTexture(const unsigned char *imageData, int width, int height)
 {
+    GLuint textureIndex;
     TG_FUNCTION_BEGIN();
-    glGenTextures(1, &asset.m_textureIndex);
+    glGenTextures(1, &textureIndex);
 
-    if (!asset.m_textureIndex) {
+    if (!textureIndex) {
         TG_ERROR_LOG("Failed to create texture");
         TG_FUNCTION_END();
         return false;
     }
 
-    glBindTexture(GL_TEXTURE_2D, asset.m_textureIndex);
+    glBindTexture(GL_TEXTURE_2D, textureIndex);
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -187,6 +260,76 @@ GLuint TgImageAssets::setImageDataToTexture(const unsigned char *imageData, int 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+    TG_FUNCTION_END();
+    return textureIndex;
+}
+
+/**
+ * @brief TgImageAssets::modifyTexture
+ *
+ * modify texture data
+ *
+ * @param imageData new image data of texture
+ * @param width new image width of texture
+ * @param height new image height of texture
+ * @param textureIndex texture index
+ */
+void TgImageAssets::modifyTexture(const unsigned char *imageData, int width, int height, GLuint textureIndex)
+{
+    TG_FUNCTION_BEGIN();
+    glBindTexture(GL_TEXTURE_2D, textureIndex);
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+    TG_FUNCTION_END();
+}
+
+/**
+ * @brief TgImageAssets::convertLoadedImageToGeneratedImage
+ *
+ * converts loaded image to generated image
+ *
+ * @param asset [in/out] TgImageAsset is modified from LoadedImage to GeneratedImage
+ * and asset is also added to m_listImages
+ * @return GLuint 0 if fails
+ */
+GLuint TgImageAssets::convertLoadedImageToGeneratedImage(TgImageAsset &asset)
+{
+    TG_FUNCTION_BEGIN();
+    if (asset.m_type != TgImageType::LoadedImage) {
+        TG_FUNCTION_END();
+        return 0;
+    }
+
+    int width = asset.m_imageData.m_loadedImage.m_width;
+    int height = asset.m_imageData.m_loadedImage.m_height;
+    unsigned char *imageData = new unsigned char[width*height*4];
+
+    glBindTexture(GL_TEXTURE_2D, asset.m_textureIndex);
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+
+    GLuint textureIndex = setImageDataToTexture(imageData, width, height);
+    if (!textureIndex) {
+        delete[]imageData;
+        TG_FUNCTION_END();
+        return 0;
+    }
+    m_listImages.push_back(TgImageAsset());
+    m_listImages.back().m_textureIndex = textureIndex;
+    m_listImages.back().m_type = TgImageType::GeneratedImage;
+    m_listImages.back().m_imageData.m_generatedImage.m_imageData = imageData;
+    m_listImages.back().m_imageData.m_generatedImage.m_width = width;
+    m_listImages.back().m_imageData.m_generatedImage.m_height = height;
+
+    asset.m_textureIndex = textureIndex;
+    asset.m_type = TgImageType::GeneratedImage;
+    asset.m_imageData.m_generatedImage.m_imageData = imageData;
+    asset.m_imageData.m_generatedImage.m_width = width;
+    asset.m_imageData.m_generatedImage.m_height = height;
     TG_FUNCTION_END();
     return asset.m_textureIndex;
 }

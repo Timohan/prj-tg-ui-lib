@@ -17,10 +17,20 @@
 #include "../../render/tg_render.h"
 #include "../../global/private/tg_global_defines.h"
 #include <string>
+#include <mutex>
 
 class TgItem2d;
 struct TgWindowInfo;
 class TgItem2dPosition;
+
+struct TgImagePrivatePixelChange {
+    uint32_t m_x;
+    uint32_t m_y;
+    uint8_t m_r;
+    uint8_t m_g;
+    uint8_t m_b;
+    uint8_t m_a;
+};
 
 class TgImagePrivate : protected TgRender
 {
@@ -34,6 +44,9 @@ public:
                       float bottomRightS, float bottomRightT,
                       float bottomLeftS, float bottomLeftT);
     void setImage(const char *filename);
+    bool setPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+    uint32_t getImageWidth();
+    uint32_t getImageHeight();
 
 private:
     float m_topLeftS, m_topLeftT;
@@ -42,6 +55,8 @@ private:
     float m_bottomLeftS, m_bottomLeftT;
 
     TgImageAsset m_imageAsset;
+    std::vector<TgImagePrivatePixelChange> m_listPixelChange;
+    std::mutex m_mutex;
 
     bool m_initVerticesDone;
     bool m_initImageAssetDone;
