@@ -16,6 +16,7 @@
 #include <mutex>
 #include "../../../event/tg_event_data.h"
 #include "../../../global/private/tg_global_wait_renderer.h"
+#include "../../tg_textfield.h"
 
 class TgItem2dPrivate;
 struct TgWindowInfo;
@@ -28,7 +29,7 @@ public:
     ~TgItem2dTooltip();
 
     void setCanBlockTooltip(bool canBlockTooltip);
-    void setTooltip(const char *text);
+    void setTooltip(const char *text, TgTextfieldHorizontalAlign align = TgTextfieldHorizontalAlign::AlignCenterH);
     void handleEventToolTip(TgEventData *eventData, const TgWindowInfo *windowInfo, bool fromMainWindow = false);
     void itemGoneDisabledOrInvisible();
 
@@ -36,6 +37,7 @@ private:
     TgItem2dPrivate *m_currentItem;
     std::string m_text;
     bool m_canBlockTooltip = false;
+    TgTextfieldHorizontalAlign m_horizontalAlign = TgTextfieldHorizontalAlign::AlignCenterH;
 };
 
 #endif // TG_ITEM_2D_PRIVATE_TOOLTIP_H

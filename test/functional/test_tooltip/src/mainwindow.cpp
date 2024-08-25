@@ -140,6 +140,30 @@ bool MainWindow::setMakeStep(int index)
         m_backgroundOnBg->deleteLater();
         m_backgroundOnBg = nullptr;
         break;
+    case 13:
+        m_buttonTopLeft.setTooltip("Top left tooltip", TgTextfieldHorizontalAlign::AlignLeft);
+        break;
+    case 14:
+        m_buttonTopLeft.setTooltip("Top left tooltip", TgTextfieldHorizontalAlign::AlignRight);
+        break;
+    case 15:
+        m_buttonBottomLeft.setTooltip("Bottom left tooltip", TgTextfieldHorizontalAlign::AlignLeft);
+        break;
+    case 16:
+        m_buttonBottomLeft.setTooltip("Bottom left tooltip", TgTextfieldHorizontalAlign::AlignRight);
+        break;
+    case 17:
+        m_buttonTopRight.setTooltip("Top right tooltip", TgTextfieldHorizontalAlign::AlignLeft);
+        break;
+    case 18:
+        m_buttonTopRight.setTooltip("Top right tooltip", TgTextfieldHorizontalAlign::AlignRight);
+        break;
+    case 19:
+        m_buttonBottomRight.setTooltip("Bottom right\ntooltip", TgTextfieldHorizontalAlign::AlignLeft);
+        break;
+    case 20:
+        m_buttonBottomRight.setTooltip("Bottom right\ntooltip", TgTextfieldHorizontalAlign::AlignRight);
+        break;
     default:
         break;
     }

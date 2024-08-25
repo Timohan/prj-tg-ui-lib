@@ -276,11 +276,12 @@ float TgGridViewCell::getTextMarginBottom()
  *
  * set tooltip text
  *
- * \return text
+ * \param text
+ * \param align tooltip text align
  */
-void TgGridViewCell::setTooltip(const char *text)
+void TgGridViewCell::setTooltip(const char *text, TgTextfieldHorizontalAlign align)
 {
-    TgItem2d::setTooltip(text);
+    TgItem2d::setTooltip(text, align);
 }
 
 /*!

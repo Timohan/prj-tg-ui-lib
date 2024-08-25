@@ -20,50 +20,6 @@ class TgTextfieldPrivate;
 struct TgWindowInfo;
 
 /*!
- * \brief TgTextfieldHorizontalAlign
- * text horizontal align
- */
-enum TgTextfieldHorizontalAlign {
-    AlignLeft = 0,  /*!< text to set horizontal left */
-    AlignCenterH,   /*!< text to set horizontal center */
-    AlignRight      /*!< text to set horizontal right */
-};
-
-/*!
- * \brief TgTextfieldVerticalAlign
- * text vertical align
- */
-enum TgTextfieldVerticalAlign {
-    AlignTop = 0,  /*!< text to set vertical top */
-    AlignCenterV,  /*!< text to set vertical center */
-    AlignBottom    /*!< text to set vertical bottom */
-};
-
-/*!
- * \brief TgTextFieldText
- * this is used with function setText(const std::vector<TgTextFieldText> &listText)
- * to set multicolor text
- */
-struct TgTextFieldText
-{
-    std::string m_text;     /*!< utf8 text */
-    uint8_t m_textColorR = 0;   /*!< m_text's red color */
-    uint8_t m_textColorG = 0;   /*!< m_text's green color */
-    uint8_t m_textColorB = 0;   /*!< m_text's blue color */
-};
-
-/*!
- * \brief TgTextFieldWordWrap
- *
- */
-enum TgTextFieldWordWrap
-{
-    WordWrapBounded = 0, /*!< default, words will be wrapped to minimum of area */
-    WordWrapOff,         /*!< only the line break '\n' will wrap the line */
-    WordWrapOn,          /*!< lines are wrapped to ' ' (empty space) or '\n' if it's possible, if there is no space or '\n' at the line, then it's same wrapping as WordWrapBounded */
-};
-
-/*!
  * \brief TgTextfield
  * handles text field label functionality (just drawing the text)
  */

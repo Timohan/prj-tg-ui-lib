@@ -66,7 +66,7 @@ bool TgGlobalTooltip::getValidToolTipDone()
  * \param y [in]
  * \param currentTooltipParentItem [in]
  */
-void TgGlobalTooltip::setTooltip(const std::string &text, int x, int y, TgItem2dTooltip *currentTooltipParentItem)
+void TgGlobalTooltip::setTooltip(const std::string &text, int x, int y, TgItem2dTooltip *currentTooltipParentItem, TgTextfieldHorizontalAlign align)
 {
     m_mutex.lock();
     if (m_setValidToolTipDone) {
@@ -77,6 +77,7 @@ void TgGlobalTooltip::setTooltip(const std::string &text, int x, int y, TgItem2d
     m_newRenderToolTipInfo.m_x = x;
     m_newRenderToolTipInfo.m_y = y;
     m_newRenderToolTipInfo.m_currentTooltipParentItem = currentTooltipParentItem;
+    m_horizontalAlign = align;
     if (!text.empty()) {
         m_setValidToolTipDone = true;
     }
@@ -107,9 +108,10 @@ int TgGlobalTooltip::getMsToWaitRendering()
  * to set possible tooltip text for rendering
  * \param x [out]
  * \param y [out]
+ * \param align [out] text align
  * \return get tooltip text
  */
-std::string TgGlobalTooltip::startRendering(int &x, int &y)
+std::string TgGlobalTooltip::startRendering(int &x, int &y, TgTextfieldHorizontalAlign &align)
 {
     std::string ret;
     m_mutex.lock();
@@ -126,6 +128,7 @@ std::string TgGlobalTooltip::startRendering(int &x, int &y)
         ret = m_previousRenderToolTipInfo.m_text;
         x = m_previousRenderToolTipInfo.m_x;
         y = m_previousRenderToolTipInfo.m_y;
+        align = m_horizontalAlign;
         m_mutex.unlock();
         return ret;
     }
@@ -143,6 +146,7 @@ std::string TgGlobalTooltip::startRendering(int &x, int &y)
         ret = m_previousRenderToolTipInfo.m_text;
         x = m_previousRenderToolTipInfo.m_x;
         y = m_previousRenderToolTipInfo.m_y;
+        align = m_horizontalAlign;
         m_mutex.unlock();
         return ret;
     }

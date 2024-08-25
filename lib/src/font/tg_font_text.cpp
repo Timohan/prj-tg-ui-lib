@@ -147,7 +147,8 @@ void TgFontText::generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculat
     size_t i, indexToUse;
     std::vector<bool> characterUsed;
     characterUsed.resize(getCharacterCount(), false);
-    clearCacheValues();
+    m_mutex.lock();
+    clearCacheValues(false);
     m_listFontInfo.resize(getCharacterCount(), nullptr);
     bool added;
 
@@ -186,6 +187,7 @@ void TgFontText::generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculat
             delete fontInfo;
         }
     }
+    m_mutex.unlock();
 }
 
 /*!
@@ -251,10 +253,13 @@ void TgFontText::generateFontTextInfoGlyphsData(float fontSize, std::vector<TgFo
  * clearing cache font cache values that were used onlyForCalculation == true on function
  * generateFontTextInfoGlyphs
  */
-void TgFontText::clearCacheValues()
+void TgFontText::clearCacheValues(bool useLock)
 {
     size_t i, i2;
     std::vector<size_t>listToDelete;
+    if (useLock) {
+        m_mutex.lock();
+    }
     for (i=0;i<m_listFontInfo.size();i++) {
         if (!m_listFontInfo[i]
             || m_listFontInfo[i]->m_addedToCache
@@ -262,17 +267,22 @@ void TgFontText::clearCacheValues()
             continue;
         }
         for (i2=i+1;i2<m_listFontInfo.size();i2++) {
-            if (m_listFontInfo[i]->m_data == m_listFontInfo[i2]->m_data) {
+            if (m_listFontInfo[i2]
+                && m_listFontInfo[i2]->m_data
+                && m_listFontInfo[i]->m_data == m_listFontInfo[i2]->m_data) {
                 m_listFontInfo[i2]->m_addedToCache = true;
             }
         }
         prj_ttf_reader_clear_data(&m_listFontInfo[i]->m_data);
-        listToDelete.push_back(i);
+        listToDelete.insert(listToDelete.begin(), i);
     }
     for (i=0;i<listToDelete.size();i++) {
         delete m_listFontInfo[listToDelete[i]];
     }
     m_listFontInfo.clear();
+    if (useLock) {
+        m_mutex.unlock();
+    }
 }
 
 /*!
@@ -326,6 +336,7 @@ float TgFontText::getVisibleBottomY()
 float TgFontText::getFontHeight()
 {
     float ret = 0;
+    m_mutex.lock();
     size_t i, c = m_listFontInfo.size();
     for (i=0;i<c;i++) {
         if (m_listFontInfo[i]) {
@@ -334,7 +345,7 @@ float TgFontText::getFontHeight()
             }
         }
     }
-
+    m_mutex.unlock();
     return static_cast<float>(ret);
 }
 

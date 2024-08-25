@@ -53,7 +53,7 @@ TgTextfieldPrivate::TgTextfieldPrivate(TgItem2d *currentItem,
 
     if (!fontFile || m_fontFile.empty()) {
         m_fontFile = TgGlobalApplication::getInstance()->getFontDefault()->getDefaultFont();
-    } 
+    }
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
 }
@@ -326,6 +326,11 @@ void TgTextfieldPrivate::setHorizontalAlign(TgItem2d *currentItem, TgTextfieldHo
 {
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
+    if (m_alignHorizontal == align) {
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return;
+    }
     m_alignHorizontal = align;
     currentItem->setPositionChanged(true);
     m_mutex.unlock();
@@ -343,6 +348,11 @@ void TgTextfieldPrivate::setVerticalAlign(TgItem2d *currentItem, TgTextfieldVert
 {
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
+    if (m_alignVertical == align) {
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return;
+    }
     m_alignVertical = align;
     currentItem->setPositionChanged(true);
     m_mutex.unlock();

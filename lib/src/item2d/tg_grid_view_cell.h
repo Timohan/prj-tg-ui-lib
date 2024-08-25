@@ -63,7 +63,7 @@ public:
     float getTextMarginTop();
     float getTextMarginRight();
     float getTextMarginBottom();
-    void setTooltip(const char *text);
+    void setTooltip(const char *text, TgTextfieldHorizontalAlign align = TgTextfieldHorizontalAlign::AlignCenterH);
 
 private:
     explicit TgGridViewCell(TgGridView *parent, float x, float y, float width, float height);

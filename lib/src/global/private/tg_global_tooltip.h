@@ -14,6 +14,7 @@
 
 #include <mutex>
 #include "../../common/time_difference.h"
+#include "../../item2d/tg_textfield.h"
 #include <stdint.h>
 
 class TgItem2dTooltip;
@@ -30,14 +31,14 @@ class TgGlobalTooltip
 {
 public:
     static TgGlobalTooltip *getInstance();
-    void setTooltip(const std::string &text, int x, int y, TgItem2dTooltip *currentTooltipParentItem);
+    void setTooltip(const std::string &text, int x, int y, TgItem2dTooltip *currentTooltipParentItem, TgTextfieldHorizontalAlign align);
     void clearTooltip(TgItem2dTooltip *currentTooltip);
     void setTooltipOnDisabled();
     bool getTooltipOnDisabled();
     bool getValidToolTipDone();
 
     void startHandleEvents();
-    std::string startRendering(int &x, int &y);
+    std::string startRendering(int &x, int &y, TgTextfieldHorizontalAlign &align);
     int getMsToWaitRendering();
 
 private:
@@ -48,6 +49,7 @@ private:
     TimeDifference m_timeDiff;
     int m_timeMinTimeToWait = -1;
     bool m_setValidToolTipDone = false;
+    TgTextfieldHorizontalAlign m_horizontalAlign = TgTextfieldHorizontalAlign::AlignCenterH;
 };
 
 #endif // TG_GLOBAL_TOOLTIP_H

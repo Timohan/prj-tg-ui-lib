@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <string>
+#include <mutex>
 
 struct TgFontInfo;
 struct TgFontInfoData;
@@ -70,9 +71,10 @@ public:
     static void setListLinesWidth(std::vector<float> &listLineWidth, size_t lineNumber, float lineWidth);
     float getTextLineWidth(size_t lineNumber);
 
-    void clearCacheValues();
+    void clearCacheValues(bool useLock);
 
 private:
+    std::mutex m_mutex;
     float m_textWidth;
     float m_visibleTopY;
     float m_visibleBottomY;

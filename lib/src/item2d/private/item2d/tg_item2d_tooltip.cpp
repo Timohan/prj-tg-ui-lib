@@ -32,13 +32,14 @@ TgItem2dTooltip::~TgItem2dTooltip()
  *
  * \return text
  */
-void TgItem2dTooltip::setTooltip(const char *text)
+void TgItem2dTooltip::setTooltip(const char *text, TgTextfieldHorizontalAlign align)
 {
     if (!text) {
         m_text.clear();
         return;
     }
     m_text = std::string(text);
+    m_horizontalAlign = align;
 }
 
 /*!
@@ -82,7 +83,7 @@ void TgItem2dTooltip::handleEventToolTip(TgEventData *eventData, const TgWindowI
         TgGlobalTooltip::getInstance()->setTooltip(m_text,
                                                    static_cast<int>(eventData->m_event.m_mouseEvent.m_x),
                                                    static_cast<int>(eventData->m_event.m_mouseEvent.m_y),
-                                                   this);
+                                                   this, m_horizontalAlign);
         TG_FUNCTION_END();
         return;
     }
@@ -97,7 +98,7 @@ void TgItem2dTooltip::handleEventToolTip(TgEventData *eventData, const TgWindowI
         TgGlobalTooltip::getInstance()->setTooltip("",
                                                    static_cast<int>(eventData->m_event.m_mouseEvent.m_x),
                                                    static_cast<int>(eventData->m_event.m_mouseEvent.m_y),
-                                                   this);
+                                                   this, m_horizontalAlign);
     }
 
     TG_FUNCTION_END();

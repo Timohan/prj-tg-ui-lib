@@ -53,7 +53,7 @@ bool TgFontMath::getFontWidthHeight(const std::vector<TgTextFieldText> &listText
         textHeight = fontText->getFontHeight();
         allDrawTextHeight = fontText->getAllDrawTextHeight();
     }
-    fontText->clearCacheValues();
+    fontText->clearCacheValues(true);
     delete fontText;
     return true;
 }

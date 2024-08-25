@@ -194,7 +194,7 @@ TgEventResult TgItem2d::handleEvent(TgEventData *eventData, const TgWindowInfo *
         TG_FUNCTION_END();
         return TgEventResult::EventResultCompleted;
     }
-    if (((eventData->m_type == TgEventType::EventTypeCharacterCallback 
+    if (((eventData->m_type == TgEventType::EventTypeCharacterCallback
         && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey)
         || eventData->m_type == TgEventType::EventTypeSelectNextItem
         || eventData->m_type == TgEventType::EventTypeSelectLastItem
@@ -1016,11 +1016,12 @@ bool TgItem2d::removeMenu(size_t i)
  *
  * set tooltip text
  *
- * \return text
+ * \param text text of tooltip
+ * \param align text align of tooltip
  */
-void TgItem2d::setTooltip(const char *text)
+void TgItem2d::setTooltip(const char *text, TgTextfieldHorizontalAlign align)
 {
-    m_private->setTooltip(text);
+    m_private->setTooltip(text, align);
 }
 
 /*!

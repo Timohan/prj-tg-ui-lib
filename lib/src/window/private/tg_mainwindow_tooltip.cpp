@@ -51,7 +51,8 @@ void TgMainWindowTooltip::startHandleEvents()
 void TgMainWindowTooltip::startRendering(const TgWindowInfo *windowInfo)
 {
     int x = 0, y = 0;
-    std::string tooltipText = TgGlobalTooltip::getInstance()->startRendering(x, y);
+    TgTextfieldHorizontalAlign align = TgTextfieldHorizontalAlign::AlignCenterH;
+    std::string tooltipText = TgGlobalTooltip::getInstance()->startRendering(x, y, align);
     if (tooltipText.empty()) {
         m_previousRenderX = -1;
         m_previousRenderY = -1;
@@ -66,7 +67,7 @@ void TgMainWindowTooltip::startRendering(const TgWindowInfo *windowInfo)
     m_previousRenderY = y;
     m_background.setVisible(true);
     m_textField.setText(tooltipText.c_str());
-
+    m_textField.setHorizontalAlign(align);
     float textWidth = 0;
     float textHeight;
     std::vector<TgTextFieldText> listText;
@@ -84,12 +85,53 @@ void TgMainWindowTooltip::startRendering(const TgWindowInfo *windowInfo)
         m_background.setY(static_cast<float>(y-15)-h);
         m_background.setHeight(h + 10);
     }
-    if (windowInfo->m_windowWidth > x+static_cast<int>(textWidth)+15) {
-        m_background.setX(static_cast<float>(x+10));
-        m_background.setWidth(textWidth + 10);
-    } else {
-        m_background.setX(static_cast<float>(x-15)-textWidth);
-        m_background.setWidth(textWidth + 10);
+    switch (align) {
+        case TgTextfieldHorizontalAlign::AlignCenterH:
+        default:
+            m_textField.setMarginLeft(0);
+            m_textField.setMarginRight(0);
+            if (windowInfo->m_windowWidth > x+static_cast<int>(textWidth)+15) {
+                m_background.setX(static_cast<float>(x+10));
+                m_background.setWidth(textWidth + 10);
+            } else {
+                if (static_cast<float>(x-15)-textWidth < 0) {
+                    m_background.setX(0);
+                } else {
+                    m_background.setX(static_cast<float>(x-15)-textWidth);
+                }
+                m_background.setWidth(textWidth + 10);
+            }
+            break;
+        case TgTextfieldHorizontalAlign::AlignLeft:
+            m_textField.setMarginLeft(5);
+            m_textField.setMarginRight(0);
+            if (windowInfo->m_windowWidth > x+static_cast<int>(textWidth)+15) {
+                m_background.setX(static_cast<float>(x+10));
+                m_background.setWidth(textWidth + 10);
+            } else {
+                if (static_cast<float>(x-15)-textWidth < 0) {
+                    m_background.setX(0);
+                } else {
+                    m_background.setX(static_cast<float>(x-15)-textWidth);
+                }
+                m_background.setWidth(textWidth + 10);
+            }
+            break;
+        case TgTextfieldHorizontalAlign::AlignRight:
+            m_textField.setMarginLeft(0);
+            m_textField.setMarginRight(5);
+            if (windowInfo->m_windowWidth > x+static_cast<int>(textWidth)+15) {
+                m_background.setX(static_cast<float>(x+10));
+                m_background.setWidth(textWidth + 10);
+            } else {
+                if (static_cast<float>(x-15)-textWidth < 0) {
+                    m_background.setX(0);
+                } else {
+                    m_background.setX(static_cast<float>(x-15)-textWidth);
+                }
+                m_background.setWidth(textWidth + 10);
+            }
+            break;
     }
 }
 

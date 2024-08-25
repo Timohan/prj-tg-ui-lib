@@ -15,6 +15,7 @@
 #include <vector>
 #include <cstddef>
 #include <functional>
+#include <string>
 #include "../event/tg_event_data.h"
 class TgItem2dPrivate;
 struct TgWindowInfo;
@@ -32,6 +33,50 @@ enum TgItem2dAnchor {
                                  * modified with margin functions, for example setMargin() */
     AnchorRelativeToParentXyFollowParentSize, /*!< item have it's own xy, but follow parent item with size (using parent's width/height), this is used with TgPage */
     AnchorRelativeToParentXFollowParentSize,  /*!< item have it's own y, but follow parent item with size (using parent's width), this is used with TgMenuTop */
+};
+
+/*!
+ * \brief TgTextfieldHorizontalAlign
+ * text horizontal align
+ */
+enum TgTextfieldHorizontalAlign {
+    AlignLeft = 0,  /*!< text to set horizontal left */
+    AlignCenterH,   /*!< text to set horizontal center */
+    AlignRight      /*!< text to set horizontal right */
+};
+
+/*!
+ * \brief TgTextfieldVerticalAlign
+ * text vertical align
+ */
+enum TgTextfieldVerticalAlign {
+    AlignTop = 0,  /*!< text to set vertical top */
+    AlignCenterV,  /*!< text to set vertical center */
+    AlignBottom    /*!< text to set vertical bottom */
+};
+
+/*!
+ * \brief TgTextFieldText
+ * this is used with function setText(const std::vector<TgTextFieldText> &listText)
+ * to set multicolor text
+ */
+struct TgTextFieldText
+{
+    std::string m_text;     /*!< utf8 text */
+    uint8_t m_textColorR = 0;   /*!< m_text's red color */
+    uint8_t m_textColorG = 0;   /*!< m_text's green color */
+    uint8_t m_textColorB = 0;   /*!< m_text's blue color */
+};
+
+/*!
+ * \brief TgTextFieldWordWrap
+ *
+ */
+enum TgTextFieldWordWrap
+{
+    WordWrapBounded = 0, /*!< default, words will be wrapped to minimum of area */
+    WordWrapOff,         /*!< only the line break '\n' will wrap the line */
+    WordWrapOn,          /*!< lines are wrapped to ' ' (empty space) or '\n' if it's possible, if there is no space or '\n' at the line, then it's same wrapping as WordWrapBounded */
 };
 
 /*!
@@ -113,7 +158,7 @@ public:
     virtual TgMenuItem *getMenu(size_t index);
     virtual bool removeMenu(size_t i);
 
-    void setTooltip(const char *text);
+    void setTooltip(const char *text, TgTextfieldHorizontalAlign align = TgTextfieldHorizontalAlign::AlignCenterH);
     void deleteLater();
 protected:
     virtual bool render(const TgWindowInfo *windowInfo);

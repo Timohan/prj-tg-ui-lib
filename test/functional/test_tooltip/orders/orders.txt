@@ -1,8 +1,35 @@
 msg start basic tooltip 0
 isImage start_view.png
+MMC 0 770 500 776 585 0 0 0
+MakeStep 1
+isImage start_view_br_tooltip.png
+MakeStep 19
+MMC 0 770 500 776 585 0 0 0
+MakeStep 1
+isImage start_view_br_tooltip_left.png
+MakeStep 20
+MMC 0 770 500 776 585 0 0 0
+MakeStep 1
+isImage start_view_br_tooltip_right.png
 MMC 0 24 50 24 20 0 0 0
 MakeStep 1
 isImage start_view_tl_tooltip.png
+MakeStep 13
+MMC 0 24 50 24 20 0 0 0
+MakeStep 1
+isImage start_view_tl_tooltip.png
+MakeStep 14
+MMC 0 24 50 24 20 0 0 0
+MakeStep 1
+isImage start_view_tl_tooltip.png
+MMC 0 16 500 16 585 0 0 0
+MakeStep 1
+isImage start_view_bl_tooltip.png
+MakeStep 15
+MMC 0 16 500 16 585 0 0 0
+MakeStep 1
+isImage start_view_bl_tooltip.png
+MakeStep 16
 MMC 0 16 500 16 585 0 0 0
 MakeStep 1
 isImage start_view_bl_tooltip.png
@@ -18,6 +45,14 @@ isImage start_view_tr_tooltip_disabled.png
 MakeStep 2
 MMC 0 770 50 770 51 0 0 0
 MakeStep 4
+MMC 0 770 50 770 20 0 0 0
+MakeStep 1
+isImage start_view_tr_tooltip.png
+MakeStep 17
+MMC 0 770 50 770 20 0 0 0
+MakeStep 1
+isImage start_view_tr_tooltip.png
+MakeStep 18
 MMC 0 770 50 770 20 0 0 0
 MakeStep 1
 isImage start_view_tr_tooltip.png

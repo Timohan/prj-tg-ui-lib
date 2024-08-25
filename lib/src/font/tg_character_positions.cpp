@@ -98,8 +98,14 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
                 }
                 break;
             }
-            if (textWidthToSet < positionLeftX) {
-                textWidthToSet = positionLeftX;
+            if (left_glyph) {
+                if (textWidthToSet < textLinesWidth + positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x)) {
+                    textWidthToSet = textLinesWidth + positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+                }
+            } else {
+                if (textWidthToSet < positionLeftX) {
+                    textWidthToSet = positionLeftX;
+                }
             }
             if (maxLineCount == 0 || maxLineCount > currentLine) {
                 previousSpaceIndex = c;
@@ -278,8 +284,14 @@ bool TgCharacterPositions::calculateTextWidthHeight(std::vector<TgFontInfoData *
                 }
                 break;
             }
-            if (textWidthToSet < positionLeftX) {
-                textWidthToSet = positionLeftX;
+            if (left_glyph) {
+                if (textWidthToSet < textLinesWidth + positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x)) {
+                    textWidthToSet = textLinesWidth + positionLeftX + static_cast<float>(left_glyph->image_pixel_right_x - left_glyph->image_pixel_left_x);
+                }
+            } else {
+                if (textWidthToSet < positionLeftX) {
+                    textWidthToSet = positionLeftX;
+                }
             }
             if (maxLineCount == 0 || maxLineCount > currentLine) {
                 previousSpaceIndex = c;
