@@ -217,8 +217,9 @@ void TgFontGlyphCache::render(TgFontText *fontText, const int vertexTransformInd
             b = fontText->getCharacter(i)->m_textColorB;
             colorFirstTime = false;
         }
-
-        fontText->getFontInfo(i)->m_listRender[ fontText->getCharacter(i)->m_characterInFontInfoIndex ]->render( fontText->getFontInfo(i)->m_textureImage, 0, 4, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        if (fontText->getCharacter(i)->m_characterInFontInfoIndex < fontText->getFontInfo(i)->m_listRender.size()) {
+            fontText->getFontInfo(i)->m_listRender[ fontText->getCharacter(i)->m_characterInFontInfoIndex ]->render( fontText->getFontInfo(i)->m_textureImage, 0, 4, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        }
     }
 }
 

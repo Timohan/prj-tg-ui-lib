@@ -14,6 +14,7 @@
 #include "../../item2d/private/item2d/tg_item2d_private.h"
 #include "../../item2d/tg_menu_item.h"
 #include "../../item2d/private/tg_menu_item_private.h"
+#include "../tg_mainwindow_private.h"
 
 TgMainWindowMenu::TgMainWindowMenu()
 {
@@ -147,6 +148,47 @@ TgEventResult TgMainWindowMenu::handleEventsMenu(TgEventData *eventData, const T
         for (i=0;i<m_listMenuItem.size();i++) {
             if (completedMenuIndex != i) {
                 m_listMenuItem[i]->hideSubMenuList();
+            }
+        }
+    }
+    if (eventData->m_type == TgEventType::EventTypeMouseScrollMove
+        && ret == TgEventResult::EventResultCompleted
+        && !m_listMenuItem.empty()
+        && m_listMenuItem.front()->m_private->getMenuType() == TgMenuItemPrivate::MenuType::MenuType_ComboBoxMenu
+        && completedMenuIndex < m_listMenuItem.size()) {
+        float menuHeight = m_listMenuItem.back()->getY() + m_listMenuItem.back()->getHeight() - m_listMenuItem.front()->getY();
+        if (menuHeight > static_cast<float>(windowInfo->m_windowHeight)) {
+            if (eventData->m_event.m_mouseEvent.m_scroll_move_y < 0) {
+                if (m_listMenuItem.back()->getY() + m_listMenuItem.back()->getHeight() > static_cast<float>(windowInfo->m_windowHeight)) {
+                    for (i=0;i<m_listMenuItem.size();i++) {
+                        m_listMenuItem[i]->setY( m_listMenuItem[i]->getY() - m_listMenuItem[i]->getHeight());
+                    }
+
+                    // need to send mouse move to item to change hover
+                    TgEventData moveEventData;
+                    moveEventData.m_type = TgEventType::EventTypeMouseMove;
+                    moveEventData.m_event.m_mouseEvent.m_x = eventData->m_event.m_mouseEvent.m_x;
+                    moveEventData.m_event.m_mouseEvent.m_y = eventData->m_event.m_mouseEvent.m_y;
+                    moveEventData.m_event.m_mouseEvent.m_currentMouseDownItem = nullptr;
+                    for (i=0;i<m_listMenuItem.size();i++) {
+                        m_listMenuItem[i]->handleEvent(&moveEventData, windowInfo);
+                    }
+                }
+            } else if (eventData->m_event.m_mouseEvent.m_scroll_move_y > 0) {
+                if (m_listMenuItem.front()->getY() < 0) {
+                    for (i=0;i<m_listMenuItem.size();i++) {
+                        m_listMenuItem[i]->setY( m_listMenuItem[i]->getY() + m_listMenuItem[i]->getHeight());
+                    }
+                    // need to send mouse move to item to change hover
+                    TgEventData moveEventData;
+                    moveEventData.m_type = TgEventType::EventTypeMouseMove;
+                    moveEventData.m_event.m_mouseEvent.m_x = eventData->m_event.m_mouseEvent.m_x;
+                    moveEventData.m_event.m_mouseEvent.m_y = eventData->m_event.m_mouseEvent.m_y;
+                    moveEventData.m_event.m_mouseEvent.m_currentMouseDownItem = nullptr;
+                    for (i=0;i<m_listMenuItem.size();i++) {
+                        m_listMenuItem[i]->handleEvent(&moveEventData, windowInfo);
+                    }
+                }
             }
         }
     }

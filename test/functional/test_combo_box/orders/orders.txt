@@ -186,5 +186,45 @@ Sleep 500
 MakeStep 8
 Sleep 500
 isImage start_screen_selected1_itemcount0.png
+MakeStep 11
+Sleep 500
+MMC 1 25 35 25 35 1 1 1
+isImage start_screen_selected0_open0_long.png
+isItemSelected 0 1
+isItemSelected 1 0
+isItemSelected 2 0
+isItemSelected 3 0
+msg start scroll up
+MouseScrollUp 25 35 1 100
+Sleep 500
+isImage start_screen_selected0_open0_long0.png
+MouseScrollDown 25 35 1 100
+Sleep 500
+isImage start_screen_selected0_open0_long_step1.png
+Sleep 500
+MouseScrollUp 25 35 1 100
+Sleep 500
+isImage start_screen_selected0_open0_long0.png
+MouseScrollDown 25 35 1 100
+Sleep 500
+isImage start_screen_selected0_open0_long_step1.png
+MouseScrollDown 25 35 50 10
+Sleep 500
+isImage start_screen_selected0_open0_long_step51.png
+MouseScrollDown 25 35 24 10
+Sleep 500
+isImage start_screen_selected0_open0_long_step75.png
+MouseScrollDown 25 35 1 10
+Sleep 500
+isImage start_screen_selected0_open0_long_step75.png
+MouseScrollUp 25 35 24 10
+Sleep 500
+isImage start_screen_selected0_open0_long_step51.png
+MouseScrollUp 425 235 24 10
+Sleep 500
+isImage start_screen_selected0_open0_long_step51_nohover.png
+MouseScrollUp 25 35 100 10
+Sleep 500
+isImage start_screen_selected0_open0_long0.png
 
 

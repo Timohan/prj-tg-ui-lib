@@ -26,7 +26,7 @@ struct TgFontTextCharacterInfo
     int32_t m_fontFileNameIndex;    /*!< character is drawed from this TgFontText's index, from m_listFontFileNames, -1 == ignored */
 
     float positionLeftX;            /*!< glyph X position, generated in TgCharacterPositions::generateTextCharacterPositioning */
-    size_t m_characterInFontInfoIndex; /*!< glyph index in TgFontInfo, generated in TgCharacterPositions::generateTextCharacterPositioning */
+    size_t m_characterInFontInfoIndex = 0; /*!< glyph index in TgFontInfo, generated in TgCharacterPositions::generateTextCharacterPositioning */
     uint32_t m_lineNumber;          /*!< line number, required to calculate glyph Y position, generated in TgCharacterPositions::generateTextCharacterPositioning */
 
     uint8_t m_textColorR;

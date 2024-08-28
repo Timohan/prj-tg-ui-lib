@@ -37,6 +37,8 @@ private:
     bool checkIsMouseReleased(int index, int x, int y, bool inArea);
     bool checkIsMouseClicked(int index, int x, int y);
     bool checkIsComboBoxItemChanged(size_t comboBoxIndex, size_t itemIndex);
+    void sendMouseScrollUp(int x, int y, uint32_t count, uint32_t timeWait);
+    void sendMouseScrollDown(int x, int y, uint32_t count, uint32_t timeWait);
 
 };
 

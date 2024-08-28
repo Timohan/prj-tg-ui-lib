@@ -180,6 +180,12 @@ void MainWindow::setMakeStep(int index)
     case 10:
         m_comboBoxTopRight.removeItemText(3);
         break;
+    case 11:
+        for (int i=4;i<100;i++) {
+            std::string text = "NewTL " + std::to_string(i);
+            m_comboBoxTopLeft.addItemText(text.c_str());
+        }
+        break;
     default:
         break;
     }

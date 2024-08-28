@@ -344,6 +344,32 @@ bool FunctionalTestOrders::loadOrders()
                     textPos += text.size() + 1;
                 }
                 m_listOrder.push_back(orders);
+            } else if (getNextText(line) == "MouseScrollUp") {
+                orders.m_type = TestOrderType::MouseScrollUp;
+                textPos = getNextText(line).size()+1;
+                for (i=0;i<4;i++) {
+                    std::string text = getNextText(line.c_str()+textPos);
+                    if (text.size() == 0) {
+                        TG_ERROR_LOG("Line is incorrect ", lineIndex );
+                        return false;
+                    }
+                    orders.m_listNumber.push_back(std::atoi(text.c_str()));
+                    textPos += text.size() + 1;
+                }
+                m_listOrder.push_back(orders);
+            } else if (getNextText(line) == "MouseScrollDown") {
+                orders.m_type = TestOrderType::MouseScrollDown;
+                textPos = getNextText(line).size()+1;
+                for (i=0;i<4;i++) {
+                    std::string text = getNextText(line.c_str()+textPos);
+                    if (text.size() == 0) {
+                        TG_ERROR_LOG("Line is incorrect ", lineIndex );
+                        return false;
+                    }
+                    orders.m_listNumber.push_back(std::atoi(text.c_str()));
+                    textPos += text.size() + 1;
+                }
+                m_listOrder.push_back(orders);
             }
         }
         ordersFile.close();

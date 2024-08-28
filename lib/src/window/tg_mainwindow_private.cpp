@@ -108,7 +108,7 @@ int TgMainWindowPrivate::initWindow(const char *windowTitle)
         TG_FUNCTION_END();
         return EXIT_FAILURE;
     }
-    
+
     if (m_shader2d.init() != 0) {
         TG_FUNCTION_END();
         return EXIT_FAILURE;

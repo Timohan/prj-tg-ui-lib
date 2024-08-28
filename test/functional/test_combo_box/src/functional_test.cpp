@@ -192,6 +192,18 @@ void FunctionalTest::start()
                         return;
                     }
                     break;
+                case TestOrderType::MouseScrollUp:
+                    sendMouseScrollUp(m_testOrders.getTestOrder(i)->m_listNumber.at(0),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(1),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(2),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(3));
+                    break;
+                case TestOrderType::MouseScrollDown:
+                    sendMouseScrollDown(m_testOrders.getTestOrder(i)->m_listNumber.at(0),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(1),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(2),
+                        m_testOrders.getTestOrder(i)->m_listNumber.at(3));
+                    break;
                 default:
                     TG_ERROR_LOG("Test case is incorrect");
                     m_returnIndex = 1;
@@ -463,6 +475,54 @@ void FunctionalTest::sendButtonMoveClick(uint32_t timeBetweenPressRelease, int p
     XFlush(display);
     if (waitAfterRelease) {
         sleep(waitAfterRelease);
+    }
+}
+
+void FunctionalTest::sendMouseScrollUp(int x, int y, uint32_t count, uint32_t timeWait)
+{
+    uint32_t i;
+    sendButtonMoveClick(0, x-1, y, x, y, 0, false, false);
+    for (i=0;i<count;i++) {
+        Display *display = m_mainWindow->getDisplay();
+        XEvent event;
+        memset(&event, 0x00, sizeof(event));
+        event.type = ButtonPress;
+        event.xbutton.button = Button4;
+        event.xbutton.same_screen = True;
+        event.xbutton.x = x;
+        event.xbutton.y = y;
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+        XFlush(display);
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeWait));
+        event.type = ButtonRelease;
+        event.xbutton.state = 0x100;
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+        XFlush(display);
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeWait));
+    }
+}
+
+void FunctionalTest::sendMouseScrollDown(int x, int y, uint32_t count, uint32_t timeWait)
+{
+    uint32_t i;
+    sendButtonMoveClick(0, x-1, y, x, y, 0, false, false);
+    for (i=0;i<count;i++) {
+        Display *display = m_mainWindow->getDisplay();
+        XEvent event;
+        memset(&event, 0x00, sizeof(event));
+        event.type = ButtonPress;
+        event.xbutton.button = Button5;
+        event.xbutton.same_screen = True;
+        event.xbutton.x = x;
+        event.xbutton.y = y;
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+        XFlush(display);
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeWait));
+        event.type = ButtonRelease;
+        event.xbutton.state = 0x100;
+        XSendEvent(display, *m_mainWindow->getWindow(), True, 0xfff, &event);
+        XFlush(display);
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeWait));
     }
 }
 

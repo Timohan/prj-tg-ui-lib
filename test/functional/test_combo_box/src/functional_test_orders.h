@@ -28,7 +28,9 @@ enum TestOrderType {
     TypeKeyRelease,
     SleepWaitTimeMs,
     isImage,
-    isComboBoxItemChanged
+    isComboBoxItemChanged,
+    MouseScrollUp,
+    MouseScrollDown
 };
 
 struct TestOrder

@@ -295,6 +295,9 @@ void TgFontText::clearCacheValues(bool useLock)
  */
 TgFontInfo *TgFontText::getFontInfo(size_t i)
 {
+    if (m_listFontInfo.size() <= i) {
+        return nullptr;
+    }
     return m_listFontInfo[i];
 }
 
