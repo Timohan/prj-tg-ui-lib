@@ -245,10 +245,12 @@ void TgItem2dMenu::setMenuItemsOpen(TgEventData *eventData, const TgWindowInfo *
  * \param listChildrenMenu
  * \param eventData
  * \param windowInfo
+ * \param currentIndex which item must be visible at start
  */
 void TgItem2dMenu::setMenuItemsOpen(bool topMenu, TgItem2d *currentItem, TgItem2d *parentItem,
                                     std::vector<TgMenuItem *>&listChildrenMenu,
-                                    TgEventData *eventData, const TgWindowInfo *windowInfo)
+                                    TgEventData *eventData, const TgWindowInfo *windowInfo,
+                                    size_t currentIndex)
 {
     float startX = 0;
     float startY = 0;
@@ -318,6 +320,7 @@ void TgItem2dMenu::setMenuItemsOpen(bool topMenu, TgItem2d *currentItem, TgItem2
     TgItem2dPrivateMessage msgToVisible;
     msgToVisible.m_type = TgItem2dPrivateMessageType::ParentItemToVisible;
     float y = startY;
+    float heightAfterCurrentIndex = 0;
 
     for (i=0;i<listChildrenMenu.size();i++) {
         reinterpret_cast<TgItem2d *>(listChildrenMenu[i])->m_private->parentVisibleChanged(true);
@@ -335,6 +338,27 @@ void TgItem2dMenu::setMenuItemsOpen(bool topMenu, TgItem2d *currentItem, TgItem2
         listChildrenMenu[i]->hideSubMenuList();
         msg.m_listAdditionalItems.push_back(listChildrenMenu[i]);
         y += listChildrenMenu[i]->getHeight();
+        if (i > currentIndex) {
+            heightAfterCurrentIndex += listChildrenMenu[i]->getHeight();
+        }
+    }
+
+    if (currentIndex > 0
+        && currentIndex < listChildrenMenu.size()
+        && static_cast<int>(listChildrenMenu.at(currentIndex)->getY() + listChildrenMenu.at(currentIndex)->getHeight()) > windowInfo->m_windowHeight) {
+        if (static_cast<int>(heightAfterCurrentIndex) < windowInfo->m_windowHeight) {
+            y = static_cast<float>(windowInfo->m_windowHeight) - listChildrenMenu.back()->getHeight();
+            for (i=0;i<listChildrenMenu.size();i++) {
+                listChildrenMenu[listChildrenMenu.size()-1-i]->setY(y);
+                y -= listChildrenMenu[listChildrenMenu.size()-1-i]->getHeight();
+            }
+        } else {
+            y = -listChildrenMenu[currentIndex]->getY();
+            for (i=0;i<listChildrenMenu.size();i++) {
+                listChildrenMenu[i]->setY(y);
+                y += listChildrenMenu[i]->getHeight();
+            }
+        }
     }
 
     if (eventData->m_type == TgEventType::EventTypeMouseMoveForMenuParent) {

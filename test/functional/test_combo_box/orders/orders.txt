@@ -226,5 +226,24 @@ isImage start_screen_selected0_open0_long_step51_nohover.png
 MouseScrollUp 25 35 100 10
 Sleep 500
 isImage start_screen_selected0_open0_long0.png
-
+MouseScrollDown 25 35 110 10
+Sleep 500
+isImage start_screen_selected0_open0_long_step75.png
+MMC 1 350 35 350 35 1 1 1
+isImage start_screen_selected0_open0_hover0.png
+MMC 1 25 35 25 35 1 1 1
+isImage start_screen_selected0_open0_long.png
+MouseScrollDown 25 35 30 10
+Sleep 500
+MMC 1 25 55 25 55 1 1 1
+MMC 1 25 35 25 35 1 1 1
+Sleep 500
+isImage start_screen_selected0_open0_hover0_selected32.png
+MouseScrollDown 25 35 100 10
+Sleep 500
+isImage start_screen_selected0_open0_long_step75x2.png
+MMC 1 25 55 25 55 1 1 1
+MMC 1 25 35 25 35 1 1 1
+Sleep 500
+isImage start_screen_selected0_open0_long_step75_selected77.png
 

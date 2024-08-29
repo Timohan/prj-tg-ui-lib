@@ -497,7 +497,7 @@ TgEventResult TgComboBoxPrivate::handleEventComboBox(TgEventData *eventData, con
         && getItemCount(false)
         && m_currentItem->m_private->isCursorOnItem(eventData->m_event.m_mouseEvent.m_x, eventData->m_event.m_mouseEvent.m_y, windowInfo)) {
         // open normal item menu with right mouse click
-        TgItem2dMenu::setMenuItemsOpen(false, m_currentItem, nullptr, m_listItems, eventData, windowInfo);
+        TgItem2dMenu::setMenuItemsOpen(false, m_currentItem, nullptr, m_listItems, eventData, windowInfo, getCurrentIndex());
         m_mutex.unlock();
         m_currentItem->setSelected(true);
         TG_FUNCTION_END();

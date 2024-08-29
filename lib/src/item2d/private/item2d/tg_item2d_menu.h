@@ -49,7 +49,7 @@ public:
     void deleteMenu(TgMenuItem *item);
     size_t getPossibleVisibleMenuCount();
     void setDeletingSubMenu();
-    static void setMenuItemsOpen(bool topMenu, TgItem2d *currentItem, TgItem2d *parentItem, std::vector<TgMenuItem *>&listChildrenMenu, TgEventData *eventData, const TgWindowInfo *windowInfo);
+    static void setMenuItemsOpen(bool topMenu, TgItem2d *currentItem, TgItem2d *parentItem, std::vector<TgMenuItem *>&listChildrenMenu, TgEventData *eventData, const TgWindowInfo *windowInfo, size_t currentIndex = 0);
 protected:
     void checkPositionValuesChildrenMenu(const TgWindowInfo *windowInfo);
 
