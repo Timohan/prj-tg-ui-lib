@@ -244,6 +244,7 @@ TgGridViewCell *TgGridViewPrivate::getCell(size_t column, size_t row)
 {
     TG_FUNCTION_BEGIN();
     if (column >= m_columnCount || row >= m_rowCount) {
+        TG_WARNING_LOG("Incorrect cell, Column:", column, "/", m_columnCount, "Row:", row, "/", m_rowCount );
         TG_FUNCTION_END();
         return nullptr;
     }
@@ -261,11 +262,13 @@ void TgGridViewPrivate::setRowCount(size_t row)
         TG_FUNCTION_END();
         return;
     }
+    TgGlobalWaitRenderer::getInstance()->renderLock();
     if (row == 0) {
         clear();
         m_rowCount = row;
         setGridCellsPositions();
         setSliderVisibilityAndPosition();
+        TgGlobalWaitRenderer::getInstance()->renderUnlock();
         TG_FUNCTION_END();
         return;
     }
@@ -321,6 +324,7 @@ void TgGridViewPrivate::setRowCount(size_t row)
     setGridCellsPositions();
     setSliderVisibilityAndPosition();
     static_cast<TgItem2d *>(m_currentItem)->setPositionChanged(true);
+    TgGlobalWaitRenderer::getInstance()->renderUnlock();
     TG_FUNCTION_END();
 }
 
@@ -345,11 +349,13 @@ void TgGridViewPrivate::setColumCount(size_t column)
         TG_FUNCTION_END();
         return;
     }
+    TgGlobalWaitRenderer::getInstance()->renderLock();
     if (column == 0) {
         clear();
         m_columnCount = column;
         setGridCellsPositions();
         setSliderVisibilityAndPosition();
+        TgGlobalWaitRenderer::getInstance()->renderUnlock();
         TG_FUNCTION_END();
         return;
     }
@@ -407,6 +413,7 @@ void TgGridViewPrivate::setColumCount(size_t column)
     setGridCellsPositions();
     setSliderVisibilityAndPosition();
     static_cast<TgItem2d *>(m_currentItem)->setPositionChanged(true);
+    TgGlobalWaitRenderer::getInstance()->renderUnlock();
     TG_FUNCTION_END();
 }
 

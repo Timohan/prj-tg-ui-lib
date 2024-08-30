@@ -87,8 +87,8 @@ bool TgMainWindow::render(const TgWindowInfo *)
 
     m_mainwindowPrivate->setupViewForRender();
     m_mainwindowPrivate->startHandleEvents();
-    m_mainwindowPrivate->handleEvents();
     TgGlobalWaitRenderer::getInstance()->renderLock();
+    m_mainwindowPrivate->handleEvents();
     m_mainwindowPrivate->startRendering(m_mainwindowPrivate->getWindowInfo());
     if (TgGlobalDeleter::getInstance()->removeItems()) {
         m_mainwindowPrivate->hideList();
@@ -103,8 +103,8 @@ bool TgMainWindow::render(const TgWindowInfo *)
     m_mainwindowPrivate->renderChildrenMenu(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderTooltip(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderEnd();
-    TgGlobalWaitRenderer::getInstance()->renderUnlock();
     checkOnResizeChangedOnChildren();
+    TgGlobalWaitRenderer::getInstance()->renderUnlock();
     TG_FUNCTION_END();
     return true;
 }

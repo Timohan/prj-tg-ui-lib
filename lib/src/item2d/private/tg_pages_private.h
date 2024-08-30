@@ -36,9 +36,11 @@ public:
 
     virtual void onInternalResize(float x, float y, float width, float height) override;
 
+    void internalChangePage();
 private:
     std::vector<TgPage *>m_listPage;
     size_t m_currentPageIndex;
+    size_t m_toCurrentPageIndex;
     double m_pageSwitchMaxTime;
     TgPagesPageSwitchType m_pageSwitchType;
     TimeDifference m_pageSwitchStartTime;

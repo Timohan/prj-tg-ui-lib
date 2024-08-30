@@ -200,10 +200,12 @@ bool TgCharacterPositions::generateTextCharacterPositioning(TgFontText *fontText
             fontText->setVisibleBottomY(fontInfo->m_listBottomPositionY.at(infoCharacterIndex));
             firstCharacterAdded = true;
         } else {
-            if (fontText->getVisibleTopY() > fontInfo->m_listTopPositionY.at(infoCharacterIndex)) {
+            if (fontInfo->m_listTopPositionY.size() > infoCharacterIndex
+                && fontText->getVisibleTopY() > fontInfo->m_listTopPositionY.at(infoCharacterIndex)) {
                 fontText->setVisibleTopY(fontInfo->m_listTopPositionY.at(infoCharacterIndex));
             }
-            if (fontText->getVisibleBottomY() < fontInfo->m_listBottomPositionY.at(infoCharacterIndex)) {
+            if (fontInfo->m_listBottomPositionY.size() > infoCharacterIndex
+                && fontText->getVisibleBottomY() < fontInfo->m_listBottomPositionY.at(infoCharacterIndex)) {
                 fontText->setVisibleBottomY(fontInfo->m_listBottomPositionY.at(infoCharacterIndex));
             }
         }

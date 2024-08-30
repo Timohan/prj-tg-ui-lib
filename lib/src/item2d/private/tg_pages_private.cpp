@@ -18,6 +18,7 @@
 
 TgPagesPrivate::TgPagesPrivate(TgItem2d *currentItem) :
     m_currentPageIndex(0),
+    m_toCurrentPageIndex(0),
     m_pageSwitchMaxTime(0.25),
     m_pageSwitchType(TgPagesPageSwitchType::PageSwitchType_Direct)
 {
@@ -63,7 +64,7 @@ size_t TgPagesPrivate::getCurrentPageIndex() const
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
-    return m_currentPageIndex;
+    return m_toCurrentPageIndex;
 }
 
 /*!
@@ -95,20 +96,34 @@ void TgPagesPrivate::setPage(size_t pageIndex)
         TG_FUNCTION_END();
         return;
     }
-    if (pageIndex == m_currentPageIndex) {
+    if (pageIndex == m_toCurrentPageIndex) {
         TG_FUNCTION_END();
         return;
     }
-    TgGlobalWaitRenderer::getInstance()->renderLock();
+    m_toCurrentPageIndex = pageIndex;
+    TG_FUNCTION_END();
+}
+
+/**
+ * @brief internally change the page
+ *
+ */
+void TgPagesPrivate::internalChangePage()
+{
+    TG_FUNCTION_BEGIN();
+    if (m_toCurrentPageIndex == m_currentPageIndex) {
+        TG_FUNCTION_END();
+        return;
+    }
     for (size_t i=0;i<m_listPage.size();i++) {
         if (m_pageSwitchType == TgPagesPageSwitchType::PageSwitchType_Direct) {
-            if (i == pageIndex) {
+            if (i == m_toCurrentPageIndex) {
                 m_listPage[i]->m_private->setPageOnTopOfParent();
             } else {
                 m_listPage[i]->m_private->setPageOutsideParent();
             }
         } else {
-            if (i == pageIndex) {
+            if (i == m_toCurrentPageIndex) {
                 m_listPage[i]->m_private->setPageToMoving(m_pageSwitchType);
                 m_listPage[i]->setToTop();
             } else if (i == m_currentPageIndex) {
@@ -118,9 +133,8 @@ void TgPagesPrivate::setPage(size_t pageIndex)
             }
         }
     }
-    m_currentPageIndex = pageIndex;
+    m_currentPageIndex = m_toCurrentPageIndex;
     m_pageSwitchStartTime.resetTimer();
-    TgGlobalWaitRenderer::getInstance()->renderUnlock();
     TG_FUNCTION_END();
 }
 
@@ -163,6 +177,7 @@ void TgPagesPrivate::checkPositionValues()
     bool setVisibleValues = false;
     size_t i;
     TgPageMovingState state;
+    internalChangePage();
     double elapsedTime = m_pageSwitchStartTime.elapsedTimeFromBegin();
     for (i=0;i<m_listPage.size();i++) {
         state = m_listPage[i]->m_private->pageMoving(elapsedTime, m_pageSwitchMaxTime);
