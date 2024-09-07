@@ -15,6 +15,7 @@
 #include "../../item2d/tg_menu_item.h"
 #include "../../item2d/private/tg_menu_item_private.h"
 #include "../tg_mainwindow_private.h"
+#include "../../global/private/tg_global_defines.h"
 
 TgMainWindowMenu::TgMainWindowMenu()
 {
@@ -46,6 +47,7 @@ void TgMainWindowMenu::handlePrivateMessageWindowMenu(const TgItem2dPrivateMessa
             m_listMenuItem.push_back(item);
             item->m_private->setMenuRendering(true);
         }
+        m_menuShowStartTime.resetTimer();
         if (message->m_primaryValue == 0) {
             m_mutexMenu.unlock();
         }
@@ -70,8 +72,18 @@ void TgMainWindowMenu::renderChildrenMenu(const TgWindowInfo *windowInfo)
     TG_FUNCTION_BEGIN();
     m_mutexMenu.lock();
     if (!m_listMenuItem.empty()) {
+#if MENU_OPEN_OPACITY_TIME == 0
+        const float opacity = 1.0f;
+#else
+        float opacity = static_cast<float>(m_menuShowStartTime.elapsedTimeFromBegin())*1000/MENU_OPEN_OPACITY_TIME;
+        if (opacity >= 1.0f) {
+            opacity = 1.0f;
+        } else {
+            TgGlobalWaitRenderer::getInstance()->release(DEFAULT_RENDER_WAIT_MAX_TIMEOUT);
+        }
+#endif
         for (size_t i=0;i<m_listMenuItem.size();i++) {
-            m_listMenuItem[i]->renderMenu(windowInfo, 1.0f);
+            m_listMenuItem[i]->renderMenu(windowInfo, opacity);
         }
     }
     m_mutexMenu.unlock();

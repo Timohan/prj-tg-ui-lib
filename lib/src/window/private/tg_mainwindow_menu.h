@@ -16,6 +16,7 @@
 #include <mutex>
 #include "../../event/tg_events.h"
 #include "../../item2d/tg_rectangle.h"
+#include "../../common/time_difference.h"
 
 class TgMenuItem;
 struct TgItem2dPrivateMessage;
@@ -36,6 +37,7 @@ protected:
     void hideList();
 
 private:
+    TimeDifference m_menuShowStartTime;
     std::mutex m_mutexMenu;
     TgItem2d *m_parentMenuItem = nullptr;    /**< just pointer to parent of visible menu items - this is only pointer to TgMenuTop */
     TgMenuItem *m_currentMenuItem = nullptr;    /**< just pointer to current visible menu items - this is only pointer to TgMenuTop */

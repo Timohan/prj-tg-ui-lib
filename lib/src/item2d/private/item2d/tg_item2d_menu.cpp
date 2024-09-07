@@ -21,6 +21,7 @@
 #include "../../../item2d/private/item2d/tg_item2d_private.h"
 #include "../../../window/tg_mainwindow_private.h"
 #include "../../../global/private/tg_global_wait_renderer.h"
+#include "../../../global/private/tg_global_defines.h"
 
 TgItem2dMenu::TgItem2dMenu(TgItem2d *currentItem, TgItem2d *parentItem) :
     m_currentItem(currentItem),
@@ -395,12 +396,22 @@ void TgItem2dMenu::setMenuVisible(float x, float y, float w, const TgWindowInfo 
     TgItem2dPrivateMessage msgToVisible;
     msgToVisible.m_type = TgItem2dPrivateMessageType::ParentItemToVisible;
     float yPos = startY;
+    bool resetTimer = false;
+    bool visibleFirst = false;
+    bool oneWasVisibleAtFirst = false;
 
     for (i=0;i<m_listChildrenMenu.size();i++) {
+        visibleFirst = m_listChildrenMenu[i]->getVisible();
+        if (visibleFirst) {
+            oneWasVisibleAtFirst = true;
+        }
         reinterpret_cast<TgItem2d *>(m_listChildrenMenu[i])->m_private->parentVisibleChanged(true);
         reinterpret_cast<TgItem2d *>(m_listChildrenMenu[i])->m_private->sendMessageToChildren(&msgToVisible, false);
         if (!m_listChildrenMenu[i]->getVisible()) {
             continue;
+        }
+        if (!visibleFirst) {
+            resetTimer = true;
         }
         m_listChildrenMenu[i]->setX(startX);
         m_listChildrenMenu[i]->setY(yPos);
@@ -412,7 +423,9 @@ void TgItem2dMenu::setMenuVisible(float x, float y, float w, const TgWindowInfo 
         m_listChildrenMenu[i]->hideSubMenuList();
         yPos += m_listChildrenMenu[i]->getHeight();
     }
-
+    if (resetTimer && !oneWasVisibleAtFirst) {
+        m_subMenuOpenStartTime.resetTimer();
+    }
     TG_FUNCTION_END();
 }
 
@@ -438,6 +451,12 @@ void TgItem2dMenu::renderMenu(const TgWindowInfo *windowInfo, float parentOpacit
     TG_FUNCTION_BEGIN();
     m_mutexMenu.lock();
     if (!m_currentItem->getVisible()) {
+        TG_FUNCTION_END();
+        return;
+    }
+
+    if (m_listChildrenMenu.empty()) {
+        m_mutexMenu.unlock();
         TG_FUNCTION_END();
         return;
     }
@@ -483,8 +502,23 @@ bool TgItem2dMenu::getTopMenu()
 void TgItem2dMenu::renderChildrenMenu(const TgWindowInfo *windowInfo, float parentOpacity)
 {
     m_mutexMenu.lock();
+    if (m_listChildrenMenu.empty()) {
+        m_mutexMenu.unlock();
+        return;
+    }
+#if MENU_OPEN_OPACITY_TIME == 0
+        const float opacity = 1.0f;
+#else
+        float opacity = static_cast<float>(m_subMenuOpenStartTime.elapsedTimeFromBegin())*1000/MENU_OPEN_OPACITY_TIME;
+        if (opacity >= 1.0f) {
+            opacity = 1.0f;
+        } else {
+            TgGlobalWaitRenderer::getInstance()->release(DEFAULT_RENDER_WAIT_MAX_TIMEOUT);
+        }
+#endif
+
     for (size_t i=0;i<m_listChildrenMenu.size();i++) {
-        m_listChildrenMenu[i]->renderMenu(windowInfo, parentOpacity);
+        m_listChildrenMenu[i]->renderMenu(windowInfo, parentOpacity*opacity);
     }
     m_mutexMenu.unlock();
 }

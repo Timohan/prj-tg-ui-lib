@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <mutex>
 #include "../../../event/tg_event_data.h"
+#include "../../../common/time_difference.h"
 class TgMenuItem;
 struct TgShortCut;
 class TgItem2d;
@@ -54,6 +55,7 @@ protected:
     void checkPositionValuesChildrenMenu(const TgWindowInfo *windowInfo);
 
 private:
+    TimeDifference m_subMenuOpenStartTime;
     bool m_topMenu = { false };
     TgItem2d *m_currentItem;
     TgItem2d *m_parentItem;
