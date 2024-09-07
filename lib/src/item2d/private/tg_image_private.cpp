@@ -169,10 +169,11 @@ void TgImagePrivate::setTranform(TgItem2d *currentItem)
  * \param windowInfo
  * \param currentItem
  * \param itemPosition
+ * \param opacity opacity for rendering
  * \return true if item was rendered, false if
  * item was not render because it was outside or invisible
  */
-bool TgImagePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition)
+bool TgImagePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition, float opacity)
 {
     TG_FUNCTION_BEGIN();
     if (!itemPosition->isRenderVisible(windowInfo)) {
@@ -185,6 +186,7 @@ bool TgImagePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentIte
                 currentItem->getXmaxOnVisible(windowInfo),
                 currentItem->getYmaxOnVisible(windowInfo));
     glUniform4f( windowInfo->m_shaderColorIndex, 1, 1, 1, 1);
+    glUniform1f( windowInfo->m_shaderOpacityIndex, opacity);
     glUniformMatrix4fv(windowInfo->m_shaderTransformIndex, 1, 0, m_transform.getMatrixTable()->data);
     TgRender::render(getTextureIndex());
     TG_FUNCTION_END();

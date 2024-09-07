@@ -17,7 +17,7 @@
 
 /*!
  * \brief TgSlider::TgSlider
- * 
+ *
  * constructor to use AnchorFollowParentSize (check TgItem2D)
  *
  * \param parent
@@ -33,7 +33,7 @@ TgSlider::TgSlider(TgItem2d *parent, TgSliderType type) :
 
 /*!
  * \brief TgSlider::TgSlider
- * 
+ *
  * constructor to use AnchorRelativeToParent (check TgItem2D)
  * position is relative to parent
  *
@@ -54,7 +54,7 @@ TgSlider::TgSlider(TgItem2d *parent, float x, float y, float width, float height
 
 /*!
  * \brief TgSlider::~TgSlider
- * 
+ *
  */
 TgSlider::~TgSlider()
 {
@@ -63,19 +63,6 @@ TgSlider::~TgSlider()
         delete m_private;
     }
     TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgSlider::render
- *
- * Renders the slider
- * \param windowInfo
- */
-bool TgSlider::render(const TgWindowInfo *)
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return true;
 }
 
 /*!

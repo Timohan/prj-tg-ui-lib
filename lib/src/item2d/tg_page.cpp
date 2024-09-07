@@ -16,7 +16,7 @@
 
 /*!
  * \brief TgPage::TgPage
- * 
+ *
  * page, background is image background
  *
  * \param parent pointer to TgPages class
@@ -34,7 +34,7 @@ TgPage::TgPage(TgPages *parent, const char *imageFilename) :
 
 /*!
  * \brief TgPage::TgPage
- * 
+ *
  * page, background is single color background (rgb)
  *
  * \param parent pointer to TgPages class
@@ -61,19 +61,6 @@ TgPage::~TgPage()
         delete m_private;
     }
     TG_FUNCTION_END();
-}
-
-/*!
- * \brief render::render
- *
- * Renders the page
- * \param windowInfo
- */
-bool TgPage::render(const TgWindowInfo *)
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return true;
 }
 
 /*!

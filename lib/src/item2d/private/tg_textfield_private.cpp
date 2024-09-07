@@ -286,10 +286,11 @@ void TgTextfieldPrivate::checkPositionValues()
  * \param windowInfo
  * \param currentItem
  * \param itemPosition
+ * \param opacity
  * \return true if item was rendered, false if
  * item was not render because it was outside or invisible
  */
-bool TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition)
+bool TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition, float opacity)
 {
     TG_FUNCTION_BEGIN();
     if (!m_fontText) {
@@ -306,6 +307,7 @@ bool TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *curren
                 currentItem->getXminOnVisible(), currentItem->getYminOnVisible(),
                 currentItem->getXmaxOnVisible(windowInfo),
                 currentItem->getYmaxOnVisible(windowInfo));
+    glUniform1f( windowInfo->m_shaderOpacityIndex, opacity);
 
     TgGlobalApplication::getInstance()->getFontGlyphCache()->render(m_fontText, windowInfo->m_shaderTransformIndex,
         windowInfo->m_shaderColorIndex, m_listTransform);

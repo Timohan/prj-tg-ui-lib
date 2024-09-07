@@ -15,7 +15,7 @@
 
 /*!
  * \brief TgPages::TgPages
- * 
+ *
  * constructor to use AnchorFollowParentSize (check TgItem2D)
  *
  * \param parent
@@ -30,7 +30,7 @@ TgPages::TgPages(TgItem2d *parent) :
 
 /*!
  * \brief TgPages::TgPages
- * 
+ *
  * constructor to use AnchorRelativeToParent (check TgItem2D)
  * position is relative to parent
  *
@@ -151,19 +151,6 @@ void TgPages::setPageSwitchTime(double pageSwitchTime)
     }
     m_private->setPageSwitchTime(pageSwitchTime);
     TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgPages::render
- *
- * Renders the pages
- * \param windowInfo
- */
-bool TgPages::render(const TgWindowInfo *)
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return true;
 }
 
 /*!

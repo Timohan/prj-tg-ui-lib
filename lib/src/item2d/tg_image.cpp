@@ -110,14 +110,14 @@ void TgImage::setImage(const char *filename)
  * \return true if item was rendered, false if
  * item was not render because it was outside or invisible
  */
-bool TgImage::render(const TgWindowInfo *windowInfo)
+bool TgImage::render(const TgWindowInfo *windowInfo, float parentOpacity)
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
         return false;
     }
     TG_FUNCTION_END();
-    return m_private->render(windowInfo, this, reinterpret_cast<TgItem2d *>(this)->m_private);
+    return m_private->render(windowInfo, this, reinterpret_cast<TgItem2d *>(this)->m_private, parentOpacity*getOpacity());
 }
 
 /*!

@@ -113,11 +113,12 @@ void TgItem2d::setVisible(bool visible)
  *
  * renders children items
  * \param windowInfo
+ * \param parentOpacity
  */
-void TgItem2d::renderChildren(const TgWindowInfo *windowInfo)
+void TgItem2d::renderChildren(const TgWindowInfo *windowInfo, float parentOpacity)
 {
     TG_FUNCTION_BEGIN();
-    m_private->renderChildren(windowInfo);
+    m_private->renderChildren(windowInfo, parentOpacity*getOpacity());
     TG_FUNCTION_END();
 }
 
@@ -140,10 +141,11 @@ void TgItem2d::checkPositionValuesChildren(const TgWindowInfo *windowInfo)
  * rendering functionality (this is empty)
  * because this is virtual function
  * \param windowInfo
+ * \param parentOpacity opacity of parent
  * \return true if item was rendered, false if
  * item was not render because it was outside or invisible
  */
-bool TgItem2d::render(const TgWindowInfo *)
+bool TgItem2d::render(const TgWindowInfo *, float)
 {
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
@@ -1033,4 +1035,24 @@ void TgItem2d::setTooltip(const char *text, TgTextfieldHorizontalAlign align)
 void TgItem2d::deleteLater()
 {
     m_private->deleteLater();
+}
+
+/**
+ * @brief get opacity of item
+ *
+ * @return float opacity value 0.0f - 1.0f
+ */
+float TgItem2d::getOpacity() const
+{
+    return m_private->getOpacity();
+}
+
+/**
+ * @brief set opacity
+ *
+ * @param opacity must be between 0.0f - 1.0f
+ */
+void TgItem2d::setOpacity(float opacity)
+{
+    m_private->setOpacity(opacity);
 }

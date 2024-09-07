@@ -51,7 +51,6 @@ public:
 protected:
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo) override;
 
-    virtual bool render(const TgWindowInfo *windowInfo) override;
     virtual void checkPositionValues() override;
 
 private:

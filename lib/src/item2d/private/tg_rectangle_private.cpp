@@ -173,10 +173,12 @@ void TgRectanglePrivate::checkPositionValues(TgItem2d *currentItem)
  * Renders the rectangle
  * \param windowInfo
  * \param currentItem
+ * \param itemPosition
+ * \param opacity opacity
  * \return true if item was rendered, false if
  * item was not render because it was outside or invisible
  */
-bool TgRectanglePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition)
+bool TgRectanglePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition, float opacity)
 {
     TG_FUNCTION_BEGIN();
     if (!itemPosition->isRenderVisible(windowInfo)) {
@@ -186,6 +188,7 @@ bool TgRectanglePrivate::render(const TgWindowInfo *windowInfo, TgItem2d *curren
                 currentItem->getXminOnVisible(), currentItem->getYminOnVisible(),
                 currentItem->getXmaxOnVisible(windowInfo),
                 currentItem->getYmaxOnVisible(windowInfo));
+    glUniform1f( windowInfo->m_shaderOpacityIndex, opacity);
     glUniform4f( windowInfo->m_shaderColorIndex, m_r, m_g, m_b, m_a);
     glUniformMatrix4fv(windowInfo->m_shaderTransformIndex, 1, 0, m_transform.getMatrixTable()->data);
     TgRender::render(getTextureIndex());

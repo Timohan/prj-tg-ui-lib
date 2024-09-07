@@ -77,7 +77,7 @@ int TgMainWindow::initWindow()
  * main window's render
  *
  */
-bool TgMainWindow::render(const TgWindowInfo *)
+bool TgMainWindow::render(const TgWindowInfo *, float)
 {
     TG_FUNCTION_BEGIN();
     if (m_firstTimeRender) {
@@ -99,7 +99,7 @@ bool TgMainWindow::render(const TgWindowInfo *)
     m_mainwindowPrivate->checkPositionValuesTooltip(m_mainwindowPrivate->getWindowInfo());
     customRender();
     m_mainwindowPrivate->setup2DShaderToUniforms();
-    renderChildren(m_mainwindowPrivate->getWindowInfo());
+    renderChildren(m_mainwindowPrivate->getWindowInfo(), 1.0f);
     m_mainwindowPrivate->renderChildrenMenu(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderTooltip(m_mainwindowPrivate->getWindowInfo());
     m_mainwindowPrivate->renderEnd();

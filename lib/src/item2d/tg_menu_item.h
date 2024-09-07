@@ -57,7 +57,7 @@ private:
 
     explicit TgMenuItem(TgMenuItem *parentMenu, TgItem2d *parent, const char *text, const TgShortCut *shortCut);
 
-    void renderMenu(const TgWindowInfo *windowInfo);
+    void renderMenu(const TgWindowInfo *windowInfo, float parentOpacity);
     void hideSubMenuList();
     TgEventResult handleChildrenEventMenu(TgEventData *eventData, const TgWindowInfo *windowInfo);
 

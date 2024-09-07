@@ -37,7 +37,7 @@ class TgImagePrivate : protected TgRender
 public:
     explicit TgImagePrivate(const char *filename);
     ~TgImagePrivate();
-    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition);
+    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition, float opacity);
     void checkPositionValues(TgItem2d *currentItem);
     void setTextureST(float topLeftS, float topLeftT,
                       float topRightS, float topRightT,

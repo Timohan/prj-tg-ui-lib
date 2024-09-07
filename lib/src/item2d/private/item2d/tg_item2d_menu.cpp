@@ -433,7 +433,7 @@ void TgItem2dMenu::hideSubMenuList()
     TG_FUNCTION_END();
 }
 
-void TgItem2dMenu::renderMenu(const TgWindowInfo *windowInfo)
+void TgItem2dMenu::renderMenu(const TgWindowInfo *windowInfo, float parentOpacity)
 {
     TG_FUNCTION_BEGIN();
     m_mutexMenu.lock();
@@ -446,7 +446,7 @@ void TgItem2dMenu::renderMenu(const TgWindowInfo *windowInfo)
         if (!m_listChildrenMenu[i]->getVisible()) {
             break;
         }
-        m_listChildrenMenu[i]->renderChildren(windowInfo);
+        m_listChildrenMenu[i]->renderChildren(windowInfo, parentOpacity);
     }
     m_mutexMenu.unlock();
     TG_FUNCTION_END();
@@ -480,11 +480,11 @@ bool TgItem2dMenu::getTopMenu()
     return m_topMenu;
 }
 
-void TgItem2dMenu::renderChildrenMenu(const TgWindowInfo *windowInfo)
+void TgItem2dMenu::renderChildrenMenu(const TgWindowInfo *windowInfo, float parentOpacity)
 {
     m_mutexMenu.lock();
     for (size_t i=0;i<m_listChildrenMenu.size();i++) {
-        m_listChildrenMenu[i]->renderMenu(windowInfo);
+        m_listChildrenMenu[i]->renderMenu(windowInfo, parentOpacity);
     }
     m_mutexMenu.unlock();
 }

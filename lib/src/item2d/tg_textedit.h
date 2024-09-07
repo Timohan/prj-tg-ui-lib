@@ -62,7 +62,6 @@ public:
     float getTextHeight();
 protected:
     virtual TgEventResult handleEvent(TgEventData *eventData, const TgWindowInfo *windowInfo);
-    virtual bool render(const TgWindowInfo *windowInfo) override;
     virtual void checkPositionValues() override;
     virtual void onHoverChanged(bool);
     virtual void onDownChanged(bool down) override;

@@ -52,10 +52,13 @@ struct TgWindowInfo
      */
     int m_shaderColorIndex;
     /**
+     * shader's opacity of values index (uniform)
+     */
+    int m_shaderOpacityIndex;
+    /**
      * shader's max render of values index (uniform)
      */
     int m_maxRenderValues;
-
     /*!
      * min window width
      */

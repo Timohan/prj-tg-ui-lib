@@ -77,18 +77,6 @@ TgTextedit::~TgTextedit()
 }
 
 /*!
- * \brief TgTextedit::render
- *
- * \param windowInfo
- */
-bool TgTextedit::render(const TgWindowInfo *)
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return true;
-}
-
-/*!
  * \brief TgTextedit::checkPositionValues
  *
  * Checks position values before rendering starts

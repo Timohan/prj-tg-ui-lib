@@ -25,7 +25,7 @@ class TgRectanglePrivate : protected TgRender
 public:
     explicit TgRectanglePrivate(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
     ~TgRectanglePrivate();
-    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition);
+    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition, float opacity);
     void setColor(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
     void checkPositionValues(TgItem2d *currentItem);
 

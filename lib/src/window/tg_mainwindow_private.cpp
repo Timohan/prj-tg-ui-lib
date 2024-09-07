@@ -117,6 +117,7 @@ int TgMainWindowPrivate::initWindow(const char *windowTitle)
     m_windowInfo.m_shaderTransformIndex = glGetUniformLocation(m_shader2d.generalShader(), "vertex_transform" );
     m_windowInfo.m_shaderRenderTypeIndex = glGetUniformLocation(m_shader2d.generalShader(), "render_type" );
     m_windowInfo.m_shaderColorIndex = glGetUniformLocation(m_shader2d.generalShader(), "color" );
+    m_windowInfo.m_shaderOpacityIndex = glGetUniformLocation(m_shader2d.generalShader(), "opacity" );
     m_windowInfo.m_maxRenderValues = glGetUniformLocation(m_shader2d.generalShader(), "maxRenderValues" );
     TG_FUNCTION_END();
     return EXIT_SUCCESS;
@@ -289,6 +290,7 @@ bool TgMainWindowPrivate::setup2DShaderToUniforms()
     glUniformMatrix4fv( m_windowInfo.m_shaderTransformIndex, 1, 0, m_view.getMatrixTable()->data);
     glUniform1i( m_windowInfo.m_shaderRenderTypeIndex, 0);
     glUniform4f( m_windowInfo.m_shaderColorIndex, 0, 0, 0, 0);
+    glUniform1f( m_windowInfo.m_shaderOpacityIndex, 1.0f);
     glUniform4f( m_windowInfo.m_maxRenderValues, 0, 0,
                  static_cast<float>(m_windowInfo.m_windowWidth),
                  static_cast<float>(m_windowInfo.m_windowHeight));

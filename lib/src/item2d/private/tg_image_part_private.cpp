@@ -431,10 +431,11 @@ void TgImagePartPrivate::setTranform(TgItem2d *currentItem)
  * \param windowInfo
  * \param currentItem
  * \param itemPosition
+ * \param opacity
  * \return true if item was rendered, false if
  * item was not render because it was outside or invisible
  */
-bool TgImagePartPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition)
+bool TgImagePartPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition, float opacity)
 {
     TG_FUNCTION_BEGIN();
     if (!itemPosition->isRenderVisible(windowInfo)) {
@@ -447,6 +448,7 @@ bool TgImagePartPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *curren
                 currentItem->getXmaxOnVisible(windowInfo),
                 currentItem->getYmaxOnVisible(windowInfo));
     glUniform4f( windowInfo->m_shaderColorIndex, 1, 1, 1, 1);
+    glUniform1f( windowInfo->m_shaderOpacityIndex, opacity);
     glUniformMatrix4fv(windowInfo->m_shaderTransformIndex, 1, 0, m_transform.getMatrixTable()->data);
     glBindTexture(GL_TEXTURE_2D, getTextureIndex());
     if (TgImagePartType::TgImagePartType_Part9 == m_type) {

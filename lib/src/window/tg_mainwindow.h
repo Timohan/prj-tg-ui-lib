@@ -34,7 +34,7 @@ public:
     explicit TgMainWindow(int width, int height, const char *windowTitle, int minWidth = -1, int minHeight = -1, int maxWidth = -1, int maxHeight = -1);
     ~TgMainWindow();
 
-    virtual bool render(const TgWindowInfo *windowInfo) override;
+    virtual bool render(const TgWindowInfo *windowInfo, float parentOpacity) override;
     void exit();
 
     void setAllowedNumberMouseButtonCount(size_t allowedNumberMouseButtonDownCount);

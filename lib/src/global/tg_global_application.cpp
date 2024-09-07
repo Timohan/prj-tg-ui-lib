@@ -172,7 +172,7 @@ void TgGlobalApplication::render()
     std::vector<TgMainWindow *>::iterator it;
     m_mutex.lock();
     for (it=m_listMainWindow.begin();it!=m_listMainWindow.end();it++) {
-        (*it)->render(nullptr);
+        (*it)->render(nullptr, 1.0f);
     }
     m_mutex.unlock();
 }

@@ -38,7 +38,7 @@ public:
     uint32_t getImageHeight();
 
 protected:
-    virtual bool render(const TgWindowInfo *windowInfo) override;
+    virtual bool render(const TgWindowInfo *windowInfo, float parentOpacity) override;
     virtual void checkPositionValues() override;
 
 private:

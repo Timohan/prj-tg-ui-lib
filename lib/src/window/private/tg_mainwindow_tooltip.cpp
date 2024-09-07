@@ -167,8 +167,8 @@ void TgMainWindowTooltip::renderTooltip(const TgWindowInfo *windowInfo)
         m_mutexTooltip.unlock();
         return;
     }
-    m_background.render(windowInfo);
-    m_background.renderChildren(windowInfo);
+    m_background.render(windowInfo, 1.0f);
+    m_background.renderChildren(windowInfo, 1.0f);
     m_mutexTooltip.unlock();
     TG_FUNCTION_END();
 }

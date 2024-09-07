@@ -69,7 +69,7 @@ public:
     explicit TgItem2dPrivate(float x, float y, float width, float height, TgItem2d *parent, TgItem2d *current, bool topMenu);
     ~TgItem2dPrivate();
 
-    void renderChildren(const TgWindowInfo *windowInfo);
+    void renderChildren(const TgWindowInfo *windowInfo, float parentOpacity);
     void checkPositionValuesChildren(const TgWindowInfo *windowInfo);
     TgEventResult handleEventsChildren(TgEventData *eventData, const TgWindowInfo *windowInfo);
 
@@ -85,6 +85,8 @@ public:
     void deleteLater();
     bool getDeleteLater();
 
+    float getOpacity() const;
+    void setOpacity(float opacity);
 protected:
     std::vector<TgItem2d *>m_listChildrenItem;
     std::vector<TgItem2d *>m_listChildrenTopMenu;
@@ -95,6 +97,7 @@ private:
     TgItem2d *m_currentItem;
     bool m_deleting = false;
     bool m_deleteLater = false;
+    float m_opacity = 1.0f;
 
     void addChild(TgItem2d *child, bool topMenu);
     void sendMessageToChildren(const TgItem2dPrivateMessage *message, bool allowFunctionalityToThisItem = true);

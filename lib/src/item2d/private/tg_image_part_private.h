@@ -41,7 +41,7 @@ public:
     TgImagePartType getType() const;
     void setType(TgImagePartType type);
 
-    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition);
+    bool render(const TgWindowInfo *windowInfo, TgItem2d *currentItem, TgItem2dPosition *itemPosition, float opacity);
     void checkPositionValues(TgItem2d *currentItem);
 
     bool setImage(const char *filename);

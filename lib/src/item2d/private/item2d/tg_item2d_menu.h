@@ -32,14 +32,14 @@ public:
     TgMenuItem *getMenu(size_t index);
 
     bool getMenuVisible();
-    void renderMenu(const TgWindowInfo *windowInfo);
+    void renderMenu(const TgWindowInfo *windowInfo, float parentOpacity);
 
     TgEventResult handleEventItem2dMenu(TgEventData *eventData, const TgWindowInfo *windowInfo);
     void setTopMenu(bool topMenu);
     bool getTopMenu();
 
     void setMenuVisible(float x, float y, float w, const TgWindowInfo *windowInfo);
-    void renderChildrenMenu(const TgWindowInfo *windowInfo);
+    void renderChildrenMenu(const TgWindowInfo *windowInfo, float parentOpacity);
 
     void hideSubMenuList();
     TgEventResult handleChildrenEventMenu(TgEventData *eventData, const TgWindowInfo *windowInfo);

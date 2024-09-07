@@ -172,11 +172,11 @@ TgEventResult TgMenuItem::handleChildrenEventMenu(TgEventData *eventData, const 
  *
  * \param windowInfo
  */
-void TgMenuItem::renderMenu(const TgWindowInfo *windowInfo)
+void TgMenuItem::renderMenu(const TgWindowInfo *windowInfo, float parentOpacity)
 {
     TG_FUNCTION_BEGIN();
-    renderChildren(windowInfo);
-    TgItem2d::m_private->renderChildrenMenu(windowInfo);
+    renderChildren(windowInfo, parentOpacity);
+    TgItem2d::m_private->renderChildrenMenu(windowInfo, parentOpacity);
     TG_FUNCTION_END();
 }
 

@@ -98,7 +98,7 @@ void TgItem2dPrivate::addChild(TgItem2d *child, bool topMenu)
  *
  * renders all children
  */
-void TgItem2dPrivate::renderChildren(const TgWindowInfo *windowInfo)
+void TgItem2dPrivate::renderChildren(const TgWindowInfo *windowInfo, float parentOpacity)
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
@@ -107,13 +107,13 @@ void TgItem2dPrivate::renderChildren(const TgWindowInfo *windowInfo)
     }
     size_t i;
     for (i=0;i<m_listChildrenItem.size();i++) {
-        if (m_listChildrenItem[i]->render(windowInfo)) {
-            m_listChildrenItem[i]->renderChildren(windowInfo);
+        if (m_listChildrenItem[i]->render(windowInfo, parentOpacity)) {
+            m_listChildrenItem[i]->renderChildren(windowInfo, parentOpacity);
         }
     }
     for (i=0;i<m_listChildrenTopMenu.size();i++) {
-        m_listChildrenTopMenu[i]->render(windowInfo);
-        m_listChildrenTopMenu[i]->renderChildren(windowInfo);
+        m_listChildrenTopMenu[i]->render(windowInfo, parentOpacity);
+        m_listChildrenTopMenu[i]->renderChildren(windowInfo, parentOpacity);
     }
     TG_FUNCTION_END();
 }
@@ -465,3 +465,26 @@ bool TgItem2dPrivate::getDeleteLater()
 {
     return m_deleteLater;
 }
+
+float TgItem2dPrivate::getOpacity() const
+{
+    return m_opacity;
+}
+
+void TgItem2dPrivate::setOpacity(float opacity)
+{
+    TG_FUNCTION_BEGIN();
+    if (std::abs(m_opacity - opacity) <= 0) {
+        TG_FUNCTION_END();
+        return;
+    }
+    if (opacity < 0.0f || opacity > 1.0f) {
+        TG_WARNING_LOG("opacity", opacity, "is incorrect, opacity must be between 0.0f-1.0f");
+        TG_FUNCTION_END();
+        return;
+    }
+    m_opacity = opacity;
+    TgGlobalWaitRenderer::getInstance()->release();
+    TG_FUNCTION_END();
+}
+

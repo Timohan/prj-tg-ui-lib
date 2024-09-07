@@ -117,13 +117,15 @@ void TgButton::setImageAreaSize(float leftAreaSize, float topAreaSize, float rig
  *
  * Renders the image
  * \param windowInfo
+ * \param parentOpacity
  * \return true if item was rendered, false if
  * item was not render because it was outside or invisible
  */
-bool TgButton::render(const TgWindowInfo *)
+bool TgButton::render(const TgWindowInfo *, float)
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
+        TG_FUNCTION_END();
         return false;
     }
     TG_FUNCTION_END();

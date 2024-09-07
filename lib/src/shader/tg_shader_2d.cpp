@@ -44,6 +44,7 @@ const char *TgShader2d::m_fragShader = "" \
         "uniform sampler2D texture;" \
         "varying vec4 currentPosition;" \
         "uniform vec4 maxRenderValues;" \
+        "uniform float opacity;" \
         "void main()" \
         "{" \
         "   if (currentPosition.x < maxRenderValues.x || currentPosition.y < maxRenderValues.y || currentPosition.x > maxRenderValues.z || currentPosition.y > maxRenderValues.w) {" \
@@ -54,7 +55,7 @@ const char *TgShader2d::m_fragShader = "" \
         "           discard;" \
         "       }" \
         "       gl_FragColor = texture2D(texture, gl_TexCoord[0].xy);" \
-        "       gl_FragColor.a = gl_FragColor.b*color.w;"
+        "       gl_FragColor.a = gl_FragColor.b*color.w*opacity;"
         "       gl_FragColor.r = gl_FragColor.r*color.x;"
         "       gl_FragColor.g = gl_FragColor.g*color.y;"
         "       gl_FragColor.b = gl_FragColor.b*color.z;"
@@ -63,7 +64,7 @@ const char *TgShader2d::m_fragShader = "" \
         "       gl_FragColor.r = gl_FragColor.r*color.x;"
         "       gl_FragColor.g = gl_FragColor.g*color.y;"
         "       gl_FragColor.b = gl_FragColor.b*color.z;"
-        "       gl_FragColor.a = gl_FragColor.a*color.w;"
+        "       gl_FragColor.a = gl_FragColor.a*color.w*opacity;"
         "    }" \
         "}";
 /*!

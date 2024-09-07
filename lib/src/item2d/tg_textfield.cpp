@@ -44,7 +44,7 @@ TgTextfield::TgTextfield(TgItem2d *parent, const char *text, const char *fontFil
  * \brief TgTextfield::TgTextfield
  *
  * TgTextfield constructor
- * 
+ *
  * constructor to use AnchorRelativeToParent (check TgItem2D)
  * position is relative to parent
  *
@@ -83,17 +83,18 @@ TgTextfield::~TgTextfield()
  *
  * Renders the text
  * \param windowInfo
+ * \param parentOpacity
  * \return true if item was rendered, false if
  * item was not render because it was outside or invisible
  */
-bool TgTextfield::render(const TgWindowInfo *windowInfo)
+bool TgTextfield::render(const TgWindowInfo *windowInfo, float parentOpacity)
 {
     TG_FUNCTION_BEGIN();
     if (!getVisible()) {
         return false;
     }
     TG_FUNCTION_END();
-    return m_private->render(windowInfo, this, reinterpret_cast<TgItem2d *>(this)->m_private);
+    return m_private->render(windowInfo, this, reinterpret_cast<TgItem2d *>(this)->m_private, parentOpacity*getOpacity());
 }
 
 /*!

@@ -160,11 +160,14 @@ public:
 
     void setTooltip(const char *text, TgTextfieldHorizontalAlign align = TgTextfieldHorizontalAlign::AlignCenterH);
     void deleteLater();
+
+    float getOpacity() const;
+    void setOpacity(float opacity);
 protected:
-    virtual bool render(const TgWindowInfo *windowInfo);
+    virtual bool render(const TgWindowInfo *windowInfo, float parentOpacity);
     virtual void checkPositionValues();
 
-    void renderChildren(const TgWindowInfo *windowInfo);
+    void renderChildren(const TgWindowInfo *windowInfo, float parentOpacity);
     virtual void checkPositionValuesChildren(const TgWindowInfo *windowInfo);
 
     virtual void onEnabledChanged(bool enabled);

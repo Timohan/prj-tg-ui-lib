@@ -71,7 +71,7 @@ void TgMainWindowMenu::renderChildrenMenu(const TgWindowInfo *windowInfo)
     m_mutexMenu.lock();
     if (!m_listMenuItem.empty()) {
         for (size_t i=0;i<m_listMenuItem.size();i++) {
-            m_listMenuItem[i]->renderMenu(windowInfo);
+            m_listMenuItem[i]->renderMenu(windowInfo, 1.0f);
         }
     }
     m_mutexMenu.unlock();
