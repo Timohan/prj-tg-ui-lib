@@ -18,6 +18,8 @@
 #include "../../global/private/tg_global_deleter.h"
 #include "../../global/private/tg_global_wait_renderer.h"
 #include "tg_menu_item_private.h"
+#include "../../font/text/tg_text_parse_utf8.h"
+#include "../../window/tg_mainwindow_private.h"
 
 TgComboBoxPrivate::TgComboBoxPrivate(TgItem2d *currentItem) :
     m_currentItem(currentItem),
@@ -317,7 +319,7 @@ TgMenuItem *TgComboBoxPrivate::getMenuItem(size_t index)
  * \return true if set was correct, false if index is larger than
  * number of items in the list
  */
-bool TgComboBoxPrivate::setCurrentIndex(size_t index, bool useLock, bool forceSendChangeIndex)
+bool TgComboBoxPrivate::setCurrentIndex(size_t index, bool useLock, bool forceSendChangeIndex, const TgWindowInfo *windowInfo)
 {
     TG_FUNCTION_BEGIN();
     if (useLock) {
@@ -345,6 +347,21 @@ bool TgComboBoxPrivate::setCurrentIndex(size_t index, bool useLock, bool forceSe
         TgMenuItem *menuItem = getMenuItem(index);
         if (menuItem) {
             std::vector<TgMenuItem *>::iterator it;
+            if (windowInfo) {
+                if (menuItem->getVisible()) {
+                    if (menuItem->getY() < 0) {
+                        float moveMenuY = menuItem->getY();
+                        for (it=m_listItems.begin();it!=m_listItems.end();it++) {
+                            (*it)->setY((*it)->getY() - moveMenuY);
+                        }
+                    } else if (menuItem->getY() + menuItem->getHeight() >= static_cast<float>(windowInfo->m_windowHeight)) {
+                        float moveMenuY = menuItem->getY() + menuItem->getHeight() - static_cast<float>(windowInfo->m_windowHeight);
+                        for (it=m_listItems.begin();it!=m_listItems.end();it++) {
+                            (*it)->setY((*it)->getY() - moveMenuY);
+                        }
+                    }
+                }
+            }
             for (it=m_listItems.begin();it!=m_listItems.end();it++) {
                 if (menuItem == (*it)) {
                     (*it)->setBackgroundColor(200,
@@ -365,6 +382,46 @@ bool TgComboBoxPrivate::setCurrentIndex(size_t index, bool useLock, bool forceSe
     }
     TG_FUNCTION_END();
     return true;
+}
+
+/**
+ * @brief is similar name - used for set current index by item name compare
+ *
+ * @param itemName combobox's item text must be similar name
+ * @param itemText combobox's item text
+ * @return true
+ * @return false
+ */
+bool TgComboBoxPrivate::isSimilarName(const std::string &itemName, const std::string &itemText)
+{
+    TgTextParseUtf8::TextParseResult result = TgTextParseUtf8::compareText(itemName, itemText, m_selectNameCaseSensitive);
+    return result == TgTextParseUtf8::TextParseResult::TextIsEqual
+        || result == TgTextParseUtf8::TextParseResult::TextIsSameBeginBut0IsSmallerSize;
+}
+
+/**
+ * @brief set current index by itemName
+ *
+ * if there was no index to select by item name, then it doesn't select any
+ *
+ * @param itemName
+ */
+void TgComboBoxPrivate::setCurrentIndex(const std::string &itemName, const TgWindowInfo *windowInfo)
+{
+    std::string itemText;
+    size_t i, c = getItemCount(false);
+    size_t currentIndex = m_selectedIndex+1;
+    for (i=1;i<c;i++) {
+        if (currentIndex == c) {
+            currentIndex = 0;
+        }
+        itemText = getItemText(currentIndex, false);
+        if (isSimilarName(itemName, itemText)) {
+            setCurrentIndex(currentIndex, false, true, windowInfo);
+            return;
+        }
+        currentIndex++;
+    }
 }
 
 /*!
@@ -520,6 +577,22 @@ TgEventResult TgComboBoxPrivate::handleEventComboBox(TgEventData *eventData, con
         && m_currentItem->getEnabled()) {
         if (getCurrentIndex() > 0) {
             setCurrentIndex(getCurrentIndex()-1, false, false);
+        }
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return TgEventResult::EventResultCompleted;
+    }
+    if (eventData->m_type == TgEventType::EventTypeCharacterCallback
+        && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
+        && eventData->m_event.m_keyEvent.m_key != 32
+        && eventData->m_event.m_keyEvent.m_key != 9
+        && m_currentItem->getVisible()
+        && m_currentItem->getSelected()
+        && m_currentItem->getEnabled()) {
+        char newCharacter[5];
+        TgTextParseUtf8::generateCharactedIndexToUtf8(eventData->m_event.m_keyEvent.m_key, newCharacter);
+        if (newCharacter[0] != '\0') {
+            setCurrentIndex(newCharacter, windowInfo);
         }
         m_mutex.unlock();
         TG_FUNCTION_END();

@@ -23,6 +23,7 @@
 #include "../../window/tg_mainwindow_private.h"
 #include "../../global/private/tg_global_wait_renderer.h"
 #include "item2d/tg_item2d_position.h"
+#include "../../font/text/tg_text_parse_utf8.h"
 
 TgTextfieldPrivate::TgTextfieldPrivate(TgItem2d *currentItem,
                                        const char *text, const char *fontFile, float fontSize,
@@ -634,14 +635,14 @@ void TgTextfieldPrivate::editText(std::vector<uint32_t>&listAddCharacter, const 
         t.m_textColorR = m_listCharacter.at(0).m_r;
         t.m_textColorG = m_listCharacter.at(0).m_g;
         t.m_textColorB = m_listCharacter.at(0).m_b;
-        TgFontGlyphCache::generateCharactedIndexToUtf8(m_listCharacter.at(0).m_character, utf8Character);
+        TgTextParseUtf8::generateCharactedIndexToUtf8(m_listCharacter.at(0).m_character, utf8Character);
         t.m_text = utf8Character;
 
         for (i=1;i<m_listCharacter.size();i++) {
             if (t.m_textColorR == m_listCharacter.at(i).m_r
                 && t.m_textColorG == m_listCharacter.at(i).m_g
                 && t.m_textColorB == m_listCharacter.at(i).m_b) {
-                TgFontGlyphCache::generateCharactedIndexToUtf8(m_listCharacter.at(i).m_character, utf8Character);
+                TgTextParseUtf8::generateCharactedIndexToUtf8(m_listCharacter.at(i).m_character, utf8Character);
                 t.m_text += utf8Character;
                 continue;
             }
@@ -649,7 +650,7 @@ void TgTextfieldPrivate::editText(std::vector<uint32_t>&listAddCharacter, const 
             t.m_textColorR = m_listCharacter.at(i).m_r;
             t.m_textColorG = m_listCharacter.at(i).m_g;
             t.m_textColorB = m_listCharacter.at(i).m_b;
-            TgFontGlyphCache::generateCharactedIndexToUtf8(m_listCharacter.at(i).m_character, utf8Character);
+            TgTextParseUtf8::generateCharactedIndexToUtf8(m_listCharacter.at(i).m_character, utf8Character);
             t.m_text = utf8Character;
         }
         m_listText.push_back(t);

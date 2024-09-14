@@ -50,22 +50,6 @@ TgMenuItem *TgMenuTopPrivate::addMenu(const char *text, const TgShortCut *shortC
         ret->setX(item->getX()+item->getWidth());
     }
 
-/*
-    bool visible = getMenuVisible();
-    m_mutexMenu.lock();
-    TgMenuItem *ret = new TgMenuItem(parentMenuItem, nullptr, text, shortCut);
-    if (m_topMenu) {
-        ret->m_private->setMenuType(TgMenuItemPrivate::MenuType::MenuType_TopDropDownMenu);
-    } else if (subMenu) {
-        ret->m_private->setMenuType(TgMenuItemPrivate::MenuType::MenuType_SubMenu);
-    }
-    ret->setVisible(true);
-    reinterpret_cast<TgItem2d *>(ret)->m_private->parentVisibleChanged(visible);
-    m_listChildrenMenu.push_back(ret);
-    m_mutexMenu.unlock();
-    return m_listChildrenMenu.back();
-    */
-
     m_mutex.unlock();
     return ret;
 }

@@ -93,6 +93,10 @@ font_cache_SRCDIR:=$(CURRENT_DIR)src/font/cache
 font_cache_SRCS:=$(wildcard $(font_cache_SRCDIR)/*.cpp)
 font_cache_OBJS:=$(font_cache_SRCS:.cpp=.o)
 
+font_text_SRCDIR:=$(CURRENT_DIR)src/font/text
+font_text_SRCS:=$(wildcard $(font_text_SRCDIR)/*.cpp)
+font_text_OBJS:=$(font_text_SRCS:.cpp=.o)
+
 event_SRCDIR:=$(CURRENT_DIR)src/event
 event_SRCS:=$(wildcard $(event_SRCDIR)/*.cpp)
 event_OBJS:=$(event_SRCS:.cpp=.o)
@@ -140,8 +144,8 @@ CXXFLAGS+=-DPRINT_ALL_ITEMS=0
 
 all: default
 
-default: $(render_OBJS) $(image_draw_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
-	$(CCX) $(render_OBJS) $(image_draw_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
+default: $(render_OBJS) $(font_text_OBJS) $(image_draw_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS)
+	$(CCX) $(render_OBJS) $(font_text_OBJS) $(image_draw_OBJS) $(item2d_private_gridview_OBJS) $(global_private_OBJS) $(font_cache_OBJS) $(window_private_OBJS) $(mainwindow_window_manager_OBJS) $(application_OBJS) $(item2d_private_item2d_OBJS) $(item2d_private_mouse_capture_OBJS) $(common_OBJS) $(event_OBJS) $(font_OBJS) $(global_OBJS) $(window_OBJS) $(shader_OBJS) $(item2d_OBJS) $(item2d_private_OBJS) $(math_OBJS) $(image_OBJS) $(LDFLAGS) -o $(TARGET)
 
 $(mainwindow_window_manager_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
@@ -197,6 +201,9 @@ $(font_OBJS):%.o: %.cpp
 $(font_cache_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
+$(font_text_OBJS):%.o: %.cpp
+	$(CCX) $(CXXFLAGS) -c $< -o $@
+
 $(event_OBJS):%.o: %.cpp
 	$(CCX) $(CXXFLAGS) -c $< -o $@
 
@@ -225,6 +232,7 @@ clean:
 	rm -f src/common/*.o
 	rm -f $(window_private_SRCDIR)/*.o
 	rm -f $(image_draw_SRCDIR)/*.o
+	rm -f $(font_text_SRCDIR)/*.o
 	rm -f src/render/*.o
 	rm -f *.so
 
@@ -252,7 +260,7 @@ $(PKGCONFIGDIR)/$(PKGCONFIGFILE).pc:
 	@echo "includedir=\$${prefix}/include/prj-tg-ui-lib" >> $@
 	@echo "" >> $@
 	@echo "Name: prj-tg-ui-lib" >> $@
-	@echo "Description: prj-tg-ui-lib lib parses ttf" >> $@
+	@echo "Description: prj-tg-ui-lib opengl GUI lib" >> $@
 	@echo "Version: $(VERSION)" >> $@
 	@echo "Cflags: -I\$${includedir}" >> $@
 	@echo "Libs: -L\$${libdir} -lprj-tg-ui-lib -Wl,--rpath=\$${libdir}" >> $@

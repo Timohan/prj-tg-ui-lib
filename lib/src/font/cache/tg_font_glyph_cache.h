@@ -45,7 +45,6 @@ public:
     void getTextPosition(TgFontText *fontText, size_t cursorPosition, float &positionX);
     size_t getTextCharacterIndex(TgFontText *fontText, const float x);
 
-    static void generateCharactedIndexToUtf8(uint32_t character, char text[5]);
 private:
     std::vector<TgFontInfo *>m_listCachedFont;
     TgFontInfo *isFontCached(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize);
