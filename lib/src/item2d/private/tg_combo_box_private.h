@@ -53,6 +53,7 @@ private:
     size_t m_selectedIndex = 0;
     bool m_buttonDown = false;
     bool m_selectNameCaseSensitive = false;
+    size_t m_menuItemDeletedCount = 0;     /*!< number of menu items, that is going to deleted but not yet removed from the list */
     TgImagePart m_backgroundImageLeft;
     TgImagePart m_backgroundImageRight;
     TgTextfield m_textField;

@@ -91,22 +91,38 @@ void TgComboBoxPrivate::addItemText(const char *text, size_t index)
     size_t cmp_index = 0;
     bool indexAddIsBeforeCurrentIndex = true;
     bool needHideTheList = false;
-    for (size_t i=0;i<m_listItems.size();i++) {
-        if (reinterpret_cast<TgItem2d *>(m_listItems[i])->m_private->getDeleting()) {
-            continue;
-        }
-        if (m_listItems[i]->m_private->getMenuRendering()) {
+    if (m_menuItemDeletedCount == 0) {
+        if (!m_listItems.empty()
+            && m_listItems.front()->m_private->getMenuRendering()) {
             needHideTheList = true;
         }
-        if (cmp_index == index) {
+        if (m_listItems.size() > index) {
+            if (index > m_selectedIndex) {
+                indexAddIsBeforeCurrentIndex = false;
+            }
             menuItem = new TgMenuItem(nullptr, nullptr, text, &shortCut);
-            m_listItems.insert(m_listItems.begin()+i, menuItem);
-            break;
-        }
-        if (cmp_index == m_selectedIndex) {
+            m_listItems.insert(m_listItems.begin()+index, menuItem);
+        } else {
             indexAddIsBeforeCurrentIndex = false;
         }
-        cmp_index++;
+    } else {
+        for (size_t i=0;i<m_listItems.size();i++) {
+            if (reinterpret_cast<TgItem2d *>(m_listItems[i])->m_private->getDeleting()) {
+                continue;
+            }
+            if (m_listItems[i]->m_private->getMenuRendering()) {
+                needHideTheList = true;
+            }
+            if (cmp_index == index) {
+                menuItem = new TgMenuItem(nullptr, nullptr, text, &shortCut);
+                m_listItems.insert(m_listItems.begin()+i, menuItem);
+                break;
+            }
+            if (cmp_index == m_selectedIndex) {
+                indexAddIsBeforeCurrentIndex = false;
+            }
+            cmp_index++;
+        }
     }
     if (!menuItem) {
         menuItem = new TgMenuItem(nullptr, nullptr, text, &shortCut);
@@ -197,19 +213,25 @@ std::string TgComboBoxPrivate::getItemText(size_t index, bool useLock)
  */
 size_t TgComboBoxPrivate::getItemCount(bool useLock)
 {
+    TG_FUNCTION_BEGIN();
     size_t ret = 0;
     if (useLock) {
         m_mutex.lock();
     }
-    for (size_t i=0;i<m_listItems.size();i++) {
-        if (reinterpret_cast<TgItem2d *>(m_listItems[i])->m_private->getDeleting()) {
-            continue;
+    if (m_menuItemDeletedCount == 0) {
+        ret = m_listItems.size();
+    } else {
+        for (size_t i=0;i<m_listItems.size();i++) {
+            if (reinterpret_cast<TgItem2d *>(m_listItems[i])->m_private->getDeleting()) {
+                continue;
+            }
+            ret++;
         }
-        ret++;
     }
     if (useLock) {
         m_mutex.unlock();
     }
+    TG_FUNCTION_END();
     return ret;
 }
 
@@ -242,6 +264,7 @@ bool TgComboBoxPrivate::removeItemText(size_t index)
     }
     TgGlobalDeleter::getInstance()->addComboBoxMenu(this, menuItem);
     reinterpret_cast<TgItem2d *>(menuItem)->m_private->setDeleting();
+    m_menuItemDeletedCount++;
 
     if (index <= getCurrentIndex()) {
         if (getCurrentIndex() > 0 && getItemCount(false) > 0) {
@@ -267,6 +290,7 @@ void TgComboBoxPrivate::deleteMenu(TgMenuItem *item)
     size_t i;
     for (i=0;i<m_listItems.size();i++) {
         if (m_listItems[i] == item) {
+            m_menuItemDeletedCount--;
             delete m_listItems[i];
             m_listItems.erase(m_listItems.begin()+i);
             break;
@@ -296,16 +320,25 @@ size_t TgComboBoxPrivate::getCurrentIndex() const
 TgMenuItem *TgComboBoxPrivate::getMenuItem(size_t index)
 {
     TG_FUNCTION_BEGIN();
-    size_t cmp_index = 0;
-    for (size_t i=0;i<m_listItems.size();i++) {
-        if (reinterpret_cast<TgItem2d *>(m_listItems[i])->m_private->getDeleting()) {
-            continue;
+    if (m_menuItemDeletedCount != 0) {
+        size_t cmp_index = 0;
+        for (size_t i=0;i<m_listItems.size();i++) {
+            if (reinterpret_cast<TgItem2d *>(m_listItems[i])->m_private->getDeleting()) {
+                continue;
+            }
+            if (cmp_index == index) {
+                return m_listItems[i];
+            }
+            cmp_index++;
         }
-        if (cmp_index == index) {
-            return m_listItems[i];
-        }
-        cmp_index++;
+        TG_FUNCTION_END();
+        return nullptr;
     }
+    if (m_listItems.size() > index) {
+        TG_FUNCTION_END();
+        return m_listItems[index];
+    }
+
     TG_FUNCTION_END();
     return nullptr;
 }
