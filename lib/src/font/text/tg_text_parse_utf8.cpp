@@ -208,6 +208,11 @@ TgTextParseUtf8::TextParseResult TgTextParseUtf8::compareText(const char *text0,
     return TgTextParseUtf8::TextParseResult::TextIsEqual;
 }
 
+/**
+ * @brief remove the last character (utf8)
+ *
+ * @param text [in/out] remove last character
+ */
 void TgTextParseUtf8::removeLastCharacter(std::string &text)
 {
     uint32_t character;
