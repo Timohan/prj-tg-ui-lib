@@ -677,10 +677,18 @@ TgEventResult TgComboBoxPrivate::handleEventComboBox(TgEventData *eventData, con
         return TgEventResult::EventResultCompleted;
     }
 
-/*if ((eventData->m_type == TgEventType::EventTypeKeyPress || eventData->m_type == TgEventType::EventTypeKeyRepeat)
-if (eventData->m_event.m_keyEvent.m_key == 0
-                   && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_Key_Backspace)
-                   */
+    if (m_keyPressAddsCharacterToSelectNext
+        && (eventData->m_type == TgEventType::EventTypeKeyPress || eventData->m_type == TgEventType::EventTypeKeyRepeat)
+        && eventData->m_event.m_keyEvent.m_key == 0
+        && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_Key_Backspace
+        && m_currentItem->getVisible()
+        && m_currentItem->getSelected()
+        && m_currentItem->getEnabled()) {
+        TgTextParseUtf8::removeLastCharacter(m_textToSelect);
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return TgEventResult::EventResultCompleted;
+    }
 
     if (eventData->m_type == TgEventType::EventTypeCharacterCallback
         && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
