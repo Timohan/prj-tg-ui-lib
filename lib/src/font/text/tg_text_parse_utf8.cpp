@@ -207,3 +207,63 @@ TgTextParseUtf8::TextParseResult TgTextParseUtf8::compareText(const char *text0,
     }
     return TgTextParseUtf8::TextParseResult::TextIsEqual;
 }
+
+void TgTextParseUtf8::removeLastCharacter(std::string &text)
+{
+    uint32_t character;
+    uint32_t characterSize = 0;
+    switch (text.size()) {
+        case 0:
+            break;
+        case 1:
+            text.clear();
+            break;
+        case 2:
+            convertNextUtf8CharacterToUtf32(text.c_str(), &character, &characterSize);
+            if (characterSize == 2) {
+                text.clear();
+                break;
+            }
+            text.pop_back();
+            break;
+        case 3:
+            convertNextUtf8CharacterToUtf32(text.c_str()+2, &character, &characterSize);
+            if (characterSize == 1) {
+                text.pop_back();
+                break;
+            }
+            convertNextUtf8CharacterToUtf32(text.c_str()+1, &character, &characterSize);
+            if (characterSize == 2) {
+                text.pop_back();
+                text.pop_back();
+                break;
+            }
+            text.clear();
+            break;
+        default:
+            convertNextUtf8CharacterToUtf32(text.c_str()+text.size()-1, &character, &characterSize);
+            if (characterSize == 1) {
+                text.pop_back();
+                break;
+            }
+            convertNextUtf8CharacterToUtf32(text.c_str()+text.size()-2, &character, &characterSize);
+            if (characterSize == 2) {
+                text.pop_back();
+                text.pop_back();
+                break;
+            }
+            convertNextUtf8CharacterToUtf32(text.c_str()+text.size()-3, &character, &characterSize);
+            if (characterSize == 3) {
+                text.pop_back();
+                text.pop_back();
+                text.pop_back();
+                break;
+            }
+            text.pop_back();
+            text.pop_back();
+            text.pop_back();
+            text.pop_back();
+            break;
+    }
+
+}

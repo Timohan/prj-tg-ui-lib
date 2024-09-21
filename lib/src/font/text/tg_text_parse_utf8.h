@@ -33,6 +33,8 @@ public:
     static void generateCharactedIndexToUtf8(uint32_t character, char newCharacter[5]);
     static bool convertNextUtf8CharacterToUtf32(const char *text, uint32_t *character, uint32_t *characterSize);
 
+    static void removeLastCharacter(std::string &text);
+
 private:
     static TextParseResult compareText(const char *text0, const char *text1, size_t textSize0, size_t textSize1, bool caseSensitive);
 };

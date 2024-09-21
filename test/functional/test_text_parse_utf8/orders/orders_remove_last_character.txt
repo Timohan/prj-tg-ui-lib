@@ -1,0 +1,14 @@
+FromText: a
+ToText:
+FromText:
+ToText:
+FromText: ab
+ToText: a
+FromText: abc
+ToText: ab
+FromText: abcd
+ToText: abc
+FromText: abcde
+ToText: abcd
+
+

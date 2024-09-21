@@ -3,6 +3,8 @@
 #include <fstream>
 #include "../../../../lib/src/font/text/tg_text_parse_utf8.h"
 
+int testRemoveLastCharacter();
+
 static void removeEndOfLineMarks(std::string &text)
 {
     while (1) {
@@ -101,6 +103,53 @@ int main(int argc , char *argv[])
             }
         }
     }
+    if (testRemoveLastCharacter() == 1) {
+        return 1;
+    }
+//void TgTextParseUtf8::removeLastCharacter(std::string &text)
     std::cout << "All tests OK\n";
+    return 0;
+}
+
+int testRemoveLastCharacter()
+{
+    std::ifstream ordersFile(ORDERS_FILE);
+    std::string line;
+    std::string fromText;
+    std::string toText;
+    int32_t lineIndex = 0;
+    if (ordersFile.is_open()) {
+        while (std::getline(ordersFile, line)) {
+            lineIndex++;
+            if (line.front() == '#') {
+                continue;
+            }
+            removeEndOfLineMarks(line);
+            if (line.compare(0, strlen("FromText: "), "FromText: ") == 0) {
+                fromText = line.substr(strlen("FromText: "));
+                continue;
+            }
+            if (line == "FromText:") {
+                fromText.clear();
+            }
+            if (line.compare(0, strlen("ToText: "), "ToText: ") == 0) {
+                toText = line.substr(strlen("ToText: "));
+                TgTextParseUtf8::removeLastCharacter(fromText);
+                if (toText != fromText) {
+                    std::cout << "Incorrect removeLastCharacter, should be: " << toText << " Line: " << lineIndex << std::endl;
+                    return 1;
+                }
+                continue;
+            }
+            if (line == "ToText:") {
+                TgTextParseUtf8::removeLastCharacter(fromText);
+                if (!fromText.empty()) {
+                    std::cout << "Incorrect removeLastCharacter, should be: " << toText << " Line: " << lineIndex << std::endl;
+                    return 1;
+                }
+                continue;
+            }
+        }
+    }
     return 0;
 }

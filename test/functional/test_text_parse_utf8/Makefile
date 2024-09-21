@@ -34,6 +34,8 @@ text_parse_utf8_OBJS:=$(text_parse_utf8_SRCS:.cpp=.o)
 
 ORDERS_FILE=$(CURRENT_DIR)orders/orders.txt
 CXXFLAGS+=-DORDERS_FILE=\"$(ORDERS_FILE)\"
+ORDERS_FILE=$(CURRENT_DIR)orders/orders_remove_last_character.txt
+CXXFLAGS+=-DORDERS_FILE_REMOVE_LAST_CHARACTER=\"$(ORDERS_FILE)\"
 
 all: default
 
