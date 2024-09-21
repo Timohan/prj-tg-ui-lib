@@ -10,5 +10,69 @@ FromText: abcd
 ToText: abc
 FromText: abcde
 ToText: abcd
+FromText: ü
+ToText:
+FromText: aü
+ToText: a
+FromText: abü
+ToText: ab
+FromText: abcü
+ToText: abc
+FromText: abcdü
+ToText: abcd
+FromText: üa
+ToText: ü
+FromText: aüb
+ToText: aü
+FromText: abüc
+ToText: abü
+FromText: abcüd
+ToText: abcü
+FromText: abcdüd
+ToText: abcdü
+
+FromText: 🀁
+ToText:
+FromText: a🀁
+ToText: a
+FromText: ab🀁
+ToText: ab
+FromText: abc🀁
+ToText: abc
+FromText: abcd🀁
+ToText: abcd
+FromText: 🀁a
+ToText: 🀁
+FromText: a🀁b
+ToText: a🀁
+FromText: ab🀁c
+ToText: ab🀁
+FromText: abc🀁d
+ToText: abc🀁
+FromText: abcd🀁d
+ToText: abcd🀁
+
+FromText: 𗫨
+ToText:
+FromText: a𗫨
+ToText: a
+FromText: ab𗫨
+ToText: ab
+FromText: abc𗫨
+ToText: abc
+FromText: abcd𗫨
+ToText: abcd
+FromText: 𗫨a
+ToText: 𗫨
+FromText: a𗫨b
+ToText: a𗫨
+FromText: ab𗫨c
+ToText: ab𗫨
+FromText: abc𗫨d
+ToText: abc𗫨
+FromText: abcd𗫨d
+ToText: abcd𗫨
+
+
 
 
