@@ -237,8 +237,8 @@ void TgTextParseUtf8::removeLastCharacter(std::string &text)
                 text.pop_back();
                 break;
             }
-            convertNextUtf8CharacterToUtf32(text.c_str()+1, &character, &characterSize);
-            if (characterSize == 2) {
+            if (convertNextUtf8CharacterToUtf32(text.c_str()+1, &character, &characterSize)
+                && characterSize == 2) {
                 text.pop_back();
                 text.pop_back();
                 break;
@@ -251,14 +251,14 @@ void TgTextParseUtf8::removeLastCharacter(std::string &text)
                 text.pop_back();
                 break;
             }
-            convertNextUtf8CharacterToUtf32(text.c_str()+text.size()-2, &character, &characterSize);
-            if (characterSize == 2) {
+            if (convertNextUtf8CharacterToUtf32(text.c_str()+text.size()-2, &character, &characterSize)
+                && characterSize == 2) {
                 text.pop_back();
                 text.pop_back();
                 break;
             }
-            convertNextUtf8CharacterToUtf32(text.c_str()+text.size()-3, &character, &characterSize);
-            if (characterSize == 3) {
+            if (convertNextUtf8CharacterToUtf32(text.c_str()+text.size()-3, &character, &characterSize)
+                && characterSize == 3) {
                 text.pop_back();
                 text.pop_back();
                 text.pop_back();
