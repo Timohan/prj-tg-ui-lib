@@ -195,3 +195,32 @@ void TgComboBox::disconnectOnSelectedIndexChanged()
     m_private->disconnectOnSelectedIndexChanged();
     TG_FUNCTION_END();
 }
+
+/**
+ * @brief gets key press on selected combobox adds chracter to select next item
+ *
+ * @return true press 'a' and then 'b'. Combobox goes to next item that starts with "ab".
+ * @return false press 'a' and then 'b'. Combobox goes to next item that starts with "b"
+ */
+bool TgComboBox::getKeyPressAddsCharacterToSelectNext() const
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return m_private->getKeyPressAddsCharacterToSelectNext();
+}
+
+/**
+ * @brief sets key press on selected combobox adds chracter to select next item
+ *
+ * press 'a' and then 'b'.
+ * if true, combobox goes to next item that starts with "ab".
+ * if false, combobox goes to next item that starts with "b".
+ *
+ * @param keyPressAddsCharacterToSelectNext
+ */
+void TgComboBox::setKeyPressAddsCharacterToSelectNext(bool keyPressAddsCharacterToSelectNext)
+{
+    TG_FUNCTION_BEGIN();
+    m_private->setKeyPressAddsCharacterToSelectNext(keyPressAddsCharacterToSelectNext);
+    TG_FUNCTION_END();
+}

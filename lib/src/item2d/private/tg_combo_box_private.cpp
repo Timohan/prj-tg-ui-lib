@@ -74,6 +74,45 @@ TgComboBoxPrivate::~TgComboBoxPrivate()
     m_mutex.unlock();
 }
 
+/**
+ * @brief gets key press on selected combobox adds chracter to select next item
+ *
+ * @return true press 'a' and then 'b'. Combobox goes to next item that starts with "ab".
+ * @return false press 'a' and then 'b'. Combobox goes to next item that starts with "b"
+ */
+bool TgComboBoxPrivate::getKeyPressAddsCharacterToSelectNext() const
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    bool ret = m_keyPressAddsCharacterToSelectNext;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+    return ret;
+}
+
+/**
+ * @brief sets key press on selected combobox adds chracter to select next item
+ *
+ * press 'a' and then 'b'.
+ * if true, combobox goes to next item that starts with "ab".
+ * if false, combobox goes to next item that starts with "b".
+ *
+ * @param keyPressAddsCharacterToSelectNext
+ */
+void TgComboBoxPrivate::setKeyPressAddsCharacterToSelectNext(bool keyPressAddsCharacterToSelectNext)
+{
+    TG_FUNCTION_BEGIN();
+    m_mutex.lock();
+    if (m_keyPressAddsCharacterToSelectNext == keyPressAddsCharacterToSelectNext) {
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return;
+    }
+    m_keyPressAddsCharacterToSelectNext = keyPressAddsCharacterToSelectNext;
+    m_mutex.unlock();
+    TG_FUNCTION_END();
+}
+
 /*!
  * \brief TgComboBoxPrivate::addItemText
  *

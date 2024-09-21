@@ -58,6 +58,8 @@ public:
     bool setCurrentIndex(size_t index);
     void connectOnSelectedIndexChanged(std::function<void(size_t)> selectedIndexChanged);
     void disconnectOnSelectedIndexChanged();
+    bool getKeyPressAddsCharacterToSelectNext() const;
+    void setKeyPressAddsCharacterToSelectNext(bool keyPressAddsCharacterToSelectNext);
 
 protected:
     virtual void onHoverChanged(bool hover) override;
