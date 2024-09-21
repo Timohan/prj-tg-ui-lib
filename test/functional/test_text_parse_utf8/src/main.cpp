@@ -106,7 +106,6 @@ int main(int argc , char *argv[])
     if (testRemoveLastCharacter() == 1) {
         return 1;
     }
-//void TgTextParseUtf8::removeLastCharacter(std::string &text)
     std::cout << "All tests OK\n";
     return 0;
 }
