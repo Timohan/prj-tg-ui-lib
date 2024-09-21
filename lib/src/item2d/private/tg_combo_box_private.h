@@ -57,6 +57,7 @@ private:
     bool m_selectNameCaseSensitive = false;
     size_t m_menuItemDeletedCount = 0;     /*!< number of menu items, that is going to deleted but not yet removed from the list */
     bool m_keyPressAddsCharacterToSelectNext = false; /*!< press 'a' and then 'b' again: if false - combobox goes to next item 'b', if true - combobox goes to next item 'ab' */
+    std::string m_textToSelect;
     TgImagePart m_backgroundImageLeft;
     TgImagePart m_backgroundImageRight;
     TgTextfield m_textField;
