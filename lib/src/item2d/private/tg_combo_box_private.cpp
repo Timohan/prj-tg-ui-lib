@@ -656,15 +656,20 @@ TgEventResult TgComboBoxPrivate::handleEventComboBox(TgEventData *eventData, con
     }
     if (eventData->m_type == TgEventType::EventTypeCharacterCallback
         && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
-        && eventData->m_event.m_keyEvent.m_key != 32
-        && eventData->m_event.m_keyEvent.m_key != 9
+        && (eventData->m_event.m_keyEvent.m_key != 32 || m_keyPressAddsCharacterToSelectNext)
+        && (eventData->m_event.m_keyEvent.m_key != 9 || m_keyPressAddsCharacterToSelectNext)
         && m_currentItem->getVisible()
         && m_currentItem->getSelected()
         && m_currentItem->getEnabled()) {
         char newCharacter[5];
         TgTextParseUtf8::generateCharactedIndexToUtf8(eventData->m_event.m_keyEvent.m_key, newCharacter);
         if (newCharacter[0] != '\0') {
-            setCurrentIndex(newCharacter, windowInfo);
+            if (m_keyPressAddsCharacterToSelectNext) {
+                m_textToSelect += newCharacter;
+                setCurrentIndex(m_textToSelect.c_str(), windowInfo);
+            } else {
+                setCurrentIndex(newCharacter, windowInfo);
+            }
         }
         m_mutex.unlock();
         TG_FUNCTION_END();
