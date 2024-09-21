@@ -108,6 +108,7 @@ void TgComboBoxPrivate::setKeyPressAddsCharacterToSelectNext(bool keyPressAddsCh
         TG_FUNCTION_END();
         return;
     }
+    m_textToSelect.clear();
     m_keyPressAddsCharacterToSelectNext = keyPressAddsCharacterToSelectNext;
     m_mutex.unlock();
     TG_FUNCTION_END();
@@ -675,6 +676,12 @@ TgEventResult TgComboBoxPrivate::handleEventComboBox(TgEventData *eventData, con
         TG_FUNCTION_END();
         return TgEventResult::EventResultCompleted;
     }
+
+/*if ((eventData->m_type == TgEventType::EventTypeKeyPress || eventData->m_type == TgEventType::EventTypeKeyRepeat)
+if (eventData->m_event.m_keyEvent.m_key == 0
+                   && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_Key_Backspace)
+                   */
+
     if (eventData->m_type == TgEventType::EventTypeCharacterCallback
         && eventData->m_event.m_keyEvent.m_pressReleaseKey == TgPressReleaseKey::PressReleaseKey_NormalKey
         && eventData->m_event.m_keyEvent.m_key == 32
