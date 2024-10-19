@@ -104,7 +104,7 @@ TgFontInfo *TgFontGlyphCache::generateCacheForText(const std::vector<uint32_t> &
         return nullptr;
     }
 
-    std::vector<uint32_t> newListCharacters = std::move(listCharacters);
+    std::vector<uint32_t> newListCharacters = listCharacters;
     for (uint32_t i=0;i<list_additonal_characters_size;i++) {
         if (std::find(newListCharacters.begin(), newListCharacters.end(), list_additonal_characters[i]) == newListCharacters.end()
             && TgGlobalApplication::getInstance()->getFontCharactersCache()->isCharacterForThisFont(list_additonal_characters[i], fontFile) ) {

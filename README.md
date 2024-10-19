@@ -17,6 +17,8 @@ prj-ttf-reader from https://github.com/Timohan/prj-ttf-reader
 
 If using glfw, required library is also: libglfw3-dev
 
+On Ubuntu 24.04, you may also need: fonts-freefont-ttf
+
 ### Build and Installation
 
 cd lib  
