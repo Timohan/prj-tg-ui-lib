@@ -16,7 +16,8 @@
 #include "tg_item2d_private.h"
 
 TgItem2dTooltip::TgItem2dTooltip(TgItem2dPrivate *currentItemPrivate) :
-    m_currentItem(currentItemPrivate)
+    m_currentItem(currentItemPrivate),
+    m_text("")
 {
 }
 
@@ -80,6 +81,7 @@ void TgItem2dTooltip::handleEventToolTip(TgEventData *eventData, const TgWindowI
             TG_FUNCTION_END();
             return;
         }
+       // TG_DEBUG_LOG(m_text, static_cast<int>(eventData->m_event.m_mouseEvent.m_x), static_cast<int>(eventData->m_event.m_mouseEvent.m_y));
         TgGlobalTooltip::getInstance()->setTooltip(m_text,
                                                    static_cast<int>(eventData->m_event.m_mouseEvent.m_x),
                                                    static_cast<int>(eventData->m_event.m_mouseEvent.m_y),
