@@ -32,10 +32,10 @@ inline void tgLog(Args&&... args)
 #ifdef TG_GLOBAL_LOG_ENABLED
 
 #if TG_GLOBAL_LOG_LEVEL == 0
-#define FUNCTION_BEGIN() \
+#define TG_FUNCTION_BEGIN() \
     std::cout << __PRETTY_FUNCTION__ << " " << __LINE__ << " Begin" << std::endl;
 
-#define FUNCTION_END() \
+#define TG_FUNCTION_END() \
     std::cout << __PRETTY_FUNCTION__ << " " << __LINE__ << " End" << std::endl;
 #else
 #define TG_FUNCTION_BEGIN()
