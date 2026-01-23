@@ -83,21 +83,6 @@ TgFontGlyphCache *TgGlobalApplication::getFontGlyphCache()
 }
 
 /*!
- * \brief TgGlobalApplication::getFontGlyphCacheData
- *
- * get font glyph cache (data)
- *
- * \return global font glyph cache (data)
- */
-TgFontGlyphCacheData *TgGlobalApplication::getFontGlyphCacheData()
-{
-    TG_FUNCTION_BEGIN();
-    TG_FUNCTION_END();
-    return &m_fontGlyphCacheData;
-}
-
-
-/*!
  * \brief TgGlobalApplication::getFontCharactersCache
  *
  * get font characters cache
@@ -124,6 +109,20 @@ TgFontDefault *TgGlobalApplication::getFontDefault()
     TG_FUNCTION_BEGIN();
     TG_FUNCTION_END();
     return &m_fontDefault;
+}
+
+/*!
+ * \brief TgGlobalApplication::getFontTextureCache
+ *
+ * get font texture cache
+ *
+ * \return global font texture cache
+ */
+TgFontTextureCache *TgGlobalApplication::getFontTextureCache()
+{
+    TG_FUNCTION_BEGIN();
+    TG_FUNCTION_END();
+    return &m_fontTextureCache;
 }
 
 /*!

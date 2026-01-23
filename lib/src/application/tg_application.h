@@ -14,6 +14,7 @@
 
 #include <GL/glew.h>
 #include <string>
+#include <vector>
 #include "../global/tg_global_macros.h"
 
 struct TgApplicationPrivate;
@@ -37,6 +38,8 @@ public:
     size_t getFontCount();
     size_t setFont(const std::string &fullFilePathFont, size_t position);
     std::string getFont(size_t i);
+    bool loadCharactersToCache(const char *filename, const std::vector<uint32_t> listCharacters, const float fontSize);
+
 private:
     TgApplicationPrivate *m_private;
 };

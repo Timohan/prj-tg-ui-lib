@@ -256,7 +256,6 @@ bool TgComboBoxPrivate::removeItemText(size_t index)
         m_mutex.unlock();
         return false;
     }
-    TG_DEBUG_LOG("Removing combobox item index: ", index);
     if (menuItem->m_private->getMenuRendering()) {
         TgItem2dPrivateMessage msgHideTheList;
         msgHideTheList.m_type = TgItem2dPrivateMessageType::EventHideTheList;

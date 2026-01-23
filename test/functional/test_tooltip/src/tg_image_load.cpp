@@ -139,3 +139,55 @@ unsigned char *TgImageLoad::generateImageData(const png_bytep *rowPointers, int 
     }
     return ret;
 }
+
+bool TgImageLoad::savePng(const char* filename, int width, int height, std::vector<uint8_t>& data)
+{
+    FILE* fp = fopen(filename, "wb");
+    if (!fp) return false;
+
+    // 1. Initialize write structure
+    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    if (!png_ptr) {
+        fclose(fp);
+        return false;
+    }
+
+    // 2. Initialize info structure
+    png_infop info_ptr = png_create_info_struct(png_ptr);
+    if (!info_ptr) {
+        png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+        fclose(fp);
+        return false;
+    }
+
+    // 3. Set up error handling (required by libpng's use of setjmp)
+    if (setjmp(png_jmpbuf(png_ptr))) {
+        png_destroy_write_struct(&png_ptr, &info_ptr);
+        fclose(fp);
+        return false;
+    }
+
+    png_init_io(png_ptr, fp);
+
+    // 4. Set image attributes (8-bit color depth, RGB)
+    png_set_IHDR(png_ptr, info_ptr, width, height,
+                 8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+                 PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+
+    png_write_info(png_ptr, info_ptr);
+
+    // 5. Write pixel data
+    // libpng expects an array of pointers to each row
+    std::vector<png_bytep> row_pointers(height);
+    for (int y = 0; y < height; y++) {
+        row_pointers[y] = &data[y * width * 3];
+    }
+
+    png_write_image(png_ptr, row_pointers.data());
+    png_write_end(png_ptr, NULL);
+
+    // 6. Cleanup
+    png_destroy_write_struct(&png_ptr, &info_ptr);
+    fclose(fp);
+    return true;
+}

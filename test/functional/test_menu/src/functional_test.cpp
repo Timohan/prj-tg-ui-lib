@@ -93,7 +93,7 @@ void FunctionalTest::start()
                     std::this_thread::sleep_for(std::chrono::milliseconds( 100 ) );
                     break;
                 case RemoveMenu:
-                    m_mainWindow->removeMenu( m_testOrders.getTestOrder(i)->m_listNumber.at(0), m_testOrders.getTestOrder(i)->m_listNumber.at(1) );
+                    m_mainWindow->removeMenuMainWindow( m_testOrders.getTestOrder(i)->m_listNumber.at(0), m_testOrders.getTestOrder(i)->m_listNumber.at(1) );
                     std::this_thread::sleep_for(std::chrono::milliseconds( m_testOrders.getTestOrder(i)->m_listNumber.at(2)) );
                     break;
                 case getMouseCursorOnHover:

@@ -16,6 +16,8 @@ PKGCONFIGDIR:=$(LIBDIR)/pkgconfig
 PKGCONFIGFILE:=prj-tg-ui-lib
 CCX:=$(if $(CCX),$(CCX),g++)
 PKGFLAGS=`pkg-config --cflags --libs prj-ttf-reader`
+PKGFLAGS+=`pkg-config --cflags --libs prj-tg-font-cache-lib`
+PKGFLAGS+=`pkg-config --cflags --libs prj-tg-font-draw-helper-lib`
 CXXFLAGS+=$(PKGFLAGS)
 CXXFLAGS+=-Wuninitialized -Wconversion -Wshadow -Wpointer-arith \
 	-Wswitch-default -Wswitch-enum -Wcast-align \

@@ -269,6 +269,7 @@ void TgGridViewPrivate::setRowCount(size_t row)
         setGridCellsPositions();
         setSliderVisibilityAndPosition();
         TgGlobalWaitRenderer::getInstance()->renderUnlock();
+        TgGlobalWaitRenderer::getInstance()->release();
         TG_FUNCTION_END();
         return;
     }
@@ -325,6 +326,7 @@ void TgGridViewPrivate::setRowCount(size_t row)
     setSliderVisibilityAndPosition();
     static_cast<TgItem2d *>(m_currentItem)->setPositionChanged(true);
     TgGlobalWaitRenderer::getInstance()->renderUnlock();
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
@@ -356,6 +358,7 @@ void TgGridViewPrivate::setColumCount(size_t column)
         setGridCellsPositions();
         setSliderVisibilityAndPosition();
         TgGlobalWaitRenderer::getInstance()->renderUnlock();
+        TgGlobalWaitRenderer::getInstance()->release();
         TG_FUNCTION_END();
         return;
     }
@@ -414,6 +417,7 @@ void TgGridViewPrivate::setColumCount(size_t column)
     setSliderVisibilityAndPosition();
     static_cast<TgItem2d *>(m_currentItem)->setPositionChanged(true);
     TgGlobalWaitRenderer::getInstance()->renderUnlock();
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 

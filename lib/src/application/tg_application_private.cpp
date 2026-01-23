@@ -149,3 +149,29 @@ std::string TgApplicationPrivate::getFont(size_t i)
 {
     return TgGlobalApplication::getInstance()->getFontDefault()->getFont(i);
 }
+
+/**
+ * \brief TgApplicationPrivate::loadCharactersToCache
+ * loads glyph characters into cache
+ *
+ * when glyph characters are first time used, they will be loaded to cache always
+ * but this will improve speed of using the character first time.
+ *
+ * \param filename full file path of the ttf file, if nullptr then uses default font
+ * \param listCharacters list of characters that will be loaded into cache
+ * \param fontSize font size of the character
+ * \return true if loading was success
+ */
+bool TgApplicationPrivate::loadCharactersToCache(const char *filename, const std::vector<uint32_t> &listCharacters, const float &fontSize)
+{
+    if (filename) {
+        return TgGlobalApplication::getInstance()->getFontGlyphCache()->loadCharactersToCache(filename, listCharacters, fontSize);
+    }
+    if (TgGlobalApplication::getInstance()->getFontDefault()->getFontCount() == 0) {
+        TG_ERROR_LOG("Font count is 0");
+        return false;
+    }
+    return TgGlobalApplication::getInstance()->getFontGlyphCache()->loadCharactersToCache(
+                TgGlobalApplication::getInstance()->getFontDefault()->getFont(0).c_str(),
+                listCharacters, fontSize);
+}

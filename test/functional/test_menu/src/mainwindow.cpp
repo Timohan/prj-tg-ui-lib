@@ -184,7 +184,7 @@ TgItem2d *MainWindow::getItem2d(size_t i)
     return nullptr;
 }
 
-void MainWindow::removeMenu(size_t i, size_t indexToRemove)
+void MainWindow::removeMenuMainWindow(size_t i, size_t indexToRemove)
 {
     switch (i) {
         case 1:

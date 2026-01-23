@@ -9,6 +9,7 @@
 TARGET:=test_text_app
 CXX:=$(if $(CXX),$(CXX),g++)
 PKGFLAGS=`pkg-config --cflags --libs prj-tg-ui-lib`
+PKGFLAGS+=`pkg-config --cflags --libs prj-tg-font-draw-helper-lib`
 CXXFLAGS+=-g -Wall -pedantic -c -pipe -std=gnu++11 -W -D_REENTRANT -fPIC
 CXXFLAGS+=-I./src
 CXXFLAGS+=$(PKGFLAGS)

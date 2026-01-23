@@ -15,6 +15,7 @@
 #include "tg_font_text.h"
 #include "tg_font_text_generator.h"
 #include "../global/tg_global_log.h"
+#include <cmath>
 
 /*!
  * \brief TgFontMath::getFontWidthHeight
@@ -32,57 +33,69 @@
  * \param maxLineWidth [in] max line width
  * \return true on success
  */
-bool TgFontMath::getFontWidthHeight(const std::vector<TgTextFieldText> &listText, float fontSize, const std::string &mainFontFile,
+bool TgFontMath::getFontWidthHeight(const std::vector<TgTextFieldText> &listText, const float fontSize, const std::string &mainFontFile,
                                     float &textWidth, float &textHeight, float &allDrawTextHeight, const uint32_t maxLineCount, const float maxLineWidth,
                                     const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine)
 {
-    textWidth = 0;
-    textHeight = 0;
-    allDrawTextHeight = 0;
-    if (listText.empty()) {
-        return true;
-    }
-
-    TgFontText *fontText = TgFontTextGenerator::generateFontTextInfo(listText, mainFontFile.c_str());
-    if (!fontText) {
+    std::vector<uint32_t> listCharacters;
+    TgFontTextGenerator::getCharacters(listText, listCharacters);
+    if (listCharacters.empty()) {
+        textWidth = 0;
+        textHeight = 0;
+        allDrawTextHeight = 0;
         return false;
     }
-    fontText->generateFontTextInfoGlyphs(fontSize, true);
-    if (TgCharacterPositions::generateTextCharacterPositioning(fontText, maxLineCount, maxLineWidth, wordWrap, allowBreakLineGoOverMaxLine)) {
-        textWidth = fontText->getTextWidth();
-        textHeight = fontText->getFontHeight();
-        allDrawTextHeight = fontText->getAllDrawTextHeight();
-    }
-    fontText->clearCacheValues(true);
-    delete fontText;
-    return true;
-}
+    std::vector<std::string> listFontFiles;
+    listFontFiles.push_back(mainFontFile);
 
-
-bool TgFontMath::getFontWidthHeightCacheWithoutRender(const std::vector<TgTextFieldText> &listText, float fontSize, const std::string &mainFontFile,
-                                    float &textWidth, float &textHeight, float &allDrawTextHeight, const uint32_t maxLineCount, const float maxLineWidth,
-                                    const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine)
-{
-    textWidth = 0;
-    textHeight = 0;
-    allDrawTextHeight = 0;
-    if (listText.empty()) {
-        return true;
-    }
-
-    std::vector<std::string> listFontFiles = TgFontDefault::getFontFiles(mainFontFile);
-    std::vector<TgFontTextCharacterInfo> listCharacter = TgFontTextGenerator::generateCharacterList(listText, listFontFiles);
-    if (listCharacter.empty()) {
-        return true;
-    }
-
-    std::vector<TgFontInfoData *> listFontInfo;
-    TgFontText::generateFontTextInfoGlyphsData(fontSize, listCharacter, listFontInfo, listFontFiles);
-
-    if (TgCharacterPositions::calculateTextWidthHeight(listFontInfo, listCharacter, maxLineCount, maxLineWidth, wordWrap, allowBreakLineGoOverMaxLine, textWidth, textHeight, allDrawTextHeight)) {
-        for (size_t i=0;i<listFontInfo.size();i++) {
-            TgGlobalApplication::getInstance()->getFontGlyphCacheData()->addCache(listFontInfo[i]);
+    const std::vector<std::string> allListFontFiles = TgGlobalApplication::getInstance()->getFontDefault()->getListFont();
+    for (const std::string &s : allListFontFiles) {
+        if (std::find(listFontFiles.begin(), listFontFiles.end(), s) == listFontFiles.end()) {
+            listFontFiles.push_back(s);
         }
+    }
+    std::vector<PrjTgFontDrawHelperData> listHelperCharacters;
+    TgGlobalApplication::getInstance()->getFontGlyphCache()->loadCharacters(listCharacters,
+                                      listFontFiles,
+                                      fontSize,
+                                      maxLineCount, maxLineWidth,
+                                      wordWrap, allowBreakLineGoOverMaxLine,
+                                      listHelperCharacters,
+                                      textHeight);
+
+    if (!listHelperCharacters.empty()) {
+        textWidth = 0;
+        size_t lineIndex = listHelperCharacters.at(0).m_lineIndex;
+        int endPosition = 0;
+        for (size_t i=0;i<listHelperCharacters.size();i++) {
+            if (maxLineCount > 0 && maxLineCount <= lineIndex) {
+                continue;
+            }
+            if (listHelperCharacters.at(i).m_lineIndex == lineIndex) {
+                if (listHelperCharacters.at(i).m_character != ' '
+                    && listHelperCharacters.at(i).m_character != '\n'
+                    && listHelperCharacters.at(i).m_character != '\r') {
+                    endPosition = listHelperCharacters.at(i).m_glyphDrawX + listHelperCharacters.at(i).m_glyphOnImageDataWidth;
+                }
+            } else {
+                if (textWidth < static_cast<float>(endPosition)) {
+                    textWidth = static_cast<float>(endPosition);
+                }
+                lineIndex = listHelperCharacters.at(i).m_lineIndex;
+                endPosition = listHelperCharacters.at(i).m_glyphDrawX + listHelperCharacters.at(i).m_glyphOnImageDataWidth;
+            }
+        }
+        if (textWidth < static_cast<float>(endPosition)) {
+            textWidth = static_cast<float>(endPosition);
+        }
+        if (maxLineCount > lineIndex || maxLineCount == 0) {
+            allDrawTextHeight = static_cast<float>(std::ceil(textHeight + static_cast<float>(lineIndex)*static_cast<float>(std::ceil(textHeight*1.5f))));
+        } else {
+            allDrawTextHeight = static_cast<float>(std::ceil(textHeight + static_cast<float>(maxLineCount-1)*static_cast<float>(std::ceil(textHeight*1.5f))));
+        }
+    } else {
+        textWidth = 0;
+        allDrawTextHeight = 0;
     }
     return true;
 }

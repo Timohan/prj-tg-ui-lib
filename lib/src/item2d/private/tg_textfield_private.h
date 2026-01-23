@@ -14,7 +14,6 @@
 
 #include "../../image/tg_image_assets.h"
 #include "../../math/tg_matrix4x4.h"
-#include "../../font/tg_character_positions.h"
 #include <string>
 #include <mutex>
 #include "../tg_textfield.h"

@@ -124,3 +124,20 @@ std::string TgApplication::getFont(size_t i)
 {
     return m_private->getFont(i);
 }
+
+/**
+ * \brief TgApplication::loadCharactersToCache
+ * loads glyph characters into cache
+ *
+ * when glyph characters are first time used, they will be loaded to cache always
+ * but this will improve speed of using the character first time.
+ *
+ * \param filename full file path of the ttf file, if nullptr then uses default font
+ * \param listCharacters list of characters that will be loaded into cache
+ * \param fontSize font size of the character
+ * \return true if loading was success
+ */
+bool TgApplication::loadCharactersToCache(const char *filename, const std::vector<uint32_t> listCharacters, const float fontSize)
+{
+    return m_private->loadCharactersToCache(filename, listCharacters, fontSize);
+}

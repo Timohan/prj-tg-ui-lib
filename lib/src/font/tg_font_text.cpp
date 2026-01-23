@@ -22,10 +22,16 @@ TgFontText::TgFontText() :
     m_textWidth(0),
     m_visibleTopY(0),
     m_visibleBottomY(0),
-    m_allLineCount(0)
+    m_allLineCount(0),
+    m_fontInfo(nullptr)
 {
-
 }
+
+TgFontText::~TgFontText()
+{
+    clearCacheValues(true);
+}
+
 /*!
  * \brief TgFontText::setFontFileNames
  *
@@ -92,6 +98,7 @@ void TgFontText::addCharacter(std::vector<TgFontTextCharacterInfo>&listCharacter
  *
  * \return get count of characters in this text
  */
+
 size_t TgFontText::getCharacterCount()
 {
     return m_listCharacter.size();
@@ -141,110 +148,60 @@ std::vector<uint32_t> TgFontText::getCharactersByFontFileNameIndex(int32_t fontF
  * \param fontSize
  * \param onlyForCalculation if true, then this TgFontInfo is not set into cache
  */
-void TgFontText::generateFontTextInfoGlyphs(float fontSize, bool onlyForCalculation)
+void TgFontText::generateFontTextInfoGlyphs(float fontSize, const uint32_t maxLineCount,
+                                            const float maxLineWidth, const TgTextFieldWordWrap wordWrap,
+                                            const bool allowBreakLineGoOverMaxLine)
 {
+    size_t i;
     TgFontInfo *fontInfo;
-    size_t i, indexToUse;
-    std::vector<bool> characterUsed;
-    characterUsed.resize(getCharacterCount(), false);
     m_mutex.lock();
     clearCacheValues(false);
-    m_listFontInfo.resize(getCharacterCount(), nullptr);
-    bool added;
+    m_listLineWidth.clear();
 
-    while (1) {
-        indexToUse = characterUsed.size();
-        for (i=0;i<characterUsed.size();i++) {
-            if (!characterUsed[i]) {
-                indexToUse = i;
-                break;
-            }
-        }
-        if (indexToUse == characterUsed.size()) {
-            break;
-        }
-
-        fontInfo = nullptr;
-        if (m_listCharacter[indexToUse].m_fontFileNameIndex != -1) {
-            std::vector<uint32_t> listCharacters = getCharactersByFontFileNameIndex(m_listCharacter[indexToUse].m_fontFileNameIndex, m_listCharacter);
-            fontInfo = TgGlobalApplication::getInstance()->getFontGlyphCache()->generateCacheForText(listCharacters,
-                                        m_listFontFileNames.at( getCharacter(indexToUse)->m_fontFileNameIndex ).c_str(),
-                                        fontSize, onlyForCalculation);
-        }
-
-        added = false;
-        for (i=0;i<characterUsed.size();i++) {
-            if (getCharacter(i)->m_fontFileNameIndex == getCharacter(indexToUse)->m_fontFileNameIndex) {
-                characterUsed[i] = true;
-                m_listFontInfo[i] = fontInfo;
-                added = true;
-            }
-        }
-        if (!added) {
-            if (fontInfo->m_data) {
-                prj_ttf_reader_clear_data(&fontInfo->m_data);
-            }
-            delete fontInfo;
-        }
+    std::vector<uint32_t> listCharacters;
+    for (i=0;i<m_listCharacter.size();i++) {
+        listCharacters.push_back(m_listCharacter[i].m_character);
     }
+    fontInfo = TgGlobalApplication::getInstance()->getFontGlyphCache()->generateCacheForText(listCharacters,
+                                    m_listFontFileNames,
+                                    fontSize, maxLineCount, maxLineWidth,
+                                    wordWrap, allowBreakLineGoOverMaxLine);
+    if (fontInfo && !fontInfo->m_glyphDrawX.empty()) {
+        size_t lineIndex = fontInfo->m_lineIndex.at(0);
+        int endPosition = 0;
+        for (i=0;i<fontInfo->m_glyphDrawX.size();i++) {
+            if (maxLineCount > 0 && maxLineCount <= fontInfo->m_lineIndex.at(i)) {
+                m_listCharacter[i].m_positionX = 0;
+                m_listCharacter[i].m_positionY = 0;
+                m_listCharacter[i].m_lineNumber = 0;
+                m_listCharacter[i].m_draw = false;
+                continue;
+            }
+            m_listCharacter[i].m_positionX = static_cast<float>(fontInfo->m_glyphDrawX.at(i));
+            m_listCharacter[i].m_positionY = static_cast<float>(fontInfo->m_glyphDrawY.at(i));
+            m_listCharacter[i].m_lineNumber = fontInfo->m_lineIndex.at(i);
+            if (fontInfo->m_lineIndex.at(i) == lineIndex) {
+                if (fontInfo->m_listCharacter.at(i) != ' '
+                    && fontInfo->m_listCharacter.at(i) != '\n'
+                    && fontInfo->m_listCharacter.at(i) != '\r') {
+                    endPosition = fontInfo->m_glyphDrawX.at(i) + fontInfo->m_glyphPixelWidth.at(i);
+                }
+            } else {
+                setListLinesWidth(lineIndex, static_cast<float>(endPosition));
+                lineIndex = fontInfo->m_lineIndex.at(i);
+                endPosition = fontInfo->m_glyphDrawX.at(i) + fontInfo->m_glyphPixelWidth.at(i);
+            }
+        }
+        setListLinesWidth(lineIndex, static_cast<float>(endPosition));
+        if (maxLineCount > 0  && maxLineCount <= lineIndex) {
+            setAllLineCount(static_cast<uint32_t>(maxLineCount));
+        } else {
+            setAllLineCount(static_cast<uint32_t>(lineIndex+1));
+        }
+        setTextWidth(static_cast<float>(fontInfo->m_glyphDrawX.back() + fontInfo->m_glyphPixelWidth.back()));
+    }
+    m_fontInfo = fontInfo;
     m_mutex.unlock();
-}
-
-/*!
- * \brief TgFontText::generateFontTextInfoGlyphsData
- *
- * generates m_listFontInfo for this text
- * which font textures contains these glyphs in the text
- * this is for data cache only
- *
- * \param fontSize
- */
-void TgFontText::generateFontTextInfoGlyphsData(float fontSize, std::vector<TgFontTextCharacterInfo>&listCharacter,
-                                                std::vector<TgFontInfoData *>&listFontInfo,
-                                                std::vector<std::string> &listFontFiles)
-{
-    TgFontInfoData *fontInfo;
-    size_t i, indexToUse;
-    std::vector<bool> characterUsed;
-    characterUsed.resize(listCharacter.size(), false);
-    listFontInfo.resize(listCharacter.size(), nullptr);
-    bool added;
-
-    while (1) {
-        indexToUse = characterUsed.size();
-        for (i=0;i<characterUsed.size();i++) {
-            if (!characterUsed[i]) {
-                indexToUse = i;
-                break;
-            }
-        }
-        if (indexToUse == characterUsed.size()) {
-            break;
-        }
-
-        fontInfo = nullptr;
-        if (listCharacter[indexToUse].m_fontFileNameIndex != -1) {
-            std::vector<uint32_t> listCharacters = getCharactersByFontFileNameIndex(listCharacter[indexToUse].m_fontFileNameIndex, listCharacter);
-            fontInfo = TgGlobalApplication::getInstance()->getFontGlyphCacheData()->generateCacheForText(listCharacters,
-                                        listFontFiles.at( listCharacter[indexToUse].m_fontFileNameIndex ).c_str(),
-                                        fontSize);
-        }
-
-        added = false;
-        for (i=0;i<characterUsed.size();i++) {
-            if (listCharacter[i].m_fontFileNameIndex == listCharacter[indexToUse].m_fontFileNameIndex) {
-                characterUsed[i] = true;
-                listFontInfo[i] = fontInfo;
-                added = true;
-            }
-        }
-        if (!added) {
-            if (fontInfo->m_data) {
-                prj_ttf_reader_clear_data(&fontInfo->m_data);
-            }
-            delete fontInfo;
-        }
-    }
 }
 
 /*!
@@ -255,31 +212,13 @@ void TgFontText::generateFontTextInfoGlyphsData(float fontSize, std::vector<TgFo
  */
 void TgFontText::clearCacheValues(bool useLock)
 {
-    size_t i, i2;
-    std::vector<size_t>listToDelete;
     if (useLock) {
         m_mutex.lock();
     }
-    for (i=0;i<m_listFontInfo.size();i++) {
-        if (!m_listFontInfo[i]
-            || m_listFontInfo[i]->m_addedToCache
-            || !m_listFontInfo[i]->m_data) {
-            continue;
-        }
-        for (i2=i+1;i2<m_listFontInfo.size();i2++) {
-            if (m_listFontInfo[i2]
-                && m_listFontInfo[i2]->m_data
-                && m_listFontInfo[i]->m_data == m_listFontInfo[i2]->m_data) {
-                m_listFontInfo[i2]->m_addedToCache = true;
-            }
-        }
-        prj_ttf_reader_clear_data(&m_listFontInfo[i]->m_data);
-        listToDelete.insert(listToDelete.begin(), i);
+    if (m_fontInfo && !m_fontInfo->m_addedToCache) {
+        delete m_fontInfo;
+        m_fontInfo = nullptr;
     }
-    for (i=0;i<listToDelete.size();i++) {
-        delete m_listFontInfo[listToDelete[i]];
-    }
-    m_listFontInfo.clear();
     if (useLock) {
         m_mutex.unlock();
     }
@@ -293,12 +232,9 @@ void TgFontText::clearCacheValues(bool useLock)
  * \param i index of font info
  * \return
  */
-TgFontInfo *TgFontText::getFontInfo(size_t i)
+TgFontInfo *TgFontText::getFontInfo()
 {
-    if (m_listFontInfo.size() <= i) {
-        return nullptr;
-    }
-    return m_listFontInfo[i];
+    return m_fontInfo;
 }
 
 /*!
@@ -340,13 +276,8 @@ float TgFontText::getFontHeight()
 {
     float ret = 0;
     m_mutex.lock();
-    size_t i, c = m_listFontInfo.size();
-    for (i=0;i<c;i++) {
-        if (m_listFontInfo[i]) {
-            if (ret < m_listFontInfo[i]->m_fontHeight) {
-                ret = m_listFontInfo[i]->m_fontHeight;
-            }
-        }
+    if (ret < m_fontInfo->m_fontHeight) {
+        ret = m_fontInfo->m_fontHeight;
     }
     m_mutex.unlock();
     return static_cast<float>(ret);
@@ -359,7 +290,7 @@ float TgFontText::getFontHeight()
  */
 float TgFontText::getLineHeight()
 {
-    return static_cast<float>(std::ceil(getFontHeight()*1.5f));
+    return static_cast<float>(std::ceil(getFontHeight()*PRJ_TG_FONT_DRAW_HELPER_LINE_HEIGHT_MULTIPLIER));
 }
 
 /*!
@@ -403,16 +334,6 @@ void TgFontText::setAllLineCount(uint32_t lineCount)
 uint32_t TgFontText::getAllLineCount()
 {
     return m_allLineCount;
-}
-
-/*!
- * \brief TgFontText::clearListLinesWidth
- *
- * clears all widths of lines
- */
-void TgFontText::clearListLinesWidth()
-{
-    m_listLineWidth.clear();
 }
 
 /*!

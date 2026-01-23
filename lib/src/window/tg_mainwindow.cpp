@@ -87,8 +87,8 @@ bool TgMainWindow::render(const TgWindowInfo *, float)
 
     m_mainwindowPrivate->setupViewForRender();
     m_mainwindowPrivate->startHandleEvents();
-    TgGlobalWaitRenderer::getInstance()->renderLock();
     m_mainwindowPrivate->handleEvents();
+    TgGlobalWaitRenderer::getInstance()->renderLock();
     m_mainwindowPrivate->startRendering(m_mainwindowPrivate->getWindowInfo());
     if (TgGlobalDeleter::getInstance()->removeItems()) {
         m_mainwindowPrivate->hideList();

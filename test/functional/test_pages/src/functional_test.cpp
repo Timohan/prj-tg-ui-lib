@@ -442,8 +442,8 @@ bool FunctionalTest::makeEditTextTest()
         return false;
     }
     h =  m_mainWindow->getTextEdit()->getTextHeight();
-    if (static_cast<int>(h) != 19) {
-        TG_ERROR_LOG("Getting text width is incorrect ", h);
+    if (static_cast<int>(h) != 17) {
+        TG_ERROR_LOG("Getting text height is incorrect ", h);
         return false;
     }
 
@@ -454,8 +454,8 @@ bool FunctionalTest::makeEditTextTest()
         return false;
     }
     h =  m_mainWindow->getTextEdit()->getTextHeight();
-    if (static_cast<int>(h) != 19) {
-        TG_ERROR_LOG("Getting text width is incorrect ", h);
+    if (static_cast<int>(h) != 17) {
+        TG_ERROR_LOG("Getting text height is incorrect ", h);
         return false;
     }
 
@@ -490,8 +490,8 @@ bool FunctionalTest::makeEditTextTest()
     }
 
     h =  m_mainWindow->getTextEdit()->getTextHeight();
-    if (static_cast<int>(h) != 17) {
-        TG_ERROR_LOG("Getting text height is incorrect ", h);
+    if (static_cast<int>(h) != 16) {
+        TG_ERROR_LOG("Getting text height is incorrect ", h, static_cast<int>(h));
         return false;
     }
 
@@ -502,14 +502,14 @@ bool FunctionalTest::makeEditTextTest()
     }
 
     w =  m_mainWindow->getTextEdit()->getTextWidth();
-    if (static_cast<int>(w) != 37) {
+    if (static_cast<int>(w) != 38) {
         TG_ERROR_LOG("Getting text width is incorrect ", w);
         return false;
     }
 
     sleep(1);
     w =  m_mainWindow->getTextEdit()->getTextWidth();
-    if (static_cast<int>(w) != 37) {
+    if (static_cast<int>(w) != 38) {
         TG_ERROR_LOG("Getting text width is incorrect ", w);
         return false;
     }

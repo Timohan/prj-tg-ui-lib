@@ -16,16 +16,16 @@
 #include <string>
 #include "../item2d/tg_textfield.h"
 
+//#define FONT_HEIGHT_MULTIPLIER  1.5f
+
 class TgFontMath
 {
 public:
     TgFontMath();
-    static bool getFontWidthHeight(const std::vector<TgTextFieldText> &listText, float fontSize, const std::string &mainFontFile,
-                                  float &textWidth, float &textHeight, float &allDrawTextHeight, const uint32_t maxLineCount, const float maxLineWidth,
-                                  const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine);
-    static bool getFontWidthHeightCacheWithoutRender(const std::vector<TgTextFieldText> &listText, float fontSize, const std::string &mainFontFile,
-                                  float &textWidth, float &textHeight, float &allDrawTextHeight, const uint32_t maxLineCount, const float maxLineWidth,
-                                  const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine);
+
+    static bool getFontWidthHeight(const std::vector<TgTextFieldText> &listText, const float fontSize, const std::string &mainFontFile,
+                                   float &textWidth, float &textHeight, float &allDrawTextHeight, const uint32_t maxLineCount, const float maxLineWidth,
+                                   const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine);
 private:
 };
 

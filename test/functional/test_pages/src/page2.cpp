@@ -160,7 +160,7 @@ float Page2::getAllDrawHeight(int index)
  */
 void Page2::onButtonChangeTextClick(TgMouseType type, float x, float y, const void *)
 {
-    std::cout << "Change text button clicked\n";
+    std::cout << "Change text button clicked " << m_centerTextIndex+1 << "\n";
     std::vector<TgTextFieldText>listText;
     TgTextFieldText t0;
     TgTextFieldText t1;
@@ -359,6 +359,7 @@ void Page2::onButtonChangeTextClick(TgMouseType type, float x, float y, const vo
             m_textFieldForTestCenter.setMaxLineCount(0);
             break;
         case 36:
+             m_textFieldForTestCenter.setAllowBreakLineGoOverMaxLine(false);
             m_textFieldForTestCenter.setText("xmultilineatextaforatestingaandamoreatestingawqdqwaaswqdwaandahereaisaveryalongatextatoamake this\nmultiline\ntext for\ntesting and\nperhaps more testing");
             break;
         case 37:

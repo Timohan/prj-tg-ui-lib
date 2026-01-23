@@ -17,8 +17,8 @@
 #include <vector>
 #include <mutex>
 #include "../font/cache/tg_font_glyph_cache.h"
-#include "../font/cache/tg_font_glyph_cache_data.h"
 #include "../font/cache/tg_font_characters_cache.h"
+#include "../font/cache/tg_font_texture_cache.h"
 #include "../font/tg_font_default.h"
 
 class TgMainWindow;
@@ -39,9 +39,9 @@ public:
     void render();
     TgImageAssets *getImageAssets();
     TgFontGlyphCache *getFontGlyphCache();
-    TgFontGlyphCacheData *getFontGlyphCacheData();
     TgFontCharactersCache *getFontCharactersCache();
     TgFontDefault *getFontDefault();
+    TgFontTextureCache *getFontTextureCache();
 #ifdef USE_GLFW
     void addEvent(GLFWwindow *window, const TgEventData *eventData);
 #else
@@ -55,8 +55,8 @@ private:
     bool m_exit;
     TgImageAssets m_imageAssets;
     TgFontGlyphCache m_fontGlyphCache;
-    TgFontGlyphCacheData m_fontGlyphCacheData;
     TgFontCharactersCache m_fontCharactersCache;
+    TgFontTextureCache m_fontTextureCache;
     TgFontDefault m_fontDefault;
     std::recursive_mutex m_mutex;
 

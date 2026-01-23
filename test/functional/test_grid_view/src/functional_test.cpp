@@ -33,8 +33,7 @@ int FunctionalTest::getReturnIndex()
 
 void FunctionalTest::start()
 {
-    std::thread([this]()
-                {
+    std::thread([this]() {
         sleep(2);
         size_t i;
         m_testOrders.loadOrders();

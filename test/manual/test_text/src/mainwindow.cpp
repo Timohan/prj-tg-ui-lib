@@ -50,7 +50,7 @@ void MainWindow::onButtonCloseClick(TgMouseType type, float x, float y, const vo
  */
 void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y, const void *)
 {
-    std::cout << "Change text button clicked\n";
+    std::cout << "Change text button clicked " << m_centerTextIndex + 1 << "\n";
     m_centerTextIndex++;
     std::vector<TgTextFieldText>listText;
     TgTextFieldText t0;
@@ -58,21 +58,31 @@ void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y, con
     TgTextFieldText t2;
     switch (m_centerTextIndex) {
         case 1:
+            m_textFieldForTestBottomRight.setMaxLineCount(1);
+            m_textFieldForTestBottomRight.setText("Bottom ગુજરાતી યુનિકોડ ફોન્ટ સૂચી 未来の文字コ Right");
+            m_textFieldForTestBottomRight.setHorizontalAlign(TgTextfieldHorizontalAlign::AlignRight);
+            m_textFieldForTestBottomRight.setVerticalAlign(TgTextfieldVerticalAlign::AlignBottom);
+            m_textFieldForTestBottomRight.setMarginBottom(10);
+            m_textFieldForTestBottomRight.setMarginRight(15);
             m_textFieldForTestCenter.setText("Changed text to \"1x\"");
             m_buttonChangeText.setText("\"1x\"");
             std::cout << "Text size: " << m_textFieldForTestCenter.getTextWidth() << "\n";
             break;
         case 2:
+            m_textFieldForTestBottomRight.setMaxLineCount(2);
+            m_textFieldForTestBottomRight.setText("Bottom ગુજરાતી યુનિકોડ ફોન્ટ સૂચી 未来の文字コ Right\nsecond line");
             std::cout << "Text size: " << m_textFieldForTestCenter.getTextWidth() << "\n";
             m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ");
             m_buttonChangeText.setText("ગુજરાતી યુનિકોડ ફોન્ટ");
             break;
         case 3:
+            m_textFieldForTestBottomRight.setText("Bottom ગુજરાતી યુનિકોડ ફોન્ટ સૂચી 未来の文字コ Right \nsecond line");
             m_textFieldForTestCenter.setText("Changed text to \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ");
             m_buttonChangeText.setText("and યુનિકોડ 未来");
             m_textFieldForTestCenter.setFontSize(24);
             break;
         case 4:
+            m_textFieldForTestBottomRight.setText("Bottom ગુજરાતી યુનિકોડ ફોન્ટ સૂચી 未来の文字コ Right  \nsecond line");
             m_textFieldForTestCenter.setText("cc \"1x\" with ગુજરાતી યુનિકોડ ફોન્ટ and 未来の文字コ and some more");
             m_textFieldForTestCenter.setFontSize(21);
             break;
@@ -135,6 +145,10 @@ void MainWindow::onButtonChangeTextClick(TgMouseType type, float x, float y, con
             m_textEmptyText.setText("Empty now");
             m_textFieldForTestCenter.setText("");
             m_buttonChangeText.setText("");
+            break;
+        case 12:
+            m_textFieldForTestBottomRight.setAllowBreakLineGoOverMaxLine(true);
+            m_textFieldForTestBottomRight.setText("Bottom ગુજરાતી યુનિકોડ ફોન્ટ સૂચી 未来の文字コ Right \nsecond line\n3rd line\n4th line");
             break;
         default:
             m_textEmptyText.setText("");

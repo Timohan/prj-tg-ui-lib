@@ -47,7 +47,7 @@ public:
     Button *getButton(size_t i);
     TgItem2d *getItem2d(size_t i);
     std::string getString(HoverVisibleChangeState state);
-    void removeMenu(size_t i, size_t indexToRemove);
+    void removeMenuMainWindow(size_t i, size_t indexToRemove);
 
 private:
     std::mutex m_mutex;

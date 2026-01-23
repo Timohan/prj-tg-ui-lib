@@ -97,13 +97,16 @@ MouseStateChange::MouseStateChange(size_t index, HoverVisibleChangeState state)
 bool MainWindow::setMakeStep(int index)
 {
     TgShortCut shortCut;
+    std::cout << "setMakeStep" << index << "\n";
     switch (index) {
     case 1:
         for (size_t x = 0; x < m_gridview.getColumCount(); x++) {
             for (size_t y = 0; y < m_gridview.getRowCount(); y++) {
+                m_gridview.getCell(x, y)->setFontSize(25);
                 m_gridview.getCell(x, y)->setText(std::string(std::to_string(x) + "/" + std::to_string(y)).c_str());
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1550));
         break;
     case 2:
         m_gridview.setRowCount(35);
@@ -137,6 +140,7 @@ bool MainWindow::setMakeStep(int index)
                 m_gridview.getCell(x, y)->setText(vecText);
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1550));
         break;
     case 7:
         m_gridview.setRowCount(20);

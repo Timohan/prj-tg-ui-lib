@@ -16,7 +16,6 @@
 #include <vector>
 #include <string>
 
-#include "tg_character_positions.h"
 #include "../item2d/tg_textfield.h"
 #include "tg_font_text.h"
 

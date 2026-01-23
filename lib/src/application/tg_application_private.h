@@ -14,6 +14,7 @@
 
 #include <GL/glew.h>
 #include <string>
+#include <vector>
 
 class TgApplicationPrivate
 {
@@ -29,6 +30,7 @@ public:
     size_t getFontCount();
     size_t setFont(const std::string &fullFilePathFont, size_t position = UINT64_MAX);
     std::string getFont(size_t i);
+    bool loadCharactersToCache(const char *filename, const std::vector<uint32_t> &listCharacters, const float &fontSize);
 private:
 };
 

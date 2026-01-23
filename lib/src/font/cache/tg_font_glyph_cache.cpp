@@ -15,8 +15,8 @@
 #include <cmath>
 #include "../../global/tg_global_log.h"
 #include "../../shader/tg_shader_2d.h"
-#include "../tg_character_positions.h"
 #include "../tg_font_text.h"
+#include "../tg_font_math.h"
 #include "../../global/tg_global_application.h"
 #define FONT_ACCURACY_VALUE 5
 
@@ -26,54 +26,37 @@ TgFontGlyphCache::TgFontGlyphCache()
 
 TgFontGlyphCache::~TgFontGlyphCache()
 {
-    std::vector<TgFontInfo *>::iterator it;
-    std::vector<TgRender *>::iterator itRender;
-    for (it=m_listCachedFont.begin();it!=m_listCachedFont.end();it++) {
-        prj_ttf_reader_clear_data(&(*it)->m_data);
-        for (itRender=(*it)->m_listRender.begin();itRender!=(*it)->m_listRender.end();itRender++) {
-            delete (*itRender);
-        }
-        (*it)->m_listRender.clear();
-        delete (*it);
-    }
-    m_listCachedFont.clear();
 }
 
-/*!
- * \brief TgFontGlyphCache::isFontCached
- *
- * searches if font is already cached for it can use same vertixes
- * and texture
- *
- * \param listCharacters contains all charactes to make vertices and texture
- * \param fontFile full file path of the font file
- * \param fontSize font size
- * \return nullptr if not, otherwise cached TgFontInfo
- */
-TgFontInfo *TgFontGlyphCache::isFontCached(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize)
+bool TgFontGlyphCache::loadCharacters(const std::vector<uint32_t> &listCharacters,
+                                      const std::vector<std::string> &listFontFiles,
+                                      const float fontSize,
+                                      const uint32_t maxLineCount, const float maxLineWidth,
+                                      const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine,
+                                      std::vector<PrjTgFontDrawHelperData> &listHelperCharacters,
+                                      float &fontHeight)
 {
-    TG_FUNCTION_BEGIN();
-    bool notFound;
-    std::vector<TgFontInfo *>::iterator it;
-    std::vector<uint32_t>::const_iterator itListCharacters;
-    for (it=m_listCachedFont.begin();it!=m_listCachedFont.end();it++) {
-        if (memcmp(&(*it)->m_fontSize, &fontSize, sizeof(float)) == 0
-            && (*it)->m_fontFile.compare(fontFile) == 0) {
-            notFound = false;
-            for (itListCharacters=listCharacters.begin();itListCharacters!=listCharacters.end();itListCharacters++) {
-                if (std::find((*it)->m_listCharacter.begin(), (*it)->m_listCharacter.end(), (*itListCharacters)) == (*it)->m_listCharacter.end()) {
-                    notFound = true;
-                    break;
-                }
-            }
-            if (!notFound) {
-                TG_FUNCTION_END();
-                return (*it);
-            }
-        }
+    m_mutex.lock();
+    bool ret;
+    if (allowBreakLineGoOverMaxLine) {
+        ret = m_helper.load(listHelperCharacters, listCharacters, listFontFiles, fontSize, 0, FONT_ACCURACY_VALUE, wordWrap, maxLineWidth, 0, allowBreakLineGoOverMaxLine);
+    } else {
+        ret = m_helper.load(listHelperCharacters, listCharacters, listFontFiles, fontSize, 0, FONT_ACCURACY_VALUE, wordWrap, maxLineWidth, maxLineCount, allowBreakLineGoOverMaxLine);
     }
-    TG_FUNCTION_END();
-    return nullptr;
+    fontHeight = m_helper.getFontHeight(listFontFiles.at(0), fontSize, 0, FONT_ACCURACY_VALUE);
+    m_mutex.unlock();
+    return ret;
+}
+
+bool TgFontGlyphCache::loadCharactersToCache(const char *filename, const std::vector<uint32_t> &listCharacters, const float &fontSize)
+{
+    std::vector<PrjTgFontDrawHelperData> listCharactersData;
+    std::vector<std::string> fontFile;
+    fontFile.push_back(std::string(filename));
+    m_mutex.lock();
+    bool ret = m_helper.load(listCharactersData, listCharacters, fontFile, fontSize, 0, FONT_ACCURACY_VALUE);
+    m_mutex.unlock();
+    return ret;
 }
 
 /*!
@@ -83,103 +66,73 @@ TgFontInfo *TgFontGlyphCache::isFontCached(const std::vector<uint32_t> &listChar
  * if possible for using these vertices and textures in others
  *
  * \param listCharacters list of characters
- * \param fontFile full file path of the font file
+ * \param listFontFiles full file path of the font files
  * \param fontSize font size
  * \param onlyForCalculation if true, then this TgFontInfo is not set into cache
  * \return nullptr if fails, generated TgFontInfo otherwise
  */
-TgFontInfo *TgFontGlyphCache::generateCacheForText(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize, bool onlyForCalculation)
+TgFontInfo *TgFontGlyphCache::generateCacheForText(const std::vector<uint32_t> &listCharacters,
+                                                   const std::vector<std::string> &listFontFiles,
+                                                   float fontSize,
+                                                   const uint32_t maxLineCount, const float maxLineWidth,
+                                                   const TgTextFieldWordWrap wordWrap, const bool allowBreakLineGoOverMaxLine)
 {
     TG_FUNCTION_BEGIN();
-    TgFontInfo *ret = isFontCached(listCharacters, fontFile, fontSize);
-    if (ret) {
-        return ret;
-    }
-
-    std::string additionalCharactersToGlyph = "ABCQWERTYUIOPÅSDFGHJKLÖÄZXVNMqwertyuiopasdfgjhklöäzxcvbnm<>|;:,.-_€'*~^1234567890+'!\"#¤%&/()=?½@£$‰‚{[]}— ";
-    uint32_t *list_additonal_characters = nullptr, list_additonal_characters_size;
-    if (prj_ttf_reader_get_characters(additionalCharactersToGlyph.c_str(), &list_additonal_characters, &list_additonal_characters_size)
-            || !list_additonal_characters_size) {
-        TG_FUNCTION_END();
-        return nullptr;
-    }
-
-    std::vector<uint32_t> newListCharacters = listCharacters;
-    for (uint32_t i=0;i<list_additonal_characters_size;i++) {
-        if (std::find(newListCharacters.begin(), newListCharacters.end(), list_additonal_characters[i]) == newListCharacters.end()
-            && TgGlobalApplication::getInstance()->getFontCharactersCache()->isCharacterForThisFont(list_additonal_characters[i], fontFile) ) {
-            newListCharacters.push_back(list_additonal_characters[i]);
+    size_t i;
+    std::vector<PrjTgFontDrawHelperData> listHelperCharacters;
+    m_mutex.lock();
+    if (allowBreakLineGoOverMaxLine) {
+        if (!m_helper.load(listHelperCharacters, listCharacters, listFontFiles, fontSize, 0, FONT_ACCURACY_VALUE, wordWrap, maxLineWidth, 0, allowBreakLineGoOverMaxLine)) {
+            m_mutex.unlock();
+            return nullptr;
+        }
+    } else {
+        if (!m_helper.load(listHelperCharacters, listCharacters, listFontFiles, fontSize, 0, FONT_ACCURACY_VALUE, wordWrap, maxLineWidth, maxLineCount, allowBreakLineGoOverMaxLine)) {
+            m_mutex.unlock();
+            return nullptr;
         }
     }
-    std::vector<uint32_t>::iterator it;
-    it = std::find(newListCharacters.begin(), newListCharacters.end(), 'A');
-    if (it != newListCharacters.end()) {
-        newListCharacters.erase(it);
-        // we set 'A' as a first character, because it's good for font height calculation
-        newListCharacters.insert(newListCharacters.begin(), 'A');
+    m_mutex.unlock();
+    TgFontInfo *ret = new TgFontInfo;
+    for (i=0;i<listHelperCharacters.size();i++) {
+        if (listHelperCharacters.at(i).m_character != '\n'
+            && listHelperCharacters.at(i).m_character != '\r') {
+            TgGlobalApplication::getInstance()->getFontTextureCache()->add(&listHelperCharacters.at(i),
+                fontSize,
+                listFontFiles.at(listHelperCharacters.at(i).m_fontSizeIndex));
+        }
+    }
+    size_t characterIndex;
+
+    m_mutex.lock();
+    ret->m_fontHeight = m_helper.getFontHeight(listFontFiles.at(0), fontSize, 0.0f,FONT_ACCURACY_VALUE);
+    m_mutex.unlock();
+    ret->m_fontSize = fontSize;
+
+    for (i=0;i<listHelperCharacters.size();i++) {
+        if (listHelperCharacters.at(i).m_character == '\n'
+            || listHelperCharacters.at(i).m_character == '\r') {
+            ret->m_listRender.push_back(nullptr);
+            ret->m_listTextureImage.push_back(0);
+        } else {
+            TgFontTextureCacheItem *item = TgGlobalApplication::getInstance()->getFontTextureCache()->get(
+                listHelperCharacters.at(i).m_character, fontSize,
+                listFontFiles.at(listHelperCharacters.at(i).m_fontSizeIndex),
+                characterIndex);
+            ret->m_listRender.push_back(item->m_listRender.at(0));
+            ret->m_listTextureImage.push_back(item->m_texture);
+        }
+        ret->m_listCharacter.push_back(listHelperCharacters.at(i).m_character);
+        ret->m_glyphDrawX.push_back(listHelperCharacters.at(i).m_glyphDrawX);
+        ret->m_glyphDrawY.push_back(listHelperCharacters.at(i).m_glyphDrawY);
+        ret->m_glyphPixelWidth.push_back(listHelperCharacters.at(i).m_glyphOnImageDataWidth);
+        ret->m_lineIndex.push_back(listHelperCharacters.at(i).m_lineIndex);
+        ret->m_glyphOffsetDrawX.push_back(listHelperCharacters.at(i).m_glyphOffsetPositionX);
+        ret->m_glyphOffsetDrawY.push_back(listHelperCharacters.at(i).m_glyphOffsetPositionY);
     }
 
-    ret = generateCache(newListCharacters, fontFile, fontSize, onlyForCalculation);
-    free(list_additonal_characters);
     TG_FUNCTION_END();
     return ret;
-}
-
-/*!
- * \brief TgFontGlyphCache::generateCache
- *
- * generates image's vertices and texture
- *
- * \param listCharacters list of characters
- * \param fontFile full file path of the font file
- * \param fontSize font size
- * \return nullptr if fails, generated TgFontInfo otherwise
- */
-TgFontInfo *TgFontGlyphCache::generateCache(const std::vector<uint32_t> &listCharacters, const char *fontFile, float fontSize, bool onlyForCalculation)
-{
-    TG_FUNCTION_BEGIN();
-    prj_ttf_reader_data_t *data;
-    data = prj_ttf_reader_init_data();
-    if (!data) {
-        TG_ERROR_LOG("prj_ttf_reader_init_data return failed");
-        TG_FUNCTION_END();
-        return nullptr;
-    }
-    if (prj_ttf_reader_generate_glyphs_list_characters(listCharacters.data(), static_cast<uint32_t>(listCharacters.size()), fontFile, fontSize, FONT_ACCURACY_VALUE, data)
-        || !data->image.width
-        || !data->image.height) {
-        prj_ttf_reader_clear_data(&data);
-        TG_ERROR_LOG("generating glyphs failed");
-        TG_FUNCTION_END();
-        return nullptr;
-    }
-
-    TgFontInfo *newInfo = new TgFontInfo;
-    newInfo->m_data = data;
-    if (!onlyForCalculation && !addImage(newInfo)) {
-        TG_ERROR_LOG("creating the texture failed");
-        prj_ttf_reader_clear_data(&data);
-        delete newInfo;
-        TG_FUNCTION_END();
-        return nullptr;
-    }
-
-    if (!generateTextVertices(newInfo, listCharacters, onlyForCalculation)) {
-        TG_ERROR_LOG("creating the text vertices failed");
-        prj_ttf_reader_clear_data(&data);
-        delete newInfo;
-        TG_FUNCTION_END();
-        return nullptr;
-    }
-
-    newInfo->m_fontFile = fontFile;
-    newInfo->m_fontSize = fontSize;
-    if (!onlyForCalculation) {
-        newInfo->m_addedToCache = true;
-        m_listCachedFont.push_back(newInfo);
-    }
-    TG_FUNCTION_END();
-    return newInfo;
 }
 
 /*!
@@ -193,12 +146,14 @@ TgFontInfo *TgFontGlyphCache::generateCache(const std::vector<uint32_t> &listCha
  */
 void TgFontGlyphCache::render(TgFontText *fontText, const int vertexTransformIndex, const int shaderColorIndex, const std::vector<TgMatrix4x4>&listMatrix)
 {
-    size_t i, c = fontText->getCharacterCount();
+    if (!fontText->getFontInfo()) {
+        return;
+    }
+    size_t i, c = fontText->getFontInfo()->m_listTextureImage.size();
     uint8_t r = 0, g = 0, b = 0;
     bool colorFirstTime = true;
     for (i=0;i<c;i++) {
-        if (!fontText->getFontInfo(i)
-            || fontText->getCharacter(i)->m_character == '\n'
+        if (fontText->getCharacter(i)->m_character == '\n'
             || !fontText->getCharacter(i)->m_draw
             || fontText->getCharacter(i)->m_fontFileNameIndex == -1) {
             continue;
@@ -217,9 +172,9 @@ void TgFontGlyphCache::render(TgFontText *fontText, const int vertexTransformInd
             b = fontText->getCharacter(i)->m_textColorB;
             colorFirstTime = false;
         }
-        if (fontText->getCharacter(i)->m_characterInFontInfoIndex < fontText->getFontInfo(i)->m_listRender.size()) {
-            fontText->getFontInfo(i)->m_listRender[ fontText->getCharacter(i)->m_characterInFontInfoIndex ]->render( fontText->getFontInfo(i)->m_textureImage, 0, 4, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        }
+        fontText->getFontInfo()->m_listRender[ i ]->render(
+            fontText->getFontInfo()->m_listTextureImage.at( i ),
+            0, 4, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
 }
 
@@ -238,7 +193,7 @@ void TgFontGlyphCache::getTextPosition(TgFontText *fontText, size_t cursorPositi
         return;
     }
     if (cursorPosition < fontText->getCharacterCount()) {
-        positionX = fontText->getCharacter(cursorPosition)->positionLeftX;
+        positionX = fontText->getCharacter(cursorPosition)->m_positionX;
     } else if (cursorPosition == fontText->getCharacterCount()) {
         positionX = fontText->getTextWidth();
     }
@@ -296,120 +251,4 @@ size_t TgFontGlyphCache::getTextCharacterIndex(TgFontText *fontText, const float
     }
 
     TG_FUNCTION_END();
-}
-
-/*!
- * \brief TgFontGlyphCache::generateTextVertices
- *
- * generate text vertices for the text
- *
- * \param newInfo [in/out] info
- * \param listCharacters contains the text to render
- * \param onlyForCalculation if true, then this TgFontInfo is not set into cache
- * \return true on success
- */
-bool TgFontGlyphCache::generateTextVertices(TgFontInfo *newInfo, const std::vector<uint32_t> &listCharacters, bool onlyForCalculation)
-{
-    TG_FUNCTION_BEGIN();
-    size_t i, c = listCharacters.size();
-    float bottomY;
-    bool firstTime = true;
-    Vertice *vertices;
-    const prj_ttf_reader_glyph_data_t *glyph;
-
-    vertices = new Vertice[4];
-    for (i=0;i<c;i++) {
-        if (!onlyForCalculation) {
-            newInfo->m_listRender.push_back(new TgRender());
-        }
-        newInfo->m_listCharacter.push_back(listCharacters.at(i));
-
-        glyph = prj_ttf_reader_get_character_glyph_data(listCharacters.at(i), newInfo->m_data);
-        if (!glyph) {
-            continue;
-        }
-
-        if (firstTime) {
-            // set the line y position
-            bottomY = static_cast<float>(glyph->image_pixel_bottom_y-glyph->image_pixel_top_y+glyph->image_pixel_offset_line_y);
-            firstTime = false;
-            newInfo->m_fontHeight = bottomY;
-        }
-
-        vertices[0].x = 0;
-        vertices[0].y = bottomY - static_cast<float>(glyph->image_pixel_bottom_y-glyph->image_pixel_top_y) - static_cast<float>(glyph->image_pixel_offset_line_y);
-        vertices[0].s = static_cast<float>(glyph->image_pixel_left_x)/static_cast<float>(newInfo->m_data->image.width);
-        vertices[0].t = static_cast<float>(glyph->image_pixel_top_y)/static_cast<float>(newInfo->m_data->image.height);
-
-        vertices[1].x = static_cast<float>(glyph->image_pixel_right_x - glyph->image_pixel_left_x);
-        vertices[1].y = bottomY - static_cast<float>(glyph->image_pixel_bottom_y-glyph->image_pixel_top_y) - static_cast<float>(glyph->image_pixel_offset_line_y);
-        vertices[1].s = static_cast<float>(glyph->image_pixel_right_x)/static_cast<float>(newInfo->m_data->image.width);
-        vertices[1].t = static_cast<float>(glyph->image_pixel_top_y)/static_cast<float>(newInfo->m_data->image.height);
-
-        vertices[2].x = 0;
-        vertices[2].y = bottomY - static_cast<float>(glyph->image_pixel_offset_line_y);
-        vertices[2].s = static_cast<float>(glyph->image_pixel_left_x)/static_cast<float>(newInfo->m_data->image.width);
-        vertices[2].t = static_cast<float>(glyph->image_pixel_bottom_y)/static_cast<float>(newInfo->m_data->image.height);
-
-        vertices[3].x = static_cast<float>(glyph->image_pixel_right_x - glyph->image_pixel_left_x);
-        vertices[3].y = bottomY - static_cast<float>(glyph->image_pixel_offset_line_y);
-        vertices[3].s = static_cast<float>(glyph->image_pixel_right_x)/static_cast<float>(newInfo->m_data->image.width);
-        vertices[3].t = static_cast<float>(glyph->image_pixel_bottom_y)/static_cast<float>(newInfo->m_data->image.height);
-
-        newInfo->m_listTopPositionY.push_back(vertices[0].y);
-        newInfo->m_listBottomPositionY.push_back(static_cast<float>(glyph->image_pixel_offset_line_y*-1));
-        if (!onlyForCalculation) {
-            newInfo->m_listRender.back()->init(vertices, 4, true);
-        }
-    }
-
-
-    delete[]vertices;
-    TG_FUNCTION_END();
-    return true;
-}
-
-/*!
- * \brief TgFontGlyphCache::addImage
- *
- * Create image from data to 2D texture image in TgFontInfo
- *
- * \param newInfo [in/out] texture will be set here
- * \return true on success
- */
-bool TgFontGlyphCache::addImage(TgFontInfo *newInfo)
-{
-    TG_FUNCTION_BEGIN();
-    int x, y, i;
-    unsigned char* imageData = nullptr;
-    newInfo->m_textureImage = 0;
-    glGenTextures(1, &newInfo->m_textureImage);
-
-    if (!newInfo->m_textureImage) {
-        TG_ERROR_LOG("generating the texture failed");
-        TG_FUNCTION_END();
-        return false;
-    }
-
-    glBindTexture(GL_TEXTURE_2D, newInfo->m_textureImage);
-    imageData = new unsigned char[newInfo->m_data->image.width*newInfo->m_data->image.height*4];
-
-    for (x=0;x<newInfo->m_data->image.width;x++) {
-        for (y=0;y<newInfo->m_data->image.height;y++) {
-            for (i=0;i<4;i++) {
-                imageData[(y*newInfo->m_data->image.width+x)*4+i] = newInfo->m_data->image.data[(y*newInfo->m_data->image.width+x)];
-            }
-        }
-    }
-
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, newInfo->m_data->image.width, newInfo->m_data->image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
-
-    delete[]imageData;
-    TG_FUNCTION_END();
-    return true;
 }

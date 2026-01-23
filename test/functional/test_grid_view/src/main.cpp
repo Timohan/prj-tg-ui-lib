@@ -30,6 +30,8 @@ int main(int argc , char *argv[])
     static TgApplication m_application;
     m_application.setFont("/usr/share/fonts/truetype/samyak-fonts/Samyak-Gujarati.ttf", 1);
     m_application.setFont("/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf", 2);
+    const std::vector<uint32_t> listCharacters{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '/', ' '};
+    m_application.loadCharactersToCache(nullptr, listCharacters, 25);
     static MainWindow m_mainwindow(800,600);
     getTest()->setMainWindow(&m_mainwindow);
     getTest()->start();

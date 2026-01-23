@@ -78,10 +78,10 @@ void TgTextfieldPrivate::generateTransform(TgItem2d *currentItem)
 {
     size_t i;
     float x = 0, y = 0;
-    m_listTransform.resize( m_fontText->getCharacterCount() );
     if (!m_fontText) {
         return;
     }
+    m_listTransform.resize( m_fontText->getCharacterCount() );
 
     switch (m_alignVertical) {
         case TgTextfieldVerticalAlign::AlignTop:
@@ -115,7 +115,9 @@ void TgTextfieldPrivate::generateTransform(TgItem2d *currentItem)
                 break;
         }
         x = std::roundf(x);
-        m_listTransform[i].setTransform(m_fontText->getCharacter(i)->positionLeftX+x, y+static_cast<float>(m_fontText->getCharacter(i)->m_lineNumber)*m_fontText->getLineHeight());
+        m_listTransform[i].setTransform(
+            m_fontText->getCharacter(i)->m_positionX+x,
+            static_cast<float>(y+m_fontText->getCharacter(i)->m_positionY+m_fontText->getFontHeight()));
     }
 }
 
@@ -165,6 +167,7 @@ void TgTextfieldPrivate::setText(const std::vector<TgTextFieldText> &listText, T
         }
         if (TgFontTextGenerator::changeTextColor(listText, m_fontText)) {
             m_mutex.unlock();
+            TgGlobalWaitRenderer::getInstance()->release();
             TG_FUNCTION_END();
             return;
         }
@@ -174,6 +177,7 @@ void TgTextfieldPrivate::setText(const std::vector<TgTextFieldText> &listText, T
     TgFontTextGenerator::getCharacters(m_listText, m_listCharacter);
     m_initDone = false;
     currentItem->setPositionChanged(true);
+    TgGlobalWaitRenderer::getInstance()->release();
     m_mutex.unlock();
     TG_FUNCTION_END();
 }
@@ -254,15 +258,23 @@ void TgTextfieldPrivate::checkPositionValues()
             delete m_fontText;
         }
         m_fontText = TgFontTextGenerator::generateFontTextInfo(m_listText, m_fontFile.c_str());
-        m_fontText->generateFontTextInfoGlyphs(m_fontSize, false);
-        TgCharacterPositions::generateTextCharacterPositioning(m_fontText, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
         m_previousTextWidthCalc = m_currentItem->getWidth();
+        m_fontText->generateFontTextInfoGlyphs(m_fontSize,
+            m_maxLineCount, m_previousTextWidthCalc,
+            m_wordWrap, m_allowBreakLineGoOverMaxLine);
+        generateTransform(m_currentItem);
     }
     if (m_currentItem->getPositionChanged()) {
         if (m_fontText
             && std::fabs(m_previousTextWidthCalc - m_currentItem->getWidth()) > std::numeric_limits<double>::epsilon()) {
-            TgCharacterPositions::generateTextCharacterPositioning(m_fontText, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+            if (m_fontText) {
+                delete m_fontText;
+            }
+            m_fontText = TgFontTextGenerator::generateFontTextInfo(m_listText, m_fontFile.c_str());
             m_previousTextWidthCalc = m_currentItem->getWidth();
+            m_fontText->generateFontTextInfoGlyphs(m_fontSize,
+                m_maxLineCount, m_previousTextWidthCalc,
+                m_wordWrap, m_allowBreakLineGoOverMaxLine);
         }
         generateTransform(m_currentItem);
         m_currentItem->setAddMinMaxHeightOnVisible(
@@ -271,8 +283,14 @@ void TgTextfieldPrivate::checkPositionValues()
         m_currentItem->setPositionChanged(false);
     } else if (m_fontText
                && std::fabs(m_previousTextWidthCalc - m_currentItem->getWidth()) > std::numeric_limits<double>::epsilon()) {
-        TgCharacterPositions::generateTextCharacterPositioning(m_fontText, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+        if (m_fontText) {
+            delete m_fontText;
+        }
+        m_fontText = TgFontTextGenerator::generateFontTextInfo(m_listText, m_fontFile.c_str());
         m_previousTextWidthCalc = m_currentItem->getWidth();
+        m_fontText->generateFontTextInfoGlyphs(m_fontSize,
+            m_maxLineCount, m_previousTextWidthCalc,
+            m_wordWrap, m_allowBreakLineGoOverMaxLine);
         generateTransform(m_currentItem);
     }
     m_initDone = true;
@@ -310,7 +328,8 @@ bool TgTextfieldPrivate::render(const TgWindowInfo *windowInfo, TgItem2d *curren
                 currentItem->getYmaxOnVisible(windowInfo));
     glUniform1f( windowInfo->m_shaderOpacityIndex, opacity);
 
-    TgGlobalApplication::getInstance()->getFontGlyphCache()->render(m_fontText, windowInfo->m_shaderTransformIndex,
+    TgGlobalApplication::getInstance()->getFontGlyphCache()->render(m_fontText,
+        windowInfo->m_shaderTransformIndex,
         windowInfo->m_shaderColorIndex, m_listTransform);
 
     glUniform1i( windowInfo->m_shaderRenderTypeIndex, 0);
@@ -508,7 +527,7 @@ float TgTextfieldPrivate::getTextWidth()
     } else {
         float textHeight;
         float allDrawTextHeight;
-        TgFontMath::getFontWidthHeightCacheWithoutRender(m_listText, m_fontSize, m_fontFile, ret, textHeight, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, ret, textHeight, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
     }
     m_mutex.unlock();
     TG_FUNCTION_END();
@@ -532,7 +551,7 @@ float TgTextfieldPrivate::getTextHeight()
     } else {
         float textWidth;
         float allDrawTextHeight;
-        TgFontMath::getFontWidthHeightCacheWithoutRender(m_listText, m_fontSize, m_fontFile, textWidth, ret, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
+        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, textWidth, ret, allDrawTextHeight, m_maxLineCount, m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
     }
     m_mutex.unlock();
     TG_FUNCTION_END();
@@ -556,7 +575,7 @@ float TgTextfieldPrivate::getAllDrawTextHeight()
     } else {
         float textWidth;
         float textHeight;
-        TgFontMath::getFontWidthHeightCacheWithoutRender(m_listText, m_fontSize, m_fontFile, textWidth, textHeight, ret, m_maxLineCount,
+        TgFontMath::getFontWidthHeight(m_listText, m_fontSize, m_fontFile, textWidth, textHeight, ret, m_maxLineCount,
                                        m_currentItem->getWidth(), m_wordWrap, m_allowBreakLineGoOverMaxLine);
     }
     m_mutex.unlock();

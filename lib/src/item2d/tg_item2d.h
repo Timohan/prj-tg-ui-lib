@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <functional>
 #include <string>
+#include <prj_tg_font_draw_helper_data.h>
 #include "../event/tg_event_data.h"
 class TgItem2dPrivate;
 struct TgWindowInfo;
@@ -68,16 +69,7 @@ struct TgTextFieldText
     uint8_t m_textColorB = 0;   /*!< m_text's blue color */
 };
 
-/*!
- * \brief TgTextFieldWordWrap
- *
- */
-enum TgTextFieldWordWrap
-{
-    WordWrapBounded = 0, /*!< default, words will be wrapped to minimum of area */
-    WordWrapOff,         /*!< only the line break '\n' will wrap the line */
-    WordWrapOn,          /*!< lines are wrapped to ' ' (empty space) or '\n' if it's possible, if there is no space or '\n' at the line, then it's same wrapping as WordWrapBounded */
-};
+typedef PrjTgFontDrawHelperWordWrap TgTextFieldWordWrap;
 
 /*!
  * \brief TgItem2d
