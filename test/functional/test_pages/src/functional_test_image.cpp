@@ -12,7 +12,7 @@
 #define IMAGES_TO_COMPARE_DIR "DS"
 #endif
 
-#define IGNORE_IMAGE_TO_EQUAL
+// #define IGNORE_IMAGE_TO_EQUAL
 
 bool FunctionalTestImage::isImageToEqual(MainWindow *mainWindow,
                             const char *imageToCompare, int width, int height,

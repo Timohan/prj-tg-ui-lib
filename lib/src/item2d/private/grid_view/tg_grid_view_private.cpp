@@ -147,9 +147,11 @@ void TgGridViewPrivate::setGridCellsPositions()
             tmp->TgItem2d::setY( h - static_cast<float>(  m_verticalSlider.getSliderCurrentPosition() ) );
             w += tmp->getWidth() + DEFAULT_GRID_CELL_BORDER;
         }
-        tmp = getCell(x-1, y);
-        if (tmp) {
-            h += tmp->getHeight() + DEFAULT_GRID_CELL_BORDER;
+        if (x > 0) {
+            tmp = getCell(x-1, y);
+            if (tmp) {
+                h += tmp->getHeight() + DEFAULT_GRID_CELL_BORDER;
+            }
         }
     }
 }
