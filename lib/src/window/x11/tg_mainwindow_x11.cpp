@@ -271,7 +271,9 @@ void TgMainWindowX11::inputListener()
         }
         m_mutex.unlock();
         waitForMsg(ConnectionNumber(m_display));
-        if (XCheckMaskEvent(m_display, m_event_mask, &xevent)) {
+        // Xlib can read many events from the connection at once, handle all of them,
+        // otherwise the rest wait for the next select() timeout
+        while (XCheckMaskEvent(m_display, m_event_mask, &xevent)) {
         m_mutex.lock();
         switch (xevent.type) {
             case MotionNotify:
