@@ -16,6 +16,7 @@
 #include "../item2d/private/item2d/tg_item2d_private.h"
 #include "../global/private/tg_global_deleter.h"
 #include "../global/private/tg_global_tooltip.h"
+#include "../global/private/tg_global_wait_renderer.h"
 
 /*!
  * \brief TgMainWindow::TgMainWindow
@@ -149,6 +150,20 @@ void TgMainWindow::exit()
 {
     TG_FUNCTION_BEGIN();
     TgGlobalApplication::getInstance()->exit();
+    TG_FUNCTION_END();
+}
+
+/*!
+ * \brief TgMainWindow::requestRender
+ *
+ * renders next frame without waiting for events, call this
+ * for example in customBeforeRender() on every frame while
+ * something is animating
+ */
+void TgMainWindow::requestRender()
+{
+    TG_FUNCTION_BEGIN();
+    TgGlobalWaitRenderer::getInstance()->release();
     TG_FUNCTION_END();
 }
 
