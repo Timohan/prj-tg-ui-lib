@@ -36,6 +36,7 @@ public:
 
     virtual bool render(const TgWindowInfo *windowInfo, float parentOpacity) override;
     void exit();
+    void requestRender();
 
     void setAllowedNumberMouseButtonCount(size_t allowedNumberMouseButtonDownCount);
     size_t getAllowedNumberMouseButtonCount();
