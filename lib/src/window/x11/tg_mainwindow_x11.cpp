@@ -202,6 +202,14 @@ void TgMainWindowX11::waitForEnd()
     TG_FUNCTION_BEGIN();
     m_mutex.lock();
     if (m_threadIsRunning == TgListenerX11State::NotRunning) {
+        // exit before the first renderEnd(), the listener thread must not be started anymore,
+        // otherwise it reads the display after it is closed
+        m_threadIsRunning = TgListenerX11State::EndedRunning;
+        m_mutex.unlock();
+        TG_FUNCTION_END();
+        return;
+    }
+    if (m_threadIsRunning == TgListenerX11State::EndedRunning) {
         m_mutex.unlock();
         TG_FUNCTION_END();
         return;
