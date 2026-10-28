@@ -157,8 +157,10 @@ int TgMainWindowX11::initWindow(const char *windowTitle, const TgWindowInfo *inf
         return EXIT_FAILURE;
     }
 
-    XClearWindow(m_display, m_window);
-    XMapRaised(m_display, m_window);
+    if (info->m_visible) {
+        XClearWindow(m_display, m_window);
+        XMapRaised(m_display, m_window);
+    }
     TG_FUNCTION_END();
     return EXIT_SUCCESS;
 }

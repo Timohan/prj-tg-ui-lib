@@ -43,7 +43,8 @@ TgWindowInfo::TgWindowInfo(int width, int height, int minWidth, int minHeight, i
     m_minWidth(minWidth),
     m_minHeight(minHeight),
     m_maxWidth(maxWidth),
-    m_maxHeight(maxHeight)
+    m_maxHeight(maxHeight),
+    m_visible(true)
 {
 }
 

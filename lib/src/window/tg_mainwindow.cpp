@@ -240,6 +240,20 @@ void TgMainWindow::customRender()
 }
 
 /*!
+ * \brief TgMainWindow::setWindowVisible
+ *
+ * sets if the window is shown, call this before TgApplication::exec(), later calls do nothing.
+ * Hidden window renders normally, for example into own framebuffers, but it is never shown
+ * and it does not get any input
+ *
+ * \param visible false hides the window, default is true
+ */
+void TgMainWindow::setWindowVisible(bool visible)
+{
+    m_mainwindowPrivate->m_windowInfo.m_visible = visible;
+}
+
+/*!
  * \brief TgMainWindow::setAllowedNumberMouseButtonCount
  *
  * set allowed number of mouse button down at once

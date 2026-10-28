@@ -78,7 +78,9 @@ int TgMainWindowGlfw::initWindow(const char *windowTitle, const TgWindowInfo *in
         return EXIT_FAILURE;
     }
 
-    glfwShowWindow(m_window);
+    if (info->m_visible) {
+        glfwShowWindow(m_window);
+    }
     return EXIT_SUCCESS;
 }
 

@@ -75,6 +75,10 @@ struct TgWindowInfo
      * max window height
      */
     int m_maxHeight;
+    /*!
+     * false: window is not shown (TgMainWindow::setWindowVisible())
+     */
+    bool m_visible;
 };
 
 class TgMainWindowPrivate
