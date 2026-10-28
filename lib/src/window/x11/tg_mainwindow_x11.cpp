@@ -230,25 +230,30 @@ void TgMainWindowX11::waitForEnd()
     TG_FUNCTION_END();
 }
 
+/*!
+ * \brief TgMainWindowX11::sendEndMsg
+ * wakes up the X11 listener thread, so it notices the end. The event is sent in the calling thread
+ * (XInitThreads() makes it safe), a detached thread could still use the display after XCloseDisplay()
+ * of the destructor
+ */
 void TgMainWindowX11::sendEndMsg()
 {
-    std::thread([this]() {
-        XKeyEvent event;
-        event.display     = m_display;
-        event.window      = m_window;
-        event.root        = m_window;
-        event.subwindow   = None;
-        event.time        = CurrentTime;
-        event.x           = 1;
-        event.y           = 1;
-        event.x_root      = 1;
-        event.y_root      = 1;
-        event.same_screen = True;
-        event.keycode     = 68;
-        event.state       = 0;
-        event.type = KeyPress;
-        XSendEvent(m_display, m_window, True, 0xfff, reinterpret_cast<XEvent *>(&event));
-    }).detach();
+    XKeyEvent event = {};
+    event.display     = m_display;
+    event.window      = m_window;
+    event.root        = m_window;
+    event.subwindow   = None;
+    event.time        = CurrentTime;
+    event.x           = 1;
+    event.y           = 1;
+    event.x_root      = 1;
+    event.y_root      = 1;
+    event.same_screen = True;
+    event.keycode     = 68;
+    event.state       = 0;
+    event.type = KeyPress;
+    XSendEvent(m_display, m_window, True, 0xfff, reinterpret_cast<XEvent *>(&event));
+    XFlush(m_display);
 }
 
 int TgMainWindowX11::waitForMsg(int fd)
