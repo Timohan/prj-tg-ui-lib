@@ -137,6 +137,10 @@ int TgMainWindowX11::initWindow(const char *windowTitle, const TgWindowInfo *inf
     hints.max_width = info->m_maxWidth;
     hints.max_height = info->m_maxHeight;
     XSetWMNormalHints(m_display, m_window, &hints);
+    // the window manager asks to close the window with WM_DELETE_WINDOW instead of breaking the X connection
+    // (then Xlib would exit the application in the listener thread while it is still rendering)
+    m_wmDeleteWindow = XInternAtom(m_display, "WM_DELETE_WINDOW", False);
+    XSetWMProtocols(m_display, m_window, &m_wmDeleteWindow, 1);
 
     glXCreateContextAttribsARBProc glXCreateContextAttribsARB = nullptr;
     glXCreateContextAttribsARB = reinterpret_cast<glXCreateContextAttribsARBProc>(
@@ -351,6 +355,13 @@ void TgMainWindowX11::inputListener()
                 break;
         }
         m_mutex.unlock();
+        }
+        // ClientMessage has no event mask, so XCheckMaskEvent() does not return it
+        while (XCheckTypedWindowEvent(m_display, m_window, ClientMessage, &xevent)) {
+            if (static_cast<Atom>(xevent.xclient.data.l[0]) == m_wmDeleteWindow) {
+                // close button of the window: the same exit as TgMainWindow::exit()
+                TgGlobalApplication::getInstance()->exit();
+            }
         }
     }
     m_mutex.lock();

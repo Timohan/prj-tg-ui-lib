@@ -54,6 +54,7 @@ private:
     Window m_window;
     GLXContext m_context;
     Colormap m_colorMap;
+    Atom m_wmDeleteWindow;
     TimeDifference m_startTime;
     TgListenerX11State m_threadIsRunning = TgListenerX11State::NotRunning;
     std::mutex m_mutex;
