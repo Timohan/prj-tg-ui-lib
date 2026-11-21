@@ -5,4 +5,5 @@
 testapp*
 html
 latex
+compile_commands.json
 

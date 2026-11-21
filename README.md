@@ -26,6 +26,11 @@ make
 or if using glfw: make USE_GLFW=on  
 sudo make install
 
+### Usign clangd
+sudo apt install clangd
+sudo apt install bear
+make clean && bear -- make
+
 ### Clean and Uninstallation
 
 make clean  
